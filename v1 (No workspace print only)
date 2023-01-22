@@ -620,11 +620,7 @@ end
 
 local function TeleportTo(Player)
 	NotificationSound:Play()
-	if Player.Character:FindFirstChild("UpperTorso") then
-	Char.Torso.CFrame = CFrame.new(Vector3.new(Player.Character.UpperTorso.Position.X,Player.Character.UpperTorso.Position.Y,Player.Character.UpperTorso.Position.Z))
-	else
-		Char.Torso.CFrame = CFrame.new(Vector3.new(Player.Character.Torso.Position.X,Player.Character.Torso.Position.Y,Player.Character.Torso.Position.Z))
-	end
+	Char.Torso.CFrame = CFrame.new(Vector3.new(Player.Character.Torso.Position.X,Player.Character.Torso.Position.Y,Player.Character.Torso.Position.Z))
 end
 
 local function FlyJump(State)
