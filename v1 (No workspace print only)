@@ -646,7 +646,7 @@ end
 
 local function TeleportTo(Player)
 	NotificationSound:Play()
-	Char.Torso.CFrame = CFrame.new(Player.Character.Torso.CFrame)
+	Char.Torso.CFrame = CFrame.new(Vector3.new(Player.Character.Torso.CFrame))
 end
 
 local function FlyJump(State)
