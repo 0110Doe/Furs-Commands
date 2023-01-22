@@ -1,0 +1,936 @@
+game:GetService("StarterGui"):SetCore("SendNotification", {
+	Title = "Script is loading..";
+	Text = "Please wait";
+	Duration = 5;
+	Button1 = "Alrighty";
+})
+
+wait(wait(game:IsLoaded()))
+wait(1)
+local Player = game.Players.LocalPlayer
+local Players = game.Players:GetPlayers()
+local WorkspaceChildren = workspace:GetChildren()
+local UIS = game:GetService("UserInputService")
+local Mouse = Player:GetMouse()
+local R15 = false
+local Floating = false
+local Flinging = false
+local Following = true
+local Tpwalking = false
+local ChatBypass = false
+local Nocliping = false
+local FlyJumping = false
+
+local cmds ={
+	"/e float",
+	"/e unfloat",
+	"/e bypasschat",
+	"/e unbypasschat",
+	"/e hideprints",
+	"/e clearprints",
+	"/e findWorkspace",
+	"/e follow [Player name or display]",
+	"/e unfollow",
+	"/e followpart [Model name showed in workspace]",
+	"/e unfollowpart",
+	"/e playerxray",
+	"/e unplayerxray",
+	"/e partxray",
+	"/e unpartxray",
+	"/e noclip",
+	"/e unnoclip",
+	"/e sit",
+	"/e to [Player name or display]",
+	"/e speed [Number between 1-10000 (Defult 16)]",
+	"/e flyjump",
+	"/e unflyjump",
+
+}
+
+--Setup
+local MainGui = Instance.new("ScreenGui")
+MainGui.Parent = Player.PlayerGui
+MainGui.ResetOnSpawn = false
+local MainFrame = Instance.new("Frame", MainGui)
+MainFrame.Position = UDim2.new(0.179, 0,0.172, 0)
+MainFrame.Size = UDim2.new(0.641, 0,0.656, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
+local UiCorner = Instance.new("UICorner", MainFrame)
+local SecondMainFrame = Instance.new("Frame", MainFrame)
+SecondMainFrame.Position = UDim2.new(0, 0,0.115, 0)
+SecondMainFrame.Size = UDim2.new(1, 0,0.885, 0)
+SecondMainFrame.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
+local UiCorner = Instance.new("UICorner", SecondMainFrame)
+local MinimizeButton = Instance.new("TextButton", MainFrame)
+MinimizeButton.Position = UDim2.new(0.942, 0,0, 0)
+MinimizeButton.Size = UDim2.new(0.058, 0,0.115, 0)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(76, 76, 76)
+MinimizeButton.Text = "-"
+MinimizeButton.TextScaled = true
+MinimizeButton.RichText = true
+MinimizeButton.TextStrokeTransparency = 0
+MinimizeButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+MinimizeButton.FontFace = Font.fromEnum(Enum.Font.Arcade)
+local UiCorner = Instance.new("UICorner", MinimizeButton)
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(0, 712,0, 44)
+Title.BackgroundTransparency = 1
+Title.Text = "Radioactive's Commands"
+Title.TextStrokeTransparency = 0
+Title.TextColor3 = Color3.fromRGB(0,0,0)
+Title.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+Title.FontFace = Font.fromEnum(Enum.Font.Arcade)
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.TextScaled = true
+Title.RichText = true
+local PrintsFrame = Instance.new("ScrollingFrame", SecondMainFrame)
+PrintsFrame.Position = UDim2.new(0.151, 0,0, 0)
+PrintsFrame.Size = UDim2.new(0.849, 0,1, 0)
+PrintsFrame.BackgroundTransparency = 1
+PrintsFrame.CanvasSize = UDim2.new(0,0,10000,0)
+PrintsFrame.Visible = false
+local UiListLayout = Instance.new("UIListLayout", PrintsFrame)
+local CommandsFrame = Instance.new("ScrollingFrame", SecondMainFrame)
+CommandsFrame.Position = UDim2.new(0.151, 0,0, 0)
+CommandsFrame.Size = UDim2.new(0.849, 0,1, 0)
+CommandsFrame.BackgroundTransparency = 1
+CommandsFrame.CanvasSize = UDim2.new(0,0,500,0)
+CommandsFrame.Visible = false
+local UiListLayout = Instance.new("UIListLayout", CommandsFrame)
+local PlayerFrame = Instance.new("ScrollingFrame", SecondMainFrame)
+PlayerFrame.Position = UDim2.new(0.151, 0,0, 0)
+PlayerFrame.Size = UDim2.new(0.849, 0,1, 0)
+PlayerFrame.BackgroundTransparency = 1
+local UiListLayout = Instance.new("UIListLayout", PlayerFrame)
+local ButtonFrame = Instance.new("Frame", SecondMainFrame)
+ButtonFrame.Size = UDim2.new(0.151, 0,1, 0)
+ButtonFrame.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+ButtonFrame.BackgroundTransparency = 0.5
+local UiCorner = Instance.new("UICorner", ButtonFrame)
+local UiListLayout = Instance.new("UIListLayout", ButtonFrame)
+UiListLayout.Padding = UDim.new(0, 5)
+local PlayerButton = Instance.new("TextButton", ButtonFrame)
+PlayerButton.Size = UDim2.new(1, 0,0.13, 0)
+PlayerButton.BackgroundColor3 = Color3.fromRGB(100,100,100)
+PlayerButton.Text = "Player"
+PlayerButton.TextColor3 = Color3.fromRGB(0,0,0)
+PlayerButton.TextStrokeTransparency = 0
+PlayerButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+PlayerButton.TextScaled = true
+local UiCorner = Instance.new("UICorner", PlayerButton)
+local CommandsButton = Instance.new("TextButton", ButtonFrame)
+CommandsButton.Size = UDim2.new(1, 0,0.13, 0)
+CommandsButton.BackgroundColor3 = Color3.fromRGB(100,100,100)
+CommandsButton.Text = "Cmds"
+CommandsButton.TextColor3 = Color3.fromRGB(0,0,0)
+CommandsButton.TextStrokeTransparency = 0
+CommandsButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+CommandsButton.TextScaled = true
+local UiCorner = Instance.new("UICorner", CommandsButton)
+local PrintsButton = Instance.new("TextButton", ButtonFrame)
+PrintsButton.Size = UDim2.new(1, 0,0.13, 0)
+PrintsButton.BackgroundColor3 = Color3.fromRGB(100,100,100)
+PrintsButton.Text = "Prints"
+PrintsButton.TextColor3 = Color3.fromRGB(0,0,0)
+PrintsButton.TextStrokeTransparency = 0
+PrintsButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+PrintsButton.TextScaled = true
+local UiCorner = Instance.new("UICorner", PrintsButton)
+
+--Ui PlayerData
+local PlayerName = Instance.new("TextLabel", PlayerFrame)
+PlayerName.Size = UDim2.new(0.98, 0,0.1, 0)
+PlayerName.BackgroundTransparency = 1
+PlayerName.Text = "Hello, "..Player.Name.."! ("..Player.DisplayName..")"
+PlayerName.TextColor3 = Color3.fromRGB(0,0,0)
+PlayerName.TextStrokeTransparency = 0
+PlayerName.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+PlayerName.TextScaled = true
+PlayerName.RichText = true
+local InformText = Instance.new("TextLabel", PlayerFrame)
+InformText.Position = UDim2.new(0, 0,0.099, 0)
+InformText.Size = UDim2.new(0.98, 0,0.4, 0)
+InformText.BackgroundTransparency = 1
+InformText.Text = "More will be added on later versions (V1)"
+InformText.TextColor3 = Color3.new(0,0,0)
+InformText.TextStrokeTransparency = 0
+InformText.TextStrokeColor3 = Color3.new(1,1,1)
+InformText.TextScaled = true
+InformText.RichText = true
+
+local NotificationSound = Instance.new("Sound", Player)
+NotificationSound.SoundId = "rbxassetid://6647898215"
+local NotificationSound2 = Instance.new("Sound", Player)
+NotificationSound2.SoundId = "rbxassetid://6647897822"
+local DiedSound = Instance.new("Sound", Player)
+DiedSound.SoundId = "rbxassetid://9061674082"
+DiedSound.Looped = true
+local LoadedSound = Instance.new("Sound", Player)
+LoadedSound.SoundId = "rbxassetid://7383525713"
+
+--Getting character
+local Char = Player.Character
+local Head = Char.Head
+local Torso
+local LowerTorso
+local LeftArm
+local UpperLeftArm
+local LowerLeftArm
+local LeftHand
+local RightArm
+local UpperRightArm
+local LowerRightArm
+local RightHand
+local LeftLeg
+local UpperLeftLeg
+local LowerLeftLeg
+local LeftFoot
+local RightLeg
+local UpperRightLeg
+local LowerRightLeg
+local RightFoot
+
+if Char:FindFirstChild("UpperTorso") then
+	Torso = Char.UpperTorso
+	LowerTorso = Char.LowerTorso
+	UpperLeftArm = Char.LeftUpperArm
+	LowerLeftArm = Char.LeftLowerArm
+	LeftHand = Char.LeftHand
+	UpperRightArm = Char.RightUpperArm
+	LowerRightArm = Char.RightLowerArm
+	RightHand = Char.RightHand
+	UpperLeftLeg = Char.LeftUpperLeg
+	LowerLeftLeg = Char.LeftLowerLeg
+	LeftFoot = Char.LeftFoot
+	UpperRightLeg = Char.RightUpperLeg
+	LowerRightLeg = Char.RightLowerLeg
+	RightFoot = Char.RightFoot
+	R15 = true
+elseif Char:FindFirstChild("Torso") then
+	Torso = Char.Torso
+	RightArm = Char["Right Arm"]
+	LeftArm = Char["Left Arm"]
+	RightLeg =  Char["Right Leg"]
+	LeftLeg = Char["Left Leg"]
+	R15 = false
+end
+
+Player.CharacterRemoving:Connect(function()
+	repeat wait() until Player.CharacterAdded
+	Char = Player.Character
+	Head = Char.Head
+
+	DiedSound:Stop()
+	if Char:FindFirstChild("UpperTorso") then
+		Torso = Char.UpperTorso
+		LowerTorso = Char.LowerTorso
+		UpperLeftArm = Char.LeftUpperArm
+		LowerLeftArm = Char.LeftLowerArm
+		LeftHand = Char.LeftHand
+		UpperRightArm = Char.RightUpperArm
+		LowerRightArm = Char.RightLowerArm
+		RightHand = Char.RightHand
+		UpperLeftLeg = Char.LeftUpperLeg
+		LowerLeftLeg = Char.LeftLowerLeg
+		LeftFoot = Char.LeftFoot
+		UpperRightLeg = Char.RightUpperLeg
+		LowerRightLeg = Char.RightLowerLeg
+		RightFoot = Char.RightFoot
+		R15 = true
+	elseif Char:FindFirstChild("Torso") then
+		Torso = Char.Torso
+		RightArm = Char["Right Arm"]
+		LeftArm = Char["Left Arm"]
+		RightLeg =  Char["Right Leg"]
+		LeftLeg = Char["Left Leg"]
+		R15 = false
+	end
+end)
+
+--Gui functions
+MinimizeButton.MouseButton1Click:Connect(function()
+	if SecondMainFrame.Visible == true then
+		SecondMainFrame.Visible = false
+		MainFrame.Size = UDim2.new(0.641, 0,0.075, 0)
+		MinimizeButton.Size = UDim2.new(0.058, 0,1, 0)
+	else
+		SecondMainFrame.Visible = true
+		MainFrame.Size = UDim2.new(0.641, 0,0.656, 0)
+		MinimizeButton.Size = UDim2.new(0.058, 0,0.115, 0)
+	end
+end)
+
+PlayerButton.MouseButton1Click:Connect(function()
+	CommandsFrame.Visible = false
+	PrintsFrame.Visible = false
+	PlayerFrame.Visible = true
+end)
+
+CommandsButton.MouseButton1Click:Connect(function()
+	CommandsFrame.Visible = true
+	PrintsFrame.Visible = false
+	PlayerFrame.Visible = false
+end)
+
+PrintsButton.MouseButton1Click:Connect(function()
+	CommandsFrame.Visible = false
+	PrintsFrame.Visible = true
+	PlayerFrame.Visible = false
+end)
+
+--Command Functions
+function dragify(Frame)
+	dragToggle = nil
+	local dragSpeed = 0
+	dragInput = nil
+	dragStart = nil
+	local dragPos = nil
+	function updateInput(input)
+		local Delta = input.Position - dragStart
+		local Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+		game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.25), {Position = Position}):Play()
+	end
+	Frame.InputBegan:Connect(function(input)
+		if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and UIS:GetFocusedTextBox() == nil then
+			dragToggle = true
+			dragStart = input.Position
+			startPos = Frame.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragToggle = false
+				end
+			end)
+		end
+	end)
+	Frame.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput = input
+		end
+	end)
+	game:GetService("UserInputService").InputChanged:Connect(function(input)
+		if input == dragInput and dragToggle then
+			updateInput(input)
+		end
+	end)
+end
+
+local function PrintNothing(Amount)
+	local Second = false
+	for i=1,Amount do
+		wait()
+		if Second == false then
+			print(" ")
+			Second = true
+		else
+			print("  ")
+			Second = false
+		end
+	end
+end
+
+local function SendNotification(TitleText, Text, Duration, Button1Text)
+	game:GetService("StarterGui"):SetCore("SendNotification", {
+		Title = TitleText;
+		Text = Text;
+		Duration = 5;
+		Button1 = Button1Text;
+	})
+end
+
+local function MakeNewTextPrint(Text)
+	local TextLabel = Instance.new("TextLabel")
+	TextLabel.Parent = PrintsFrame
+	TextLabel.Size = UDim2.new(0.97,0,0.00001,0)
+	TextLabel.BackgroundTransparency = 1
+	TextLabel.TextStrokeTransparency = 0
+	TextLabel.TextColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+	TextLabel.TextStrokeColor3 = Color3.new(1,1,1)
+	TextLabel.Text = Text
+	TextLabel.TextScaled = true
+	TextLabel.TextWrapped = true
+	TextLabel.RichText = true
+end
+
+local function MakeNewTextCommand(Text)
+	local TextLabel = Instance.new("TextLabel")
+	TextLabel.Parent = CommandsFrame
+	TextLabel.Size = UDim2.new(0.97,0,0.00025,0)
+	TextLabel.BackgroundTransparency = 1
+	TextLabel.TextStrokeTransparency = 0
+	TextLabel.TextColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+	TextLabel.TextStrokeColor3 = Color3.new(1, 1, 1)
+	TextLabel.Text = Text
+	TextLabel.TextScaled = true
+	TextLabel.TextWrapped = true
+	TextLabel.RichText = true
+end
+
+
+local function Float(State)
+	NotificationSound:Play()
+	Floating = State
+	local Lower = false
+	local Higher = false
+	while Floating == true do
+		local Part = Instance.new("Part")
+		Part.Parent = workspace
+		Part.Position = Torso.Position
+		Part.Anchored = true
+		Part.Size = Vector3.new(3,1,3)
+		Part.Position=Part.Position-Vector3.new(0,3.53,0)
+		if Lower == true then
+			Part.Position = Torso.Position
+			Part.Position=Part.Position-Vector3.new(0,4,0)
+		elseif Higher == true then
+			Part.Position = Torso.Position
+			Part.Position=Part.Position-Vector3.new(0,3,0)
+		end
+		Part.Transparency = 1
+		wait(0.0001)
+		Part:Remove()
+		UIS.InputBegan:Connect(function(input)
+			if Floating == true then
+				if input.KeyCode == Enum.KeyCode.Q then
+					Lower = true
+				end
+			end
+		end)
+		UIS.InputEnded:Connect(function(input)
+			if input.KeyCode == Enum.KeyCode.Q then
+				Lower = false
+			end
+		end)
+
+		UIS.InputBegan:Connect(function(input)
+			if Floating == true then
+				if input.KeyCode == Enum.KeyCode.E then
+					Higher = true
+				end
+			end
+		end)
+		UIS.InputEnded:Connect(function(input)
+			if input.KeyCode == Enum.KeyCode.E then
+				Higher = false
+			end
+		end)
+	end
+end
+
+local function Bypass(State)
+	NotificationSound:Play()
+	ChatBypass = State
+	Player.Chatted:Connect(function(message)
+		local NotACmd = true
+		for i=1,#cmds do
+			if message == cmds[i] then
+				NotACmd = false
+			end
+		end
+		if ChatBypass == true and NotACmd == true then
+			game:GetService("Chat"):Chat(Head, message, Enum.ChatColor.White)
+		end
+	end)
+end
+
+local function Follow(State, Followed)
+	NotificationSound:Play()
+	Following = State
+	while Following == true do
+		wait()
+		Char.Humanoid:MoveTo(Followed.Position, Char)
+	end
+end
+
+local function FollowNPC(State, Followed)
+	NotificationSound:Play()
+	Following = State
+	while Following == true do
+		wait()
+		Char.Humanoid:MoveTo(Followed.Position, Char)
+	end
+end
+
+local FoundItems = 0
+local function FoundMore(Model)
+	local ModelChildren = Model:GetChildren()
+	for i=1,#ModelChildren do
+		FoundItems=FoundItems+1
+		print(FoundItems..".."..Model:GetFullName().."."..ModelChildren[i].Name)
+		MakeNewTextPrint(FoundItems..".."..Model:GetFullName().."."..ModelChildren[i].Name)
+		local OtherChildren = ModelChildren[i]:GetChildren()
+		local Num = 0
+		for i=1,#OtherChildren do Num=Num+1 end
+		if Num > 1 then
+			FoundMore(ModelChildren[i])
+		end
+	end
+end
+
+local function FindWorkspace()
+	PrintNothing(10)
+	NotificationSound2:Play()
+	for i=1,#WorkspaceChildren do
+		FoundItems=FoundItems+1
+		print(FoundItems..".."..WorkspaceChildren[i].Name)
+		MakeNewTextPrint(FoundItems..".."..WorkspaceChildren[i].Name)
+		local OtherChildren = WorkspaceChildren[i]:GetChildren()
+		local Num = 0
+		for i=1,#OtherChildren do Num=Num+1 end
+		if Num > 1 then
+			FoundMore(WorkspaceChildren[i])
+		end
+	end
+end
+
+local function ClearPrints()
+	NotificationSound:Play()
+	local C = PrintsFrame:GetChildren()
+	local Total = 0
+	for i=1,#C do
+		if C[i].Name == "TextLabel" then
+			C[i]:Remove()
+			Total=Total+1
+		end
+	end
+	print("Removed "..Total.." prints!")
+	MakeNewTextPrint("Removed "..Total.." prints!")
+	wait(5)
+	PrintsFrame:FindFirstChild("TextLabel"):Remove()
+end
+
+local function PlayerXray()
+	NotificationSound:Play()
+	for i=1,#Players do
+		local CharacterChildren = Players[i].Character:GetChildren()
+		for i=1,#CharacterChildren do
+			local Hightlight = Instance.new("Highlight")
+			Hightlight.Parent = CharacterChildren[i]
+			Hightlight.OutlineTransparency = 1
+		end
+	end
+end
+
+local function unPlayerXray()
+	NotificationSound:Play()
+	for i=1,#Players do
+		local CharacterChildren = Players[i].Character:GetChildren()
+		for i=1,#CharacterChildren do
+			if CharacterChildren[i]:FindFirstChildOfClass("Highlight") then
+				CharacterChildren[i]:FindFirstChildOfClass("Highlight"):Remove()
+			end
+		end
+	end
+end
+
+local function FoundMoreXray(Model)
+	local ModelChildren = Model:GetChildren()
+	for i=1,#ModelChildren do
+		if ModelChildren[i]:IsA("Part") then
+			if ModelChildren[i].Name ~= "HumanoidRootPart" then
+				ModelChildren[i].Transparency = 0.5
+			end
+		end
+		local OtherChildren = ModelChildren[i]:GetChildren()
+		local Num = 0
+		for i=1,#OtherChildren do Num=Num+1 end
+		if Num > 1 then
+			FoundMoreXray(ModelChildren[i])
+		end
+	end
+end
+
+local function PartXray()
+	NotificationSound:Play()
+	for i=1,#WorkspaceChildren do
+		if WorkspaceChildren[i]:IsA("Part") then
+			if WorkspaceChildren[i].Name ~= "HumanoidRootPart" then
+				WorkspaceChildren[i].Transparency = 0.5
+			end
+		end
+		local OtherChildren = WorkspaceChildren[i]:GetChildren()
+		local Num = 0
+		for i=1,#OtherChildren do Num=Num+1 end
+		if Num > 1 then
+			FoundMoreXray(WorkspaceChildren[i])
+		end
+	end
+end
+
+local function FoundMoreUnxray(Model)
+	local ModelChildren = Model:GetChildren()
+	for i=1,#ModelChildren do
+		if ModelChildren[i]:IsA("Part") then
+			if ModelChildren[i].Name ~= "HumanoidRootPart" then
+				ModelChildren[i].Transparency = 0
+			end
+		end
+		local OtherChildren = ModelChildren[i]:GetChildren()
+		local Num = 0
+		for i=1,#OtherChildren do Num=Num+1 end
+		if Num > 1 then
+			FoundMoreUnxray(ModelChildren[i])
+		end
+	end
+end
+
+local function UnPartXray()
+	NotificationSound:Play()
+	for i=1,#WorkspaceChildren do
+		if WorkspaceChildren[i]:IsA("Part") then
+			if WorkspaceChildren[i].Name ~= "HumanoidRootPart" then
+				WorkspaceChildren[i].Transparency = 0
+			end
+		end
+		local OtherChildren = WorkspaceChildren[i]:GetChildren()
+		local Num = 0
+		for i=1,#OtherChildren do Num=Num+1 end
+		if Num > 1 then
+			FoundMoreUnxray(WorkspaceChildren[i])
+		end
+	end
+end
+
+local function FoundMoreunNoclip(Model)
+	local ModelChildren = Model:GetChildren()
+	for i=1,#ModelChildren do
+		if ModelChildren[i]:IsA("Part") then
+			ModelChildren[i].CanCollide = true
+		end
+		local OtherChildren = ModelChildren[i]:GetChildren()
+		local Num = 0
+		for i=1,#OtherChildren do Num=Num+1 end
+		if Num > 1 then
+			FoundMoreunNoclip(ModelChildren[i])
+		end
+	end
+end
+
+local function Noclip(State)
+	NotificationSound:Play()
+	Nocliping = State
+	local function MakeNoCollison(Part)
+		Part.CanCollide = false
+	end
+
+	if R15 == true then
+		RightHand.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		UpperRightArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		LowerRightArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		LeftHand.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		UpperLeftArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		LowerLeftArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		Torso.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		LowerTorso.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		Head.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+	else
+		RightArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		LeftArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		Torso.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		Head.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+	end
+
+	if Nocliping == false then
+		for i=1,#WorkspaceChildren do
+			if WorkspaceChildren[i]:IsA("Part") then
+				WorkspaceChildren[i].CanCollide = true
+			end
+			local OtherChildren = WorkspaceChildren[i]:GetChildren()
+			local Num = 0
+			for i=1,#OtherChildren do Num=Num+1 end
+			if Num > 1 then
+				FoundMoreunNoclip(WorkspaceChildren[i])
+			end
+		end
+	end
+end
+
+local function TeleportTo(Player)
+	NotificationSound:Play()
+	Char.Torso.CFrame = CFrame.new(Player.Character.Torso.CFrame)
+end
+
+local function FlyJump(State)
+	FlyJumping = State
+	while FlyJumping == true do
+		wait()
+		if Char.Humanoid.Jump == true then
+			local Part = Instance.new("Part")
+			Part.Parent = workspace
+			Part.Transparency = 1
+			Part.Position = Torso.Position
+			Part.Size = Vector3.new(5,1,5)
+			Part.Position=Part.Position-Vector3.new(0,4,0)
+			wait()
+			Part:Remove()
+		end
+	end
+end
+--Chatted commands
+Player.Chatted:Connect(function(message)
+	if message == "/e flyjump" then
+		FlyJump(true)
+	elseif message == "/e unflyjump" then
+		FlyJump(false)
+	end
+
+	if message == "/e sit" then
+		Char.Humanoid.Sit = true
+	end
+
+	if message == "/e noclip" then
+		Noclip(true)
+	elseif message == "/e unnoclip" then
+		Noclip(false)
+	end
+
+	if message == "/e playerxray" then
+		PlayerXray()
+	elseif message == "/e unplayerxray" then
+		unPlayerXray()
+	end
+
+	if message == "/e partxray" then
+		PartXray()
+	elseif message == "/e unpartxray" then
+		UnPartXray()
+	end
+
+	if message == "/e float" then
+		Float(true)
+	elseif message == "/e unfloat" then
+		Float(false)
+	end
+
+	if message == "/e bypasschat" then
+		Bypass(true)
+	elseif message == "/e unbypasschat" then
+		Bypass(false)
+	end
+
+	if message == "/e hideprints" then
+		PrintNothing(600)
+	end
+
+	if message == "/e clearprints" then
+		ClearPrints()
+	end
+
+	if message == "/e findWorkspace" then
+		FindWorkspace()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findPlayers" then
+		FindPlayers()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findLighting" then
+		FindLighting()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findMaterialService" then
+		FindMaterialService()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findReplicatedFirst" then
+		FindReplicatedFirst()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findReplicatedStorage" then
+		FindReplicatedStorage()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findServerScriptService" then
+		FindServerScriptService()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findServerStorage" then
+		FindServerStorage()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findStarterGui" then
+		FindStarterGui()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findStarterPack" then
+		FindStarterPack()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findStarterPlayer" then
+		FindStarterPlayer()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findTeams" then
+		FindTeams()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findSoundService" then
+		FindSoundService()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findChat" then
+		FindChat()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findLocalizationService" then
+		FindLocalizationService()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	if message == "/e findTestService" then
+		FindTestService()
+		wait(0.1)
+		print("Found a total of "..FoundItems.." items!")
+		if FoundItems == 0 then
+			MakeNewTextPrint("!!!No items found!!!")
+		end
+		FoundItems=0
+	end
+
+	for i=1,#Players do
+		if message == "/e follow "..Players[i].Name or message == "/e follow "..Players[i].DisplayName then
+			local FollowedTorso
+			if Players[i].Character:FindFirstChild("UpperTorso") then
+				FollowedTorso = Players[i].Character.UpperTorso
+			else
+				FollowedTorso = Players[i].Character.Torso
+			end
+			Follow(true, FollowedTorso)
+		elseif message == "/e unfollow" then
+			Follow(false, nil)
+		elseif message == "/e to "..Players[i].Name or message == "/e to "..Players[i].DisplayName then
+			TeleportTo(Players[i])
+		end
+	end
+
+	for i=1,#WorkspaceChildren do
+		if message == "/e followpart "..WorkspaceChildren[i].Name then
+			local FollowedTorso
+			if WorkspaceChildren[i]:FindFirstChild("UpperTorso") then
+				FollowedTorso = WorkspaceChildren[i].UpperTorso
+			elseif WorkspaceChildren[i]:IsA("Part") then
+				FollowedTorso = WorkspaceChildren[i]
+			else
+				FollowedTorso = WorkspaceChildren[i].Torso
+			end
+			FollowNPC(true, FollowedTorso)
+		elseif message == "/e unfollowpart" then
+			FollowNPC(false, nil)
+		end
+	end
+
+	for i=1,10000 do
+		if message == "/e speed "..i then
+			Char.Humanoid.WalkSpeed = i
+		end
+	end
+end)
+
+Char.Humanoid.Died:Connect(function()
+	local CharChildren = Char:GetChildren()
+	DiedSound:Play()
+	for i=1,500 do
+		wait()
+		for i=1,#CharChildren do if CharChildren[i]:IsA("Part") or CharChildren[i]:IsA("MeshPart") or CharChildren[i]:IsA("BasePart") then CharChildren[i].Position=CharChildren[i].Position+Vector3.new(0,0.5,0) CharChildren[i].Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360)) CharChildren[i].Transparency = 0.5 end end
+	end
+end)
+
+for i=1,#cmds do
+	local cmd = cmds[i]
+	MakeNewTextCommand(cmd)
+end
+
+dragify(MainFrame)
+
+LoadedSound:Play()
+SendNotification("Script loaded!", "Have fun!", 5, "Okay!")
+wait(2.5)
+SendNotification("Script made by,", "Some dude on roblox!", 5, "Cool!")
