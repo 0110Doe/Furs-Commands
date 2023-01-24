@@ -1,4 +1,11 @@
 game:GetService("StarterGui"):SetCore("SendNotification", {
+	Title = "Warning!";
+	Text = "This is an outdated version of 'Furs Commands'! script may brake!";
+	Duration = 5;
+	Button1 = "Noted";
+})
+wait(2.5)
+game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Script is loading..";
 	Text = "Please wait";
 	Duration = 5;
@@ -105,7 +112,7 @@ local UiCorner = Instance.new("UICorner", MinimizeButton)
 local Title = Instance.new("TextLabel", MainFrame)
 Title.Size = UDim2.new(0, 712,0, 44)
 Title.BackgroundTransparency = 1
-Title.Text = "Radioactive's Commands"
+Title.Text = "Furs Commands"
 Title.TextStrokeTransparency = 0
 Title.TextColor3 = Color3.fromRGB(0,0,0)
 Title.TextStrokeColor3 = Color3.fromRGB(255,255,255)
