@@ -710,9 +710,9 @@ end
 local function TeleportTo(PlayerTo)
 	NotificationSound:Play()
 	if PlayerTo.Character:FindFirstChild("UpperTorso") then
-		Torso.CFrame = CFrame.new(Vector3.new(PlayerTo.Character.UpperTorso.Position.X,PlayerTo.Character.UpperTorso.Position.Y,PlayerTo.Character.UpperTorso.Position.Z))
+		Torso.CFrame = CFrame.fromMatrix(Vector3.new(PlayerTo.Character.UpperTorso.Position.X,PlayerTo.Character.UpperTorso.Position.Y,PlayerTo.Character.UpperTorso.Position.Z), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 	else
-		Torso.CFrame = CFrame.new(Vector3.new(PlayerTo.Character.Torso.Position.X,PlayerTo.Character.Torso.Position.Y,PlayerTo.Character.Torso.Position.Z))
+		Torso.CFrame = CFrame.fromMatrix(Vector3.new(PlayerTo.Character.Torso.Position.X,PlayerTo.Character.Torso.Position.Y,PlayerTo.Character.Torso.Position.Z), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 	end
 end
 
@@ -763,6 +763,9 @@ local flying = false
 local a = 1
 local function Fly(State, Number)
 	NotificationSound:Play()
+	if State == true then
+		SendNotification("Note,", "You can noclip by pressing E", 5, "Okay")
+	end
 	Flying = State
 	
 	if Flying == true then
@@ -961,10 +964,10 @@ local function Respawn()
 	Float(false)
 	DiedSound:Play()
 	local RespawnPos = Torso.Position
-	Torso.CFrame = CFrame.new(Vector3.new(0,-470,0))
+	Torso.CFrame = CFrame.fromMatrix(Vector3.new(0,-470,0), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 	wait(1)
 	repeat wait() until Char:FindFirstChild("Head")
-	Torso.CFrame = CFrame.new(RespawnPos)
+	Torso.CFrame = CFrame.fromMatrix(RespawnPos, Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 	SendNotification("Respawned character", "You may continue of whatever you were doing", 5, "Okay")
 end
 
@@ -1009,7 +1012,7 @@ local function Headsit(PlayerTo)
 	local Weld = Instance.new("Weld", Torso)
 	Weld.Part0 = Torso
 	Weld.Part1 = PlayerTo.Character.Head
-	Weld.C1 = CFrame.new(Vector3.new(0,0.2,0.7))
+	Weld.C1 = CFrame.fromMatrix(Vector3.new(0,0.2,0.7), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 	
 	while Char.Humanoid.Sit == true do
 		wait()
@@ -1025,7 +1028,7 @@ local function HeadStand(PlayerTo)
 	local Weld = Instance.new("Weld", Torso)
 	Weld.Part0 = Torso
 	Weld.Part1 = PlayerTo.Character.Head
-	Weld.C1 = CFrame.new(Vector3.new(0,3.5,0))
+	Weld.C1 = CFrame.fromMatrix(Vector3.new(0,3.5,0), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 	
 	while Char.Humanoid.PlatformStand == true do
 		wait()
@@ -1055,7 +1058,7 @@ local function Tpwalk(State, Number)
 					Forward = true
 					while Forward == true do
 						wait()
-						Torso.CFrame=Torso.CFrame*CFrame.new(Vector3.new(0,0,-Speed))
+						Torso.CFrame=Torso.CFrame*CFrame.fromMatrix(Vector3.new(0,0,-Speed), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 					end
 				end
 			end
@@ -1072,7 +1075,7 @@ local function Tpwalk(State, Number)
 					Right = true
 					while Right == true do
 						wait()
-						Torso.CFrame=Torso.CFrame*CFrame.new(Vector3.new(Speed,0,0))
+						Torso.CFrame=Torso.CFrame*CFrame.fromMatrix(Vector3.new(Speed,0,0), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 					end
 				end
 			end
@@ -1089,7 +1092,7 @@ local function Tpwalk(State, Number)
 					Left = true
 					while Left == true do
 						wait()
-						Torso.CFrame=Torso.CFrame*CFrame.new(Vector3.new(-Speed,0,0))
+						Torso.CFrame=Torso.CFrame*CFrame.fromMatrix(Vector3.new(-Speed,0,0), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 					end
 				end
 			end
@@ -1106,7 +1109,7 @@ local function Tpwalk(State, Number)
 					Backward = true
 					while Backward == true do
 						wait()
-						Torso.CFrame=Torso.CFrame*CFrame.new(Vector3.new(0,0,Speed))
+						Torso.CFrame=Torso.CFrame*CFrame.fromMatrix(Vector3.new(0,0,Speed), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 					end
 				end
 			end
@@ -1179,8 +1182,18 @@ Player.Chatted:Connect(function(message)
 	end
 	
 	if message == "/e toolrange" then
-		if Char:FindFirstChildOfClass("Tool") then
-			ToolRange(Char:FindFirstChildOfClass("Tool"))
+		local charChildren = Char:GetChildren()
+		local FoundTool = false
+		local Tool = nil
+		for i=1,#charChildren do
+			if charChildren[i]:IsA("Tool") then
+				FoundTool = true
+				Tool = charChildren[i]
+			end
+		end
+		
+		if FoundTool == true and Tool ~= nil then
+			ToolRange(Tool)
 		else
 			ErrorSound:Play()
 			SendNotification("Error!", "Please equip a tool for command to work!", 5, "Okay")
@@ -1357,7 +1370,7 @@ Player.CharacterRemoving:Connect(function()
 	end
 	
 	if SpawnLocation ~= nil then
-		Torso.CFrame = CFrame.new(Vector3.new(SpawnLocation.Position.X,SpawnLocation.Position.Y,SpawnLocation.Position.Z))
+		Torso.CFrame = CFrame.fromMatrix(Vector3.new(SpawnLocation.Position.X,SpawnLocation.Position.Y,SpawnLocation.Position.Z), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
 	end
 end)
 
