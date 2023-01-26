@@ -146,11 +146,5 @@ Idk what to put here for now
 
 
 
+![download](https://user-images.githubusercontent.com/123289129/214942299-6a9f9097-9b5c-42cd-b26d-1e02e0cff4ce.png)
 
-
-
-
-
-
-
-HAIIIIIIIIIIIIIii
