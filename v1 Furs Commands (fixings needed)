@@ -1552,12 +1552,12 @@ end
 Player.Chatted:Connect(function(message)
 	if message == "/e rejoin" then
 		local TeleportService = game:GetService("TeleportService")
-		if #Players <= 1 then
+		if true then
 			Players.LocalPlayer:Kick("\nRejoining...")
 			wait()
-			TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+			TeleportService:Teleport(game.PlaceId, Player)
 		else
-			TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
+			TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Player)
 		end
 	end
 	
