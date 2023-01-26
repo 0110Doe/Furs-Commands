@@ -1548,7 +1548,18 @@ local function Funny4(State, Number)
 end
 
 --Chatted commands
-Player.Chatted:Connect(function(message)	
+Player.Chatted:Connect(function(message)
+	if message == "/e rejoin" then
+		local TeleportService = game:GetService("TeleportService")
+		if #Players:GetPlayers() <= 1 then
+			Players.LocalPlayer:Kick("\nRejoining...")
+			wait()
+			TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+		else
+			TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
+		end
+	end
+	
 	if message == "/e fixgui" then
 		NotificationSound:Play()
 		MainFrame.Position = UDim2.new(0.5,0,0.5,0)
