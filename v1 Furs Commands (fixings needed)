@@ -88,6 +88,7 @@ local cmds ={
 	"/e headstand [Player name or display]",
 	"/e tpwalk [Number between 1-10000]",
 	"/e untpwalk",
+	"/e rejoin",
 }
 
 --Setup
