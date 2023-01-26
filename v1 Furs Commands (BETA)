@@ -4,8 +4,9 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 	Duration = 15;
 	Icon = "rbxassetid://9417142960";
 })
-local NewestVersion = 0.1
-local ScriptVersion = 0.1
+local NewestVersion = 1
+local ScriptVersion = 1
+local ScriptVersionCreationDate = "2023/1/21"
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Script is loading..";
 	Text = "Please wait..";
@@ -1476,14 +1477,43 @@ end
 local function GetNewestVersion()
 	NotificationSound:Play()
 	MakeNewTextPrint("Newest version is V"..NewestVersion)
-	MakeNewTextPrint("You are currently using V"..ScriptVersion)
+	MakeNewTextPrint("You are currently using V"..ScriptVersion.." ("..ScriptVersionCreationDate..")")
 	SendNotification("Newest version", "V"..NewestVersion, 5, "Okay")
 	wait(2.5)
 	if ScriptVersion == NewestVersion then
-		SendNotification("Current script version", "You are up to date! (V"..ScriptVersion..")", 5, "Okay")
+		SendNotification("Current script version", "You are up to date! (V"..ScriptVersion.."["..ScriptVersionCreationDate.."])", 5, "Okay")
 	else
-		SendNotification("Current script version", "V"..ScriptVersion, 5, "Okay")
+		SendNotification("Current script version", "V"..ScriptVersion.."["..ScriptVersionCreationDate.."])", 5, "Okay")
 	end
+end
+
+local function HowGetGithub()
+	NotificationSound:Play()
+	SendNotification("How to see steps", "Press F9 on your keyboard or type '/e console' in chat or go to 'PRINTS' in your command ui", 30, "Okay")
+	Print([[
+		How to get newest version:
+		Step 1; Go to github.com in your browser (Create an account if needed)
+		Step 2; Go to the top left corner and type in "0110" and click "All Github"
+		Step 3; Move down to the bottom left and click "Users"
+		Step 4; Click on user named "0110Doe"
+		Step 5; Click "Repositories" then click "Furs-Commands-Roblox-Script"
+		Step 6; Scroll down until you see the newest version that is showed (Make sure it doesnt say (old [Test])
+		Step 7; Click on the newest version file and press "Raw"
+		Step 8; Go to the search bar of your browser and copy the link (Ctrl+C)
+		Step 9; Move to your executor and type in "loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()"
+		Step 10; Go back to roblox and say "/e rejoin" and then execute the newest version!
+	]])
+	MakeNewTextPrint("How to get newest version:")
+	MakeNewTextPrint("Step 1; Go to github.com in your browser (Create an account if needed)")
+	MakeNewTextPrint("Step 2; Go to the top left corner and type in "0110" and click 'All Github'")
+	MakeNewTextPrint("Step 3; Move down to the bottom left and click 'Users'")
+	MakeNewTextPrint("Step 4; Click on user named '0110Doe'")
+	MakeNewTextPrint("Step 5; Click 'Repositories' then click 'Furs-Commands-Roblox-Script'")
+	MakeNewTextPrint("Step 6; Scroll down until you see the newest version that is showed (Make sure it doesnt say (old [Test])")
+	MakeNewTextPrint("Step 7; Click on the newest version file and click 'Raw'")
+	MakeNewTextPrint("Step 8; Go to the search bar of your browser and copy the link (Ctrl+C)")
+	MakeNewTextPrint("Step 9; Move to your executor and type in 'loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()')
+	MakeNewTextPrint("Step 10; Go back to roblox and say '/e rejoin' and then execute the newest version!")
 end
 
 local function Headsit(PlayerTo)
@@ -1550,6 +1580,10 @@ end
 
 --Chatted commands
 Player.Chatted:Connect(function(message)
+	if message == "/e howgetnewversion" then
+		HowGetGithub()	
+	end
+
 	if message == "/e rejoin" then
 		local TeleportService = game:GetService("TeleportService")
 		TeleportService:Teleport(game.PlaceId, Player)
