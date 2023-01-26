@@ -1552,7 +1552,7 @@ end
 Player.Chatted:Connect(function(message)
 	if message == "/e rejoin" then
 		local TeleportService = game:GetService("TeleportService")
-		TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, Player)
+		TeleportService:Teleport(game.PlaceId, Player)
 	end
 	
 	if message == "/e fixgui" then
