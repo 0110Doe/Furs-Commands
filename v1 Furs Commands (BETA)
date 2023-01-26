@@ -1495,7 +1495,7 @@ local function HowGetGithub()
 		Step 1; Go to github.com in your browser (Create an account if needed)
 		Step 2; Go to the top left corner and type in "0110" and click "All Github"
 		Step 3; Move down to the bottom left and click "Users"
-		Step 4; Click on user named "0110Doe"
+		Step 4; Click on user named "Puro paperbox (0110Doe)"
 		Step 5; Click "Repositories" then click "Furs-Commands-Roblox-Script"
 		Step 6; Scroll down until you see the newest version that is showed (Make sure it doesnt say (old [Test])
 		Step 7; Click on the newest version file and press "Raw"
@@ -1507,7 +1507,7 @@ local function HowGetGithub()
 	MakeNewTextPrint("Step 1; Go to github.com in your browser (Create an account if needed)")
 	MakeNewTextPrint("Step 2; Go to the top left corner and type in "0110" and click 'All Github'")
 	MakeNewTextPrint("Step 3; Move down to the bottom left and click 'Users'")
-	MakeNewTextPrint("Step 4; Click on user named '0110Doe'")
+	MakeNewTextPrint("Step 4; Click on user named 'Puro paperbox (0110Doe)'")
 	MakeNewTextPrint("Step 5; Click 'Repositories' then click 'Furs-Commands-Roblox-Script'")
 	MakeNewTextPrint("Step 6; Scroll down until you see the newest version that is showed (Make sure it doesnt say (old [Test])")
 	MakeNewTextPrint("Step 7; Click on the newest version file and click 'Raw'")
