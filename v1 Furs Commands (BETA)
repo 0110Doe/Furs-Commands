@@ -21,6 +21,7 @@ local Player = game.Players.LocalPlayer
 local Players = game.Players:GetPlayers()
 local WorkspaceChildren = workspace:GetChildren()
 local ReplicatedStorage = game.ReplicatedStorage
+local Camera = workspace.CurrentCamera
 local UIS = game:GetService("UserInputService")
 local Mouse = Player:GetMouse()
 local WhileWaitEvent = Instance.new("BindableEvent", Player)
@@ -41,6 +42,7 @@ local Funnying4 = false
 local Spinning = false
 local Tpwalking = false
 local IsTyping = false
+local IsDead = false
 local spawnpos = nil
 
 local cmds ={
@@ -62,6 +64,17 @@ local cmds ={
 	"/e normalhead {CLIENT}",
 	"/e removehats {CLIENT}",
 	"/e restorehats {CLIENT}",
+	"/e hidemain {CLIENT}",
+	"/e showmain {CLIENT}",
+	"/e firstperson {CLIENT}",
+	"/e unfirstperson {CLIENT}",
+	"/e nightvision {CLIENT}",
+	"/e unnightvision {CLIENT}",
+	"/e day {CLIENT}",
+	"/e night {CLIENT",
+	"/e light {CLIENT}",
+	"/e fov [Number between 1-120 (70 defult)] {CLIENT}",
+	"/e brightness [Number between 1-10000 (1 defult) {CLIENT}",
 	"Shift+P [Enables freecam] {CLIENT}",
 	"ServerSided Commands:",
 	"/e fixgui (To position the ui if lost)",
@@ -262,6 +275,8 @@ local DiedSound = Instance.new("Sound", Player)
 DiedSound.SoundId = "rbxassetid://6598984092"
 local ErrorSound = Instance.new("Sound", Player)
 ErrorSound.SoundId = "rbxassetid://9066063340"
+local NightVisionSound = Instance.new("Sound", Player)
+NightVisionSound.SoundId = "rbxassetid://376178316"
 local LoadedSound = Instance.new("Sound", Player)
 LoadedSound.SoundId = "rbxassetid://7383525713"
 
@@ -940,7 +955,7 @@ local function Float(State)
 	Floating = State
 	local Lower = false
 	local Higher = false
-	while Floating == true do
+	while Floating == true and IsDead == false do
 		local Part = Instance.new("Part")
 		Part.Parent = workspace
 		Part.Position = Torso.Position
@@ -988,7 +1003,7 @@ end
 local function Follow(State, Followed)
 	NotificationSound:Play()
 	Following = State
-	while Following == true do
+	while Following == true and IsDead == false do
 		wait()
 		Player.Character.Humanoid:MoveTo(Followed.Position, Player.Character)
 	end
@@ -997,7 +1012,7 @@ end
 local function FollowNPC(State, Followed)
 	NotificationSound:Play()
 	Following = State
-	while Following == true do
+	while Following == true and IsDead == false do
 		wait()
 		Player.Character.Humanoid:MoveTo(Followed.Position, Player.Character)
 	end
@@ -1094,20 +1109,20 @@ local function Noclip(State)
 	end
 
 	if R15 == true then
-		RightHand.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		UpperRightArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		LowerRightArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		LeftHand.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		UpperLeftArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		LowerLeftArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		Torso.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		LowerTorso.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		Head.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		RightHand.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		UpperRightArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		LowerRightArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		LeftHand.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		UpperLeftArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		LowerLeftArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		Torso.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		LowerTorso.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		Head.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
 	else
-		RightArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		LeftArm.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		Torso.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
-		Head.Touched:Connect(function(Part) if Nocliping == true then MakeNoCollison(Part) end end)
+		RightArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		LeftArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		Torso.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
+		Head.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
 	end
 
 	if Nocliping == false then
@@ -1133,7 +1148,7 @@ end
 local function FlyJump(State)
 	NotificationSound:Play()
 	FlyJumping = State
-	while FlyJumping == true do
+	while FlyJumping == true and IsDead == false do
 		wait()
 		if Player.Character.Humanoid.Jump == true then
 			local Part = Instance.new("Part")
@@ -1150,7 +1165,7 @@ end
 
 local function SetSpawn()
 	NotificationSound:Play()
-	spawnpos = getRoot(Char).CFrame
+	spawnpos = getRoot(Player.Character).CFrame
 	SendNotification('Spawn Point','Spawn point created at '..tostring(spawnpos))
 end
 
@@ -1176,7 +1191,7 @@ local function Fly(State, Number)
 	end
 	Flying = State
 
-	if Flying == true then
+	if Flying == true and IsDead == false then
 		if a == 1 then
 			repeat wait() until lplayer and lplayer.Character and lplayer.Character:FindFirstChild('HumanoidRootPart') and lplayer.Character:FindFirstChild('Humanoid')
 			repeat wait() until Mouse
@@ -1263,7 +1278,7 @@ local function Fly(State, Number)
 				noclip = not noclip
 			end
 		end)
-		while Flying == true do
+		while Flying == true and IsDead == false do
 			player = game.Players.LocalPlayer
 			character = player.Character
 			if noclip then
@@ -1286,7 +1301,7 @@ end
 local function Funny(State)
 	Funnying = State
 	FunnyNotificationSound:Play()
-	while Funnying == true do
+	while Funnying == true and IsDead == false do
 		wait()
 		if R15 == true then
 			Torso.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
@@ -1315,7 +1330,7 @@ end
 local function Funny2(State)
 	FunnyNotificationSound:Play()
 	Funnying2 = State
-	while Funnying2 == true do
+	while Funnying2 == true and IsDead == false do
 		for i=1,40 do
 			wait()
 			Head.Size=Head.Size+Vector3.new(0.1,0.1,0.1)
@@ -1352,7 +1367,7 @@ end
 local function Funny3(State, Number)
 	FunnyNotificationSound:Play()
 	Funnying3 = State
-	while Funnying3 == true do
+	while Funnying3 == true and IsDead == false do
 		wait()
 		Torso.Orientation = Vector3.new(Number,0,0)
 	end
@@ -1361,22 +1376,16 @@ end
 local function Spin(State, Number)
 	NotificationSound:Play()
 	Spinning = State
-	while Spinning == true do
+	while Spinning == true and IsDead == false do
 		wait()
-		if Player.Character:FindFirstChild("Torso") then
-			local Torso = Player.Character:FindFirstChild("Torso")
-			Torso.CFrame = Torso.CFrame * CFrame.fromEulerAnglesXYZ(0,(Number),0)
-		else
-			local Torso = Player.Character:FindFirstChild("UpperTorso")
-			Torso.CFrame = Torso.CFrame * CFrame.fromEulerAnglesXYZ(0,(Number),0)
-		end
+		getRoot(Player.Character).CFrame = getRoot(Player.Character).CFrame * CFrame.fromEulerAnglesXYZ(0,(Number),0)
 	end
 end
 
 local function HideGui(State)
 	NotificationSound:Play()
 	local PlayerGui = Player.PlayerGui:GetChildren()
-	if State == true then
+	if State == true and IsDead == false then
 		for i=1,#PlayerGui do
 			if PlayerGui[i]:IsA("ScreenGui") then
 				if PlayerGui[i].Name ~= "Chat" then
@@ -1413,7 +1422,7 @@ local function Headsit(PlayerTo)
 		PlayerTo.Character.UpperTorso.Anchored = false
 	end
 	
-	while Player.Character.Humanoid.Sit == true do
+	while Player.Character.Humanoid.Sit == true and IsDead == false do
 		wait()
 		if Player.Character.Humanoid.Sit == false then
 			Weld:Remove()
@@ -1439,7 +1448,7 @@ local function HeadStand(PlayerTo)
 		PlayerTo.Character.UpperTorso.Anchored = false
 	end
 	
-	while Player.Character.Humanoid.PlatformStand == true do
+	while Player.Character.Humanoid.PlatformStand == true and IsDead == false do
 		wait()
 		if Player.Character.Humanoid.Jump == true then
 			Weld:Remove()
@@ -1458,7 +1467,7 @@ local function Tpwalk(State, Number)
 	Tpwalking = State
 
 	local hb = RunService.Heartbeat
-	while Tpwalking == true do
+	while Tpwalking == true and IsDead == false do
 		wait()
 		local delta = hb:Wait()
 		if Char.Humanoid.MoveDirection.Magnitude > 0 then
@@ -1471,7 +1480,7 @@ end
 local function Funny4(State, Number)
 	NotificationSound:Play()
 	Funnying4 = State
-	while Funnying4 == true do
+	while Funnying4 == true and IsDead == false do
 		wait()
 		if Player.Character:FindFirstChild("Torso") then
 			local Torso = Player.Character:FindFirstChild("Torso")
@@ -1483,9 +1492,97 @@ local function Funny4(State, Number)
 	end
 end
 
+local DefultAtmoColor
+local DefultAtmoDecay
+local DefultAtmoDensity
+local DefultFogColor
+local DefultFogEnd
+if game.Lighting:FindFirstChildOfClass("Atmosphere") then
+	DefultAtmoColor = game.Lighting:FindFirstChildOfClass("Atmosphere").Color
+	DefultAtmoDecay = game.Lighting:FindFirstChildOfClass("Atmosphere").Decay
+	DefultAtmoDensity = game.Lighting:FindFirstChildOfClass("Atmosphere").Density
+else
+	DefultFogColor = game.Lighting.FogColor
+	DefultFogEnd = game.Lighting.FogEnd
+end
+local DefultBrightness = game.Lighting.Brightness
+local DefultAmbientColor = game.Lighting.Ambient
+local DefultOutdoorAmbient = game.Lighting.OutdoorAmbient
 local RespawnPos = Instance.new("StringValue", nil)
 --Chatted commands
 Player.Chatted:Connect(function(message)
+	if message == "/e day" then
+		NotificationSound:Play()
+		game.Lighting.ClockTime = 14
+	elseif message == "/e night" then
+		NotificationSound:Play()
+		game.Lighting.ClockTime = 0
+	end
+	
+	if message == "/e light" then
+		NotificationSound:Play()
+		local Light = Instance.new("PointLight", Player.Character.HumanoidRootPart)
+		Light.Brightness = 2
+		Light.Range = 60
+	end
+	
+	if message == "/e nightvision" then
+		NightVisionSound:Play()
+		game.Lighting.Brightness = 5
+		game.Lighting.Ambient = Color3.fromRGB(0, 124, 21)
+		game.Lighting.OutdoorAmbient = Color3.fromRGB(0, 124, 21)
+		
+		if game.Lighting:FindFirstChildOfClass("Atmosphere") then
+			game.Lighting:FindFirstChildOfClass("Atmosphere").Color = Color3.new(0,0,0)
+			game.Lighting:FindFirstChildOfClass("Atmosphere").Decay = Color3.new(0,0,0)
+			game.Lighting:FindFirstChildOfClass("Atmosphere").Density = 1
+			for i=1,10 do
+				wait()
+				game.Lighting:FindFirstChildOfClass("Atmosphere").Density=game.Lighting:FindFirstChildOfClass("Atmosphere").Density-0.1
+			end
+		else
+			game.Lighting.FogColor = Color3.fromRGB(0,0,0)
+			game.Lighting.FogEnd = 0
+			for i=1,100 do
+				wait()
+				game.Lighting.FogEnd=game.Lighting.FogEnd+10
+			end
+			game.Lighting.FogEnd = DefultFogEnd
+		end
+	elseif message == "/e unnightvision" then
+		NightVisionSound:Play()
+		game.Lighting.Brightness = DefultBrightness
+		game.Lighting.Ambient = DefultAmbientColor
+		game.Lighting.OutdoorAmbient = DefultOutdoorAmbient
+		
+		if game.Lighting:FindFirstChildOfClass("Atmosphere") then
+			game.Lighting:FindFirstChildOfClass("Atmosphere").Color = Color3.new(0,0,0)
+			game.Lighting:FindFirstChildOfClass("Atmosphere").Decay = Color3.new(0,0,0)
+			game.Lighting:FindFirstChildOfClass("Atmosphere").Density = 1
+			for i=1,10 do
+				wait()
+				game.Lighting:FindFirstChildOfClass("Atmosphere").Density=game.Lighting:FindFirstChildOfClass("Atmosphere").Density-0.1
+			end
+		else
+			game.Lighting.FogColor = Color3.fromRGB(0,0,0)
+			game.Lighting.FogEnd = 0
+			for i=1,100 do
+				wait()
+				game.Lighting.FogEnd=game.Lighting.FogEnd+10
+			end
+			game.Lighting.FogEnd = DefultFogEnd
+		end
+	end
+	
+	if message == "/e hidemain" then
+		NotificationSound:Play()
+		MainGui.Enabled = false
+		SendNotification("Note", "Type /e showmain to make ui visible", 5, "Okay")
+	elseif message == "/e showmain" then
+		NotificationSound:Play()
+		MainGui.Enabled = true
+	end
+	
 	if message == "/e newestversion" then
 		NotificationSound:Play()
 		MakeNewTextPrint("Newest version is V"..NewestVersion)
@@ -1495,7 +1592,7 @@ Player.Chatted:Connect(function(message)
 		if ScriptVersion == NewestVersion then
 			SendNotification("Current script version", "You are up to date! (V"..ScriptVersion.."["..ScriptVersionCreationDate.."])", 5, "Okay")
 		else
-			SendNotification("Current script version", "V"..ScriptVersion.."["..ScriptVersionCreationDate.."])", 5, "Okay")
+			SendNotification("Current script version", "(V"..ScriptVersion.."["..ScriptVersionCreationDate.."] {type /e getnew to get newest version,})", 5, "Okay")
 		end
 	end
 	
@@ -1508,9 +1605,12 @@ Player.Chatted:Connect(function(message)
 		while IsRespawning == true do
 			wait()
 			Player.CharacterAdded:Connect(function()
-				IsRespawning = false
 				wait(0.1)
-				getRoot(Player.Character).CFrame = RespawnPos
+				if IsRespawning == true then
+					IsRespawning = false
+					getRoot(Player.Character).CFrame = RespawnPos
+					RespawnPos = nil
+				end
 			end)
 		end
 		SendNotification("Respawned", "You may continue of whatever you were doing", 5, "Okay")
@@ -1647,6 +1747,7 @@ Player.Chatted:Connect(function(message)
 	end
 	
 	if message == "/e sit" then
+		NotificationSound:Play()
 		Char.Humanoid.Sit = true
 	end
 	
@@ -1686,6 +1787,14 @@ Player.Chatted:Connect(function(message)
 		end
 	end
 	
+	if message == "/e firstperson" then
+		NotificationSound:Play()
+		Player.CameraMode = Enum.CameraMode.LockFirstPerson
+	elseif message == "/e unfirstperson" then
+		NotificationSound:Play()
+		Player.CameraMode = Enum.CameraMode.Classic
+	end
+	
 	for i=1,10000 do
 		if message == "/e speed "..i then
 			NotificationSound:Play()
@@ -1703,6 +1812,12 @@ Player.Chatted:Connect(function(message)
 			Tpwalk(true, i)
 		elseif message == "/e funny4 "..i then
 			Funny4(true, i)
+		elseif message == "/e fov "..i then
+			NotificationSound:Play()
+			Camera.FieldOfView = i
+		elseif message == "/e brightness "..i then
+			NotificationSound:Play()
+			game.Lighting.Brightness = i
 		end
 	end
 	
@@ -1786,6 +1901,16 @@ local function StopCommands()
 	Spin(false, 0)
 end
 
+Player.Character.Humanoid.Died:Connect(function()
+	IsDead = true
+	while IsDead == true do
+		wait()
+		Player.CharacterAdded:Connect(function()
+			IsDead = false
+		end)
+	end
+end)
+
 Player.CharacterRemoving:Connect(function()
 	SendNotification("Please wait,", "Stuff are loading..", 5, "Okay")
 	StopCommands()
@@ -1826,7 +1951,6 @@ Player.CharacterRemoving:Connect(function()
 	end
 
 	if spawnpos ~= nil then
-		wait(2)
 		getRoot(Player.Character).CFrame = spawnpos
 	end
 end)
