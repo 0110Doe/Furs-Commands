@@ -90,12 +90,14 @@ local cmds ={
 	"/e tpwalk [Number between 1-10000]",
 	"/e untpwalk",
 	"/e rejoin",
+	"/e respawn",
 }
 
 --Setup
 local MainGui = Instance.new("ScreenGui")
 MainGui.Parent = Player.PlayerGui
 MainGui.ResetOnSpawn = false
+MainGui.Enabled = false
 local MainFrame = Instance.new("Frame", MainGui)
 MainFrame.Position = UDim2.new(0.179, 0,0.172, 0)
 MainFrame.Size = UDim2.new(0.641, 0,0.656, 0)
@@ -309,37 +311,6 @@ elseif Char:FindFirstChild("Torso") then
 	LeftLeg = Char["Left Leg"]
 	R15 = false
 end
-
---Player.CharacterRemoving:Connect(function()
---	repeat wait() until Player.CharacterAdded
---	Char = Player.Character
---	Head = Char.Head
-
---	if Char:FindFirstChild("UpperTorso") then
---		Torso = Char.UpperTorso
---		LowerTorso = Char.LowerTorso
---		UpperLeftArm = Char.LeftUpperArm
---		LowerLeftArm = Char.LeftLowerArm
---		LeftHand = Char.LeftHand
---		UpperRightArm = Char.RightUpperArm
---		LowerRightArm = Char.RightLowerArm
---		RightHand = Char.RightHand
---		UpperLeftLeg = Char.LeftUpperLeg
---		LowerLeftLeg = Char.LeftLowerLeg
---		LeftFoot = Char.LeftFoot
---		UpperRightLeg = Char.RightUpperLeg
---		LowerRightLeg = Char.RightLowerLeg
---		RightFoot = Char.RightFoot
---		R15 = true
---	elseif Char:FindFirstChild("Torso") then
---		Torso = Char.Torso
---		RightArm = Char["Right Arm"]
---		LeftArm = Char["Left Arm"]
---		RightLeg =  Char["Right Leg"]
---		LeftLeg = Char["Left Leg"]
---		R15 = false
---	end
---end)
 
 --unknown functions
 MinimizeButton.MouseButton1Click:Connect(function()
@@ -1019,7 +990,7 @@ local function Follow(State, Followed)
 	Following = State
 	while Following == true do
 		wait()
-		Char.Humanoid:MoveTo(Followed.Position, Char)
+		Player.Character.Humanoid:MoveTo(Followed.Position, Player.Character)
 	end
 end
 
@@ -1028,7 +999,7 @@ local function FollowNPC(State, Followed)
 	Following = State
 	while Following == true do
 		wait()
-		Char.Humanoid:MoveTo(Followed.Position, Char)
+		Player.Character.Humanoid:MoveTo(Followed.Position, Player.Character)
 	end
 end
 
@@ -1066,23 +1037,6 @@ local function FindWorkspace()
 	end
 end
 
-local function ClearPrints()
-	NotificationSound:Play()
-	local C = PrintsFrame:GetChildren()
-	local Total = 0
-	for i=1,#C do
-		wait()
-		if C[i].Name == "TextLabel" then
-			C[i]:Remove()
-			Total=Total+1
-		end
-	end
-	print("Removed "..Total.." prints!")
-	MakeNewTextPrint("Removed "..Total.." prints!")
-	wait(5)
-	PrintsFrame:FindFirstChild("TextLabel"):Remove()
-end
-
 local function FoundMoreXray(Model)
 	local ModelChildren = Model:GetChildren()
 	for i=1,#ModelChildren do
@@ -1100,23 +1054,6 @@ local function FoundMoreXray(Model)
 	end
 end
 
-local function PartXray()
-	NotificationSound:Play()
-	for i=1,#WorkspaceChildren do
-		if WorkspaceChildren[i]:IsA("Part") then
-			if WorkspaceChildren[i].Name ~= "HumanoidRootPart" then
-				WorkspaceChildren[i].Transparency = 0.5
-			end
-		end
-		local OtherChildren = WorkspaceChildren[i]:GetChildren()
-		local Num = 0
-		for i=1,#OtherChildren do Num=Num+1 end
-		if Num > 1 then
-			FoundMoreXray(WorkspaceChildren[i])
-		end
-	end
-end
-
 local function FoundMoreUnxray(Model)
 	local ModelChildren = Model:GetChildren()
 	for i=1,#ModelChildren do
@@ -1130,23 +1067,6 @@ local function FoundMoreUnxray(Model)
 		for i=1,#OtherChildren do Num=Num+1 end
 		if Num > 1 then
 			FoundMoreUnxray(ModelChildren[i])
-		end
-	end
-end
-
-local function UnPartXray()
-	NotificationSound:Play()
-	for i=1,#WorkspaceChildren do
-		if WorkspaceChildren[i]:IsA("Part") then
-			if WorkspaceChildren[i].Name ~= "HumanoidRootPart" then
-				WorkspaceChildren[i].Transparency = 0
-			end
-		end
-		local OtherChildren = WorkspaceChildren[i]:GetChildren()
-		local Num = 0
-		for i=1,#OtherChildren do Num=Num+1 end
-		if Num > 1 then
-			FoundMoreUnxray(WorkspaceChildren[i])
 		end
 	end
 end
@@ -1207,12 +1127,7 @@ end
 
 local function TeleportTo(PlayerTo)
 	NotificationSound:Play()
-	local Weld = Instance.new("Weld", Char)
-	PlayerTo.Character.Torso.Anchored = true
-	Weld.Part0 = PlayerTo.Character.Torso
-	Weld.Part1 = Torso
-	PlayerTo.Character.Torso.Anchored = false
-	Weld:Remove()
+	getRoot(Player.Character).CFrame = PlayerTo.Character.HumanoidRootPart
 end
 
 local function FlyJump(State)
@@ -1220,7 +1135,7 @@ local function FlyJump(State)
 	FlyJumping = State
 	while FlyJumping == true do
 		wait()
-		if Char.Humanoid.Jump == true then
+		if Player.Character.Humanoid.Jump == true then
 			local Part = Instance.new("Part")
 			Part.Parent = workspace
 			Part.Transparency = 1
@@ -1448,7 +1363,13 @@ local function Spin(State, Number)
 	Spinning = State
 	while Spinning == true do
 		wait()
-		Torso.CFrame = Torso.CFrame * CFrame.fromEulerAnglesXYZ(0,(Number),0)
+		if Player.Character:FindFirstChild("Torso") then
+			local Torso = Player.Character:FindFirstChild("Torso")
+			Torso.CFrame = Torso.CFrame * CFrame.fromEulerAnglesXYZ(0,(Number),0)
+		else
+			local Torso = Player.Character:FindFirstChild("UpperTorso")
+			Torso.CFrame = Torso.CFrame * CFrame.fromEulerAnglesXYZ(0,(Number),0)
+		end
 	end
 end
 
@@ -1474,59 +1395,27 @@ local function HideGui(State)
 	end
 end
 
-local function GetNewestVersion()
-	NotificationSound:Play()
-	MakeNewTextPrint("Newest version is V"..NewestVersion)
-	MakeNewTextPrint("You are currently using V"..ScriptVersion.." ("..ScriptVersionCreationDate..")")
-	SendNotification("Newest version", "V"..NewestVersion, 5, "Okay")
-	wait(2.5)
-	if ScriptVersion == NewestVersion then
-		SendNotification("Current script version", "You are up to date! (V"..ScriptVersion.."["..ScriptVersionCreationDate.."])", 5, "Okay")
-	else
-		SendNotification("Current script version", "V"..ScriptVersion.."["..ScriptVersionCreationDate.."])", 5, "Okay")
-	end
-end
-
-local function HowGetGithub()
-	NotificationSound:Play()
-	SendNotification("How to see steps", "Press F9 on your keyboard or type '/e console' in chat or go to 'PRINTS' in your command ui", 30, "Okay")
-	Print([[
-		How to get newest version:
-		Step 1; Go to github.com in your browser (Create an account if needed)
-		Step 2; Go to the top left corner and type in "0110" and click "All Github"
-		Step 3; Move down to the bottom left and click "Users"
-		Step 4; Click on user named "Puro paperbox (0110Doe)"
-		Step 5; Click "Repositories" then click "Furs-Commands-Roblox-Script"
-		Step 6; Scroll down until you see the newest version that is showed (Make sure it doesnt say (old [Test])
-		Step 7; Click on the newest version file and press "Raw"
-		Step 8; Go to the search bar of your browser and copy the link (Ctrl+C)
-		Step 9; Move to your executor and type in "loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()"
-		Step 10; Go back to roblox and say "/e rejoin" and then execute the newest version!
-	]])
-	MakeNewTextPrint("How to get newest version:")
-	MakeNewTextPrint("Step 1; Go to github.com in your browser (Create an account if needed)")
-	MakeNewTextPrint("Step 2; Go to the top left corner and type in "0110" and click 'All Github'")
-	MakeNewTextPrint("Step 3; Move down to the bottom left and click 'Users'")
-	MakeNewTextPrint("Step 4; Click on user named 'Puro paperbox (0110Doe)'")
-	MakeNewTextPrint("Step 5; Click 'Repositories' then click 'Furs-Commands-Roblox-Script'")
-	MakeNewTextPrint("Step 6; Scroll down until you see the newest version that is showed (Make sure it doesnt say (old [Test])")
-	MakeNewTextPrint("Step 7; Click on the newest version file and click 'Raw'")
-	MakeNewTextPrint("Step 8; Go to the search bar of your browser and copy the link (Ctrl+C)")
-	MakeNewTextPrint("Step 9; Move to your executor and type in 'loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()')
-	MakeNewTextPrint("Step 10; Go back to roblox and say '/e rejoin' and then execute the newest version!")
-end
-
 local function Headsit(PlayerTo)
 	NotificationSound:Play()
-	Char.Humanoid.Sit = true
-	local Weld = Instance.new("Weld", Torso)
-	Weld.Part0 = Torso
+	Player.Character.Humanoid.Sit = true
+	if PlayerTo.Character:FindFirstChild("Torso") then
+		PlayerTo.Character.Torso.Anchored = true
+	else
+		PlayerTo.Character.UpperTorso.Anchored = true
+	end
+	local Weld = Instance.new("Weld", Player.Character.HumanoidRootPart)
+	Weld.Part0 = Player.Character.HumanoidRootPart
 	Weld.Part1 = PlayerTo.Character.Head
 	Weld.C1 = CFrame.fromMatrix(Vector3.new(0,0.2,0.7), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
-
-	while Char.Humanoid.Sit == true do
+	if PlayerTo.Character:FindFirstChild("Torso") then
+		PlayerTo.Character.Torso.Anchored = false
+	else
+		PlayerTo.Character.UpperTorso.Anchored = false
+	end
+	
+	while Player.Character.Humanoid.Sit == true do
 		wait()
-		if Char.Humanoid.Sit == false then
+		if Player.Character.Humanoid.Sit == false then
 			Weld:Remove()
 		end
 	end
@@ -1534,17 +1423,27 @@ end
 
 local function HeadStand(PlayerTo)
 	NotificationSound:Play()
-	Char.Humanoid.PlatformStand = true
+	Player.Character.Humanoid.PlatformStand = true
+	if PlayerTo.Character:FindFirstChild("Torso") then
+		PlayerTo.Character.Torso.Anchored = true
+	else
+		PlayerTo.Character.UpperTorso.Anchored = true
+	end
 	local Weld = Instance.new("Weld", Torso)
 	Weld.Part0 = Torso
 	Weld.Part1 = PlayerTo.Character.Head
 	Weld.C1 = CFrame.fromMatrix(Vector3.new(0,3.5,0), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
-
-	while Char.Humanoid.PlatformStand == true do
+	if PlayerTo.Character:FindFirstChild("Torso") then
+		PlayerTo.Character.Torso.Anchored = false
+	else
+		PlayerTo.Character.UpperTorso.Anchored = false
+	end
+	
+	while Player.Character.Humanoid.PlatformStand == true do
 		wait()
-		if Char.Humanoid.Jump == true then
+		if Player.Character.Humanoid.Jump == true then
 			Weld:Remove()
-			Char.Humanoid.PlatformStand = false
+			Player.Character.Humanoid.PlatformStand = false
 		end
 	end
 end
@@ -1557,7 +1456,7 @@ local function Tpwalk(State, Number)
 	local Speed
 	NotificationSound:Play()
 	Tpwalking = State
-	
+
 	local hb = RunService.Heartbeat
 	while Tpwalking == true do
 		wait()
@@ -1574,36 +1473,88 @@ local function Funny4(State, Number)
 	Funnying4 = State
 	while Funnying4 == true do
 		wait()
-		Torso.CFrame = Torso.CFrame * CFrame.fromEulerAnglesXYZ((Number),(Number),(Number))
+		if Player.Character:FindFirstChild("Torso") then
+			local Torso = Player.Character:FindFirstChild("Torso")
+			Torso.CFrame = Torso.CFrame * CFrame.fromEulerAnglesXYZ((Number),(Number),(Number))
+		else
+			local Torso = Player.Character:FindFirstChild("UpperTorso")
+			Torso.CFrame = Torso.CFrame * CFrame.fromEulerAnglesXYZ((Number),(Number),(Number))
+		end
 	end
 end
 
+local RespawnPos = Instance.new("StringValue", nil)
 --Chatted commands
 Player.Chatted:Connect(function(message)
-	if message == "/e howgetnewversion" then
-		HowGetGithub()	
+	if message == "/e newestversion" then
+		NotificationSound:Play()
+		MakeNewTextPrint("Newest version is V"..NewestVersion)
+		MakeNewTextPrint("You are currently using V"..ScriptVersion.." ("..ScriptVersionCreationDate..")")
+		SendNotification("Newest version", "V"..NewestVersion, 5, "Okay")
+		wait(2.5)
+		if ScriptVersion == NewestVersion then
+			SendNotification("Current script version", "You are up to date! (V"..ScriptVersion.."["..ScriptVersionCreationDate.."])", 5, "Okay")
+		else
+			SendNotification("Current script version", "V"..ScriptVersion.."["..ScriptVersionCreationDate.."])", 5, "Okay")
+		end
+	end
+	
+	if message == "/e respawn" then
+		DiedSound:Play()
+		RespawnPos = getRoot(Player.Character).CFrame
+		getRoot(Player.Character).CFrame = CFrame.new(Vector3.new(0,-470,0))
+		wait(1)
+		local IsRespawning = true
+		while IsRespawning == true do
+			wait()
+			Player.CharacterAdded:Connect(function()
+				IsRespawning = false
+				wait(0.1)
+				getRoot(Player.Character).CFrame = RespawnPos
+			end)
+		end
+		SendNotification("Respawned", "You may continue of whatever you were doing", 5, "Okay")
+	end
+	
+	if message == "/e getnew" then
+		NotificationSound:Play()
+		SendNotification("How to see steps", "Press F9 on your keyboard or type '/e console' in chat or go to 'PRINTS' in your command ui", 30, "Okay")
+		print([[
+		How to get newest version:
+		Step 1; Go to github.com in your browser (Create an account if needed)
+		Step 2; Go to the top left corner and type in "0110" and click "All Github"
+		Step 3; Move down to the bottom left and click "Users"
+		Step 4; Click on user named "Puro paperbox (0110Doe)"
+		Step 5; Click "Repositories" then click "Furs-Commands-Roblox-Script"
+		Step 6; Scroll down until you see the newest version that is showed (Make sure it doesnt say (old [Test])
+		Step 7; Click on the newest version file and press "Raw"
+		Step 8; Go to the search bar of your browser and copy the link (Ctrl+C)
+		Step 9; Move to your executor and type in "loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()"
+		Step 10; Go back to roblox and say "/e rejoin" and then execute the newest version!
+	]])
+		MakeNewTextPrint("How to get newest version:")
+		MakeNewTextPrint("Step 1; Go to github.com in your browser (Create an account if needed)")
+		MakeNewTextPrint("Step 2; Go to the top left corner and type in '0110' and click 'All Github'")
+		MakeNewTextPrint("Step 3; Move down to the bottom left and click 'Users'")
+		MakeNewTextPrint("Step 4; Click on user named 'Puro paperbox (0110Doe)'")
+		MakeNewTextPrint("Step 5; Click 'Repositories' then click 'Furs-Commands-Roblox-Script'")
+		MakeNewTextPrint("Step 6; Scroll down until you see the newest version that is showed (Make sure it doesnt say (old [Test])")
+		MakeNewTextPrint("Step 7; Click on the newest version file and click 'Raw'")
+		MakeNewTextPrint("Step 8; Go to the search bar of your browser and copy the link (Ctrl+C)")
+		MakeNewTextPrint("Step 9; Move to your executor and type in 'loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()")
+		MakeNewTextPrint("Step 10; Go back to roblox and say '/e rejoin' and then execute the newest version!")
 	end
 
 	if message == "/e rejoin" then
 		local TeleportService = game:GetService("TeleportService")
 		TeleportService:Teleport(game.PlaceId, Player)
 	end
-	
+
 	if message == "/e fixgui" then
 		NotificationSound:Play()
 		MainFrame.Position = UDim2.new(0.5,0,0.5,0)
 	end
-
-	if message == "/e newestversion" then
-		GetNewestVersion()
-	end
-
-	if message == "/e hidegui" then
-		HideGui(true)
-	elseif message == "/e showgui" then
-		HideGui(false)
-	end
-
+	
 	if message == "/e bighead" then
 		NotificationSound:Play()
 		Head.Size = Vector3.new(5,5,5)
@@ -1614,25 +1565,7 @@ Player.Chatted:Connect(function(message)
 		NotificationSound:Play()
 		Head.Size = Vector3.new(2, 1, 1)
 	end
-
-	if message == "/e removehats" then
-		RemoveHats()
-	elseif message == "/e restorehats" then
-		RestoreHats()
-	end
-
-	if message == "/e funny" then
-		Funny(true)
-	elseif message == "/e unfunny" then
-		Funny(false)
-	end
-
-	if message == "/e funny2" then
-		Funny2(true)
-	elseif message == "/e unfunny2" then
-		Funny2(false)
-	end
-
+	
 	if message == "/e toolrange" then
 		local charChildren = Char:GetChildren()
 		local FoundTool = false
@@ -1653,47 +1586,39 @@ Player.Chatted:Connect(function(message)
 			print("Please equip a tool for command to work!")
 		end
 	end
-
-	if message == "/e setspawn" then
-		SetSpawn()
-	end
-
-	if message == "/e flyjump" then
-		FlyJump(true)
-	elseif message == "/e unflyjump" then
-		FlyJump(false)
-	end
-
-	if message == "/e sit" then
-		Char.Humanoid.Sit = true
-	end
-
-	if message == "/e noclip" then
-		Noclip(true)
-	elseif message == "/e unnoclip" then
-		Noclip(false)
-	end
-
+	
 	if message == "/e partxray" then
-		PartXray()
+		NotificationSound:Play()
+		for i=1,#WorkspaceChildren do
+			if WorkspaceChildren[i]:IsA("Part") then
+				if WorkspaceChildren[i].Name ~= "HumanoidRootPart" then
+					WorkspaceChildren[i].Transparency = 0.5
+				end
+			end
+			local OtherChildren = WorkspaceChildren[i]:GetChildren()
+			local Num = 0
+			for i=1,#OtherChildren do Num=Num+1 end
+			if Num > 1 then
+				FoundMoreXray(WorkspaceChildren[i])
+			end
+		end
 	elseif message == "/e unpartxray" then
-		UnPartXray()
+		NotificationSound:Play()
+		for i=1,#WorkspaceChildren do
+			if WorkspaceChildren[i]:IsA("Part") then
+				if WorkspaceChildren[i].Name ~= "HumanoidRootPart" then
+					WorkspaceChildren[i].Transparency = 0
+				end
+			end
+			local OtherChildren = WorkspaceChildren[i]:GetChildren()
+			local Num = 0
+			for i=1,#OtherChildren do Num=Num+1 end
+			if Num > 1 then
+				FoundMoreUnxray(WorkspaceChildren[i])
+			end
+		end
 	end
-
-	if message == "/e float" then
-		Float(true)
-	elseif message == "/e unfloat" then
-		Float(false)
-	end
-
-	if message == "/e hideprints" then
-		PrintNothing(600)
-	end
-
-	if message == "/e clearprints" then
-		ClearPrints()
-	end
-
+	
 	if message == "/e findWorkspace" then
 		FindWorkspace()
 		wait(0.1)
@@ -1703,7 +1628,28 @@ Player.Chatted:Connect(function(message)
 		end
 		FoundItems=0
 	end
-
+	
+	if message == "/e clearprints" then
+		NotificationSound:Play()
+		local C = PrintsFrame:GetChildren()
+		local Total = 0
+		for i=1,#C do
+			wait()
+			if C[i].Name == "TextLabel" then
+				C[i]:Remove()
+				Total=Total+1
+			end
+		end
+		print("Removed "..Total.." prints!")
+		MakeNewTextPrint("Removed "..Total.." prints!")
+		wait(5)
+		PrintsFrame:FindFirstChild("TextLabel"):Remove()
+	end
+	
+	if message == "/e sit" then
+		Char.Humanoid.Sit = true
+	end
+	
 	for i=1,#Players do
 		if message == "/e follow "..Players[i].Name or message == "/e follow "..Players[i].DisplayName then
 			local FollowedTorso
@@ -1739,14 +1685,14 @@ Player.Chatted:Connect(function(message)
 			FollowNPC(false, nil)
 		end
 	end
-
+	
 	for i=1,10000 do
 		if message == "/e speed "..i then
 			NotificationSound:Play()
-			Char.Humanoid.WalkSpeed = i
+			Player.Character.Humanoid.WalkSpeed = i
 		elseif message == "/e jumppower "..i then
 			NotificationSound:Play()
-			Char.Humanoid.JumpPower = i
+			Player.Character.Humanoid.JumpPower = i
 		elseif message == "/e fly "..i then
 			Fly(true, i)
 		elseif message == "/e funny3 "..i then
@@ -1759,7 +1705,7 @@ Player.Chatted:Connect(function(message)
 			Funny4(true, i)
 		end
 	end
-
+	
 	if message == "/e fly" then
 		Fly(true, 2)
 	elseif message == "/e unfly" then
@@ -1772,6 +1718,56 @@ Player.Chatted:Connect(function(message)
 		Tpwalk(true, 2.5)
 	elseif message == "/e untpwalk" then
 		Tpwalk(false, 0)
+	end
+	
+	if message == "/e hidegui" then
+		HideGui(true)
+	elseif message == "/e showgui" then
+		HideGui(false)
+	end
+
+	if message == "/e removehats" then
+		RemoveHats()
+	elseif message == "/e restorehats" then
+		RestoreHats()
+	end
+
+	if message == "/e funny" then
+		Funny(true)
+	elseif message == "/e unfunny" then
+		Funny(false)
+	end
+
+	if message == "/e funny2" then
+		Funny2(true)
+	elseif message == "/e unfunny2" then
+		Funny2(false)
+	end
+
+	if message == "/e setspawn" then
+		SetSpawn()
+	end
+
+	if message == "/e flyjump" then
+		FlyJump(true)
+	elseif message == "/e unflyjump" then
+		FlyJump(false)
+	end
+
+	if message == "/e noclip" then
+		Noclip(true)
+	elseif message == "/e unnoclip" then
+		Noclip(false)
+	end
+
+	if message == "/e float" then
+		Float(true)
+	elseif message == "/e unfloat" then
+		Float(false)
+	end
+
+	if message == "/e hideprints" then
+		PrintNothing(600)
 	end
 end)
 
@@ -1793,7 +1789,15 @@ end
 Player.CharacterRemoving:Connect(function()
 	SendNotification("Please wait,", "Stuff are loading..", 5, "Okay")
 	StopCommands()
-
+	
+	local IsRespawning = true
+	while IsRespawning == true do
+		wait()
+		Player.CharacterAdded:Connect(function()
+			IsRespawning = false
+		end)
+	end
+	
 	Char = Player.Character
 	Head = Char.Head
 	if Char:FindFirstChild("UpperTorso") then
@@ -1820,10 +1824,9 @@ Player.CharacterRemoving:Connect(function()
 		LeftLeg = Char["Left Leg"]
 		R15 = false
 	end
-	
+
 	if spawnpos ~= nil then
-		wait(2)
-		print("hi")
+		wait(0.1)
 		getRoot(Player.Character).CFrame = spawnpos
 	end
 end)
@@ -1839,6 +1842,7 @@ MakeNewTextPrint("There is a total of "..TotalCommands.." commands! (V"..ScriptV
 print("There is a total of "..TotalCommands.." commands!")
 
 dragify(MainFrame)
+MainGui.Enabled = true
 
 WhileWaitEvent.Event:Connect(function()
 	while wait(1) do
