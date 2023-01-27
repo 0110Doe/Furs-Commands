@@ -1826,7 +1826,7 @@ Player.CharacterRemoving:Connect(function()
 	end
 
 	if spawnpos ~= nil then
-		wait(0.1)
+		wait(2)
 		getRoot(Player.Character).CFrame = spawnpos
 	end
 end)
