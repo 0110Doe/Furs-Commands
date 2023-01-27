@@ -41,6 +41,7 @@ local Funnying3 = false
 local Funnying4 = false
 local Spinning = false
 local Tpwalking = false
+local ConstantFoving = false
 local IsTyping = false
 local IsDead = false
 local spawnpos = nil
@@ -73,7 +74,10 @@ local cmds ={
 	"/e day {CLIENT}",
 	"/e night {CLIENT",
 	"/e light {CLIENT}",
+	"/e unlight",
 	"/e fov [Number between 1-120 (70 defult)] {CLIENT}",
+	"/e constantfov [Number between 1-120 (70 defult)] {CLIENT}",
+	"/e unconstantfov",
 	"/e brightness [Number between 1-10000 (1 defult) {CLIENT}",
 	"Shift+P [Enables freecam] {CLIENT}",
 	"ServerSided Commands:",
@@ -197,6 +201,12 @@ PrintsButton.TextStrokeTransparency = 0
 PrintsButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 PrintsButton.TextScaled = true
 local UiCorner = Instance.new("UICorner", PrintsButton)
+local NightVisionUi = Instance.new("ImageLabel", MainGui)
+NightVisionUi.Image = "rbxassetid://7552884581"
+NightVisionUi.Position = UDim2.new(0,0,-0.1,0)
+NightVisionUi.Size = UDim2.new(1.1,0,1.1,0)
+NightVisionUi.BackgroundTransparency = 1
+NightVisionUi.Visible = false
 
 --Ui PlayerData
 local PlayerName = Instance.new("TextLabel", PlayerFrame)
@@ -1492,6 +1502,17 @@ local function Funny4(State, Number)
 	end
 end
 
+local ConstantFovNumber
+local function ConstantFov(State, Number)
+	ConstantFoving = State
+	ConstantFovNumber = Number
+	
+	while ConstantFoving == true do
+		wait()
+		Camera.FieldOfView = ConstantFovNumber
+	end
+end
+
 local DefultAtmoColor
 local DefultAtmoDecay
 local DefultAtmoDensity
@@ -1513,10 +1534,10 @@ local RespawnPos = Instance.new("StringValue", nil)
 Player.Chatted:Connect(function(message)
 	if message == "/e day" then
 		NotificationSound:Play()
-		game.Lighting.ClockTime = 14
+		game.Lighting.TimeOfDay = "14:00:00"
 	elseif message == "/e night" then
 		NotificationSound:Play()
-		game.Lighting.ClockTime = 0
+		game.Lighting.TimeOfDay = "0:00:00"
 	end
 	
 	if message == "/e light" then
@@ -1524,11 +1545,17 @@ Player.Chatted:Connect(function(message)
 		local Light = Instance.new("PointLight", Player.Character.HumanoidRootPart)
 		Light.Brightness = 2
 		Light.Range = 60
+	elseif message == "/e unlight" then
+		NotificationSound:Play()
+		if Player.Character.HumanoidRootPart:FindFirstChild("PointLight") then
+			Player.Character.HumanoidRootPart.PointLight:Remove()
+		end
 	end
 	
 	if message == "/e nightvision" then
 		NightVisionSound:Play()
-		game.Lighting.Brightness = 5
+		NightVisionUi.Visible = true
+		game.Lighting.Brightness=game.Lighting.Brightness+7
 		game.Lighting.Ambient = Color3.fromRGB(0, 124, 21)
 		game.Lighting.OutdoorAmbient = Color3.fromRGB(0, 124, 21)
 		
@@ -1551,6 +1578,7 @@ Player.Chatted:Connect(function(message)
 		end
 	elseif message == "/e unnightvision" then
 		NightVisionSound:Play()
+		NightVisionUi.Visible = false
 		game.Lighting.Brightness = DefultBrightness
 		game.Lighting.Ambient = DefultAmbientColor
 		game.Lighting.OutdoorAmbient = DefultOutdoorAmbient
@@ -1608,6 +1636,7 @@ Player.Chatted:Connect(function(message)
 				wait(0.1)
 				if IsRespawning == true then
 					IsRespawning = false
+					wait(1.5)
 					getRoot(Player.Character).CFrame = RespawnPos
 					RespawnPos = nil
 				end
@@ -1818,6 +1847,8 @@ Player.Chatted:Connect(function(message)
 		elseif message == "/e brightness "..i then
 			NotificationSound:Play()
 			game.Lighting.Brightness = i
+		elseif message == "/e constantfov "..i then
+			ConstantFov(true, i)
 		end
 	end
 	
@@ -1833,6 +1864,8 @@ Player.Chatted:Connect(function(message)
 		Tpwalk(true, 2.5)
 	elseif message == "/e untpwalk" then
 		Tpwalk(false, 0)
+	elseif message == "/e unconstantfov" then
+		ConstantFov(false, 70)
 	end
 	
 	if message == "/e hidegui" then
@@ -1951,6 +1984,7 @@ Player.CharacterRemoving:Connect(function()
 	end
 
 	if spawnpos ~= nil then
+		wait(1)
 		getRoot(Player.Character).CFrame = spawnpos
 	end
 end)
