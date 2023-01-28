@@ -50,70 +50,70 @@ local spawnpos = nil
 
 local cmds ={
 	"ClientSided Commands:",
-	"/e newestversion (Reconmended to use if version is old) {CLIENT}",
-	"/e partxray {CLIENT}",
-	"/e unpartxray {CLIENT}",
-	"/e hideprints {CLIENT}",
-	"/e clearprints {CLIENT}",
-	"/e findWorkspace {CLIENT}",
-	"/e funny {CLIENT}",
-	"/e unfunny {CLIENT}",
-	"/e funny2 {CLIENT}",
-	"/e unfunny2 {CLIENT}",
-	"/e funny3 [Number between 1-10000] {CLIENT}",
-	"/e unfunny3 {CLIENT}",
-	"/e bighead {CLIENT}",
-	"/e smallhead {CLIENT}",
-	"/e normalhead {CLIENT}",
-	"/e removehats {CLIENT}",
-	"/e restorehats {CLIENT}",
-	"/e fixgui (To position the ui if lost)",
-	"/e hidemain {CLIENT}",
-	"/e showmain {CLIENT}",
-	"/e firstperson {CLIENT}",
-	"/e unfirstperson {CLIENT}",
-	"/e nightvision {CLIENT}",
-	"/e unnightvision {CLIENT}",
-	"/e day {CLIENT}",
-	"/e night {CLIENT",
-	"/e light {CLIENT}",
-	"/e unlight",
-	"/e fov [Number between 1-120 (70 defult)] {CLIENT}",
-	"/e constantfov [Number between 1-120 (70 defult)] {CLIENT}",
-	"/e unconstantfov",
-	"/e brightness [Number between 1-10000 (1 defult) {CLIENT}",
-	"/e fogend [Number between 1-10000] {CLIENT}",
-	"/e fogcolor [Number between 1-156] {CLIENT}",
-	"/e showbypasschat",
-	"/e hidebypasschat",
+	"newestversion (Reconmended to use if version is old) {CLIENT}",
+	"partxray {CLIENT}",
+	"unpartxray {CLIENT}",
+	"hideprints {CLIENT}",
+	"clearprints {CLIENT}",
+	"findWorkspace {CLIENT}",
+	"funny {CLIENT}",
+	"unfunny {CLIENT}",
+	"funny2 {CLIENT}",
+	"unfunny2 {CLIENT}",
+	"funny3 [Number between 1-10000] {CLIENT}",
+	"unfunny3 {CLIENT}",
+	"bighead {CLIENT}",
+	"smallhead {CLIENT}",
+	"normalhead {CLIENT}",
+	"removehats {CLIENT}",
+	"restorehats {CLIENT}",
+	"fixgui (To position the ui if lost)",
+	"hidemain {CLIENT}",
+	"showmain {CLIENT}",
+	"firstperson {CLIENT}",
+	"unfirstperson {CLIENT}",
+	"nightvision {CLIENT}",
+	"unnightvision {CLIENT}",
+	"day {CLIENT}",
+	"night {CLIENT",
+	"light {CLIENT}",
+	"unlight",
+	"fov [Number between 1-120 (70 defult)] {CLIENT}",
+	"constantfov [Number between 1-120 (70 defult)] {CLIENT}",
+	"unconstantfov",
+	"brightness [Number between 1-10000 (1 defult) {CLIENT}",
+	"fogend [Number between 1-10000] {CLIENT}",
+	"fogcolor [Number between 1-156] {CLIENT}",
+	"showbypasschat",
+	"hidebypasschat",
 	"Shift+P [Enables freecam] {CLIENT}",
 	"ServerSided Commands:",
-	"/e float",
-	"/e unfloat",
-	"/e follow [Player name or display]",
-	"/e unfollow",
-	"/e followpart [Model name showed in workspace]",
-	"/e unfollowpart",
-	"/e noclip",
-	"/e unnoclip",
-	"/e sit",
-	"/e to [Player name or display]",
-	"/e speed [Number between 1-10000 (Defult 16)]",
-	"/e jumppower [Number between 1-10000 (Defult 50)]",
-	"/e flyjump",
-	"/e unflyjump",
-	"/e fly [Number for fly speed (Defult 2)]",
-	"/e unfly",
-	"/e setspawn",
-	"/e toolrange",
-	"/e spin [Number between 1-10000]",
-	"/e unspin",
-	"/e headsit [Player name or display]",
-	"/e headstand [Player name or display]",
-	"/e tpwalk [Number between 1-10000]",
-	"/e untpwalk",
-	"/e rejoin",
-	"/e respawn",
+	"float",
+	"unfloat",
+	"follow [Player name or display]",
+	"unfollow",
+	"followpart [Model name showed in workspace]",
+	"unfollowpart",
+	"noclip",
+	"unnoclip",
+	"sit",
+	"to [Player name or display]",
+	"speed [Number between 1-10000 (Defult 16)]",
+	"jumppower [Number between 1-10000 (Defult 50)]",
+	"flyjump",
+	"unflyjump",
+	"fly [Number for fly speed (Defult 2)]",
+	"unfly",
+	"setspawn",
+	"toolrange",
+	"spin [Number between 1-10000]",
+	"unspin",
+	"headsit [Player name or display]",
+	"headstand [Player name or display]",
+	"tpwalk [Number between 1-10000]",
+	"untpwalk",
+	"rejoin",
+	"respawn",
 }
 
 --Setup
@@ -216,7 +216,7 @@ NightVisionUi.Visible = false
 local CommandBar = Instance.new("TextBox", MainGui)
 CommandBar.Position = UDim2.new(0.788, 0,0.96, 0)
 CommandBar.Size = UDim2.new(0, 252,0, 23)
-CommandBar.BackgroundTransparency = 0.5
+CommandBar.BackgroundTransparency = 0.2
 CommandBar.BackgroundColor3 = Color3.fromRGB(56,56,56)
 CommandBar.TextStrokeTransparency = 0
 CommandBar.TextStrokeColor3 = Color3.fromRGB(255,255,255)
@@ -1700,8 +1700,8 @@ CommandBar.FocusLost:Connect(function()
 	if message == "hidemain" then
 		NotificationSound:Play()
 		MainGui.Enabled = false
-		SendNotification("Note", "Type /e showmain to make ui visible", 5, "Okay")
-	elseif message == "/e showmain" or message == "/showmain" then
+		SendNotification("Note", "Type showmain to make ui visible", 5, "Okay")
+	elseif message == "showmain" then
 		NotificationSound:Play()
 		MainGui.Enabled = true
 	end
@@ -1715,7 +1715,7 @@ CommandBar.FocusLost:Connect(function()
 		if ScriptVersion == NewestVersion then
 			SendNotification("Current script version", "You are up to date! (V"..ScriptVersion.."["..ScriptVersionCreationDate.."])", 5, "Okay")
 		else
-			SendNotification("Current script version", "(V"..ScriptVersion.."["..ScriptVersionCreationDate.."] {type /e getnew to get newest version,})", 5, "Okay")
+			SendNotification("Current script version", "(V"..ScriptVersion.."["..ScriptVersionCreationDate.."] {type getnew to get newest version,})", 5, "Okay")
 		end
 	end
 	
@@ -1742,7 +1742,7 @@ CommandBar.FocusLost:Connect(function()
 	
 	if message == "getnew" then
 		NotificationSound:Play()
-		SendNotification("How to see steps", "Press F9 on your keyboard or type '/e console' in chat or go to 'PRINTS' in your command ui", 30, "Okay")
+		SendNotification("How to see steps", "Press F9 on your keyboard or type 'console' in chat or go to 'PRINTS' in your command ui", 30, "Okay")
 		print([[
 		How to get newest version:
 		Step 1; Go to github.com in your browser (Create an account if needed)
@@ -1754,7 +1754,7 @@ CommandBar.FocusLost:Connect(function()
 		Step 7; Click on the newest version file and press "Raw"
 		Step 8; Go to the search bar of your browser and copy the link (Ctrl+C)
 		Step 9; Move to your executor and type in "loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()"
-		Step 10; Go back to roblox and say "/e rejoin" and then execute the newest version!
+		Step 10; Go back to roblox and type "rejoin" and then execute the newest version!
 	]])
 		MakeNewTextPrint("How to get newest version:")
 		MakeNewTextPrint("Step 1; Go to github.com in your browser (Create an account if needed)")
@@ -1766,7 +1766,7 @@ CommandBar.FocusLost:Connect(function()
 		MakeNewTextPrint("Step 7; Click on the newest version file and click 'Raw'")
 		MakeNewTextPrint("Step 8; Go to the search bar of your browser and copy the link (Ctrl+C)")
 		MakeNewTextPrint("Step 9; Move to your executor and type in 'loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()")
-		MakeNewTextPrint("Step 10; Go back to roblox and say '/e rejoin' and then execute the newest version!")
+		MakeNewTextPrint("Step 10; Go back to roblox and type 'rejoin' and then execute the newest version!")
 	end
 
 	if message == "rejoin" then
@@ -2115,4 +2115,4 @@ WhileWaitEvent:Fire()
 LoadedSound:Play()
 SendNotification("Script loaded!", "There is currently "..TotalCommands.." commands, Have fun!", 5, "Okay!")
 wait(2)
-SendNotification("Important!", "If you lose the ui type /e fixgui, and if commands arnt working use '/' as the prefix (Ex; /hideprints)", 15, "Noted")
+SendNotification("Important!", "If you lose the ui type fixgui", 15, "Noted")
