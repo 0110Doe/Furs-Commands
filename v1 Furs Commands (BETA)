@@ -1,11 +1,12 @@
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Important";
 	Text = "This script is currently still being built! So it may be buggy or brake on death,";
-	Duration = 15;
-	Icon = "rbxassetid://9417142960";
+	Duration = 5;
+	Button1 = "Okay";
+	Icon = "rbxassetid://11570895459";
 })
-local NewestVersion = 1
-local ScriptVersion = 1
+local NewestVersion = 1.1
+local ScriptVersion = 1.1
 local ScriptVersionCreationDate = "2023/1/21"
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Script is loading..";
@@ -31,7 +32,6 @@ local Floating = false
 local Flinging = false
 local Following = true
 local Tpwalking = false
-local ChatBypass = false
 local Nocliping = false
 local FlyJumping = false
 local Flying = false
@@ -42,8 +42,10 @@ local Funnying4 = false
 local Spinning = false
 local Tpwalking = false
 local ConstantFoving = false
+local ChatBypassing = false
 local IsTyping = false
 local IsDead = false
+local FakeChatMessage = nil
 local spawnpos = nil
 
 local cmds ={
@@ -65,6 +67,7 @@ local cmds ={
 	"/e normalhead {CLIENT}",
 	"/e removehats {CLIENT}",
 	"/e restorehats {CLIENT}",
+	"/e fixgui (To position the ui if lost)",
 	"/e hidemain {CLIENT}",
 	"/e showmain {CLIENT}",
 	"/e firstperson {CLIENT}",
@@ -79,9 +82,12 @@ local cmds ={
 	"/e constantfov [Number between 1-120 (70 defult)] {CLIENT}",
 	"/e unconstantfov",
 	"/e brightness [Number between 1-10000 (1 defult) {CLIENT}",
+	"/e fogend [Number between 1-10000] {CLIENT}",
+	"/e fogcolor [Number between 1-156] {CLIENT}",
+	"/e showbypasschat",
+	"/e hidebypasschat",
 	"Shift+P [Enables freecam] {CLIENT}",
 	"ServerSided Commands:",
-	"/e fixgui (To position the ui if lost)",
 	"/e float",
 	"/e unfloat",
 	"/e follow [Player name or display]",
@@ -208,6 +214,40 @@ NightVisionUi.Size = UDim2.new(1.1,0,1.1,0)
 NightVisionUi.BackgroundTransparency = 1
 NightVisionUi.Visible = false
 
+local FakeChatFrame = Instance.new("Frame", MainGui)
+FakeChatFrame.Position = UDim2.new(0.5,0,0.5,0)
+FakeChatFrame.Size = UDim2.new(0.315, 0,0.429, 0)
+FakeChatFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
+FakeChatFrame.Visible = false
+local UiCorner = Instance.new("UICorner", FakeChatFrame)
+local SecondFakeChatMainFrame = Instance.new("Frame", FakeChatFrame)
+SecondFakeChatMainFrame.Position = UDim2.new(0,0,0.149,0)
+SecondFakeChatMainFrame.Size = UDim2.new(1, 0,0.851, 0)
+SecondFakeChatMainFrame.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+local CloseFakeChatButton = Instance.new("TextButton", FakeChatFrame)
+CloseFakeChatButton.Position = UDim2.new(0.901,0,0,0)
+CloseFakeChatButton.Size = UDim2.new(0.099, 0,0.149, 0)
+CloseFakeChatButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+CloseFakeChatButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+CloseFakeChatButton.Text = "X"
+CloseFakeChatButton.TextScaled = true
+local UiCorner = Instance.new("UICorner", CloseFakeChatButton)
+local UiCorner = Instance.new("UICorner", SecondFakeChatMainFrame)
+local MessageFakeChatText = Instance.new("TextBox", SecondFakeChatMainFrame)
+MessageFakeChatText.Position = UDim2.new(0.104, 0,0.127, 0)
+MessageFakeChatText.Size = UDim2.new(0.792, 0,0.354, 0)
+MessageFakeChatText.Text = "Type in a message you want to bypass (YOU CAN SAY ANYTHING)"
+MessageFakeChatText.TextScaled = true
+local UiCorner = Instance.new("UICorner", MessageFakeChatText)
+local ChatFakeChatButton = Instance.new("TextButton", SecondFakeChatMainFrame)
+ChatFakeChatButton.Position = UDim2.new(0.232, 0,0.613, 0)
+ChatFakeChatButton.Size = UDim2.new(0.533, 0,0.236, 0)
+ChatFakeChatButton.BackgroundColor3 = Color3.fromRGB(24, 104, 0)
+ChatFakeChatButton.TextColor3 = Color3.new(0,0,0)
+ChatFakeChatButton.Text = "Chat"
+ChatFakeChatButton.TextScaled = true
+local UiCorner = Instance.new("UICorner", ChatFakeChatButton)
+
 --Ui PlayerData
 local PlayerName = Instance.new("TextLabel", PlayerFrame)
 PlayerName.Size = UDim2.new(0.98, 0,0.1, 0)
@@ -287,6 +327,8 @@ local ErrorSound = Instance.new("Sound", Player)
 ErrorSound.SoundId = "rbxassetid://9066063340"
 local NightVisionSound = Instance.new("Sound", Player)
 NightVisionSound.SoundId = "rbxassetid://376178316"
+local ClickSound = Instance.new("Sound", Player)
+ClickSound.SoundId = "rbxassetid://6895079853"
 local LoadedSound = Instance.new("Sound", Player)
 LoadedSound.SoundId = "rbxassetid://7383525713"
 
@@ -339,6 +381,7 @@ end
 
 --unknown functions
 MinimizeButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
 	if SecondMainFrame.Visible == true then
 		SecondMainFrame.Visible = false
 		MainFrame.Size = UDim2.new(0.3, 0,0.075, 0)
@@ -353,18 +396,21 @@ MinimizeButton.MouseButton1Click:Connect(function()
 end)
 
 PlayerButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
 	CommandsFrame.Visible = false
 	PrintsFrame.Visible = false
 	PlayerFrame.Visible = true
 end)
 
 CommandsButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
 	CommandsFrame.Visible = true
 	PrintsFrame.Visible = false
 	PlayerFrame.Visible = false
 end)
 
 PrintsButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
 	CommandsFrame.Visible = false
 	PrintsFrame.Visible = true
 	PlayerFrame.Visible = false
@@ -378,6 +424,19 @@ UIS.TextBoxFocusReleased:Connect(function()
 	IsTyping = false
 end)
 
+ChatFakeChatButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
+	ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(FakeChatMessage, "All")
+end)
+
+MessageFakeChatText.FocusLost:Connect(function()
+	FakeChatMessage = MessageFakeChatText.Text
+end)
+
+CloseFakeChatButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
+	FakeChatFrame.Visible = false
+end)
 --Freecam
 local pi    = math.pi
 local abs   = math.abs
@@ -1532,15 +1591,23 @@ local DefultOutdoorAmbient = game.Lighting.OutdoorAmbient
 local RespawnPos = Instance.new("StringValue", nil)
 --Chatted commands
 Player.Chatted:Connect(function(message)
-	if message == "/e day" then
+	if message == "/e showbypasschat" or message == "/showbypasschat" then
+		NotificationSound:Play()
+		FakeChatFrame.Visible = true
+	elseif message == "/e hidebypasschat" or message == "/hidebypasschat" then
+		NotificationSound:Play()
+		FakeChatFrame.Visible = false
+	end
+	
+	if message == "/e day" or message == "/day" then
 		NotificationSound:Play()
 		game.Lighting.TimeOfDay = "14:00:00"
-	elseif message == "/e night" then
+	elseif message == "/e night" or message == "/night" then
 		NotificationSound:Play()
 		game.Lighting.TimeOfDay = "0:00:00"
 	end
 	
-	if message == "/e light" then
+	if message == "/e light" or message == "/light" then
 		NotificationSound:Play()
 		local Light = Instance.new("PointLight", Player.Character.HumanoidRootPart)
 		Light.Brightness = 2
@@ -1552,7 +1619,7 @@ Player.Chatted:Connect(function(message)
 		end
 	end
 	
-	if message == "/e nightvision" then
+	if message == "/e nightvision" or message == "/nightvision" then
 		NightVisionSound:Play()
 		NightVisionUi.Visible = true
 		game.Lighting.Brightness=game.Lighting.Brightness+7
@@ -1574,9 +1641,9 @@ Player.Chatted:Connect(function(message)
 				wait()
 				game.Lighting.FogEnd=game.Lighting.FogEnd+10
 			end
-			game.Lighting.FogEnd = DefultFogEnd
+			game.Lighting.FogColor = DefultFogColor
 		end
-	elseif message == "/e unnightvision" then
+	elseif message == "/e unnightvision" or message == "/unnightvision" then
 		NightVisionSound:Play()
 		NightVisionUi.Visible = false
 		game.Lighting.Brightness = DefultBrightness
@@ -1599,19 +1666,20 @@ Player.Chatted:Connect(function(message)
 				game.Lighting.FogEnd=game.Lighting.FogEnd+10
 			end
 			game.Lighting.FogEnd = DefultFogEnd
+			game.Lighting.FogColor = DefultFogColor
 		end
 	end
 	
-	if message == "/e hidemain" then
+	if message == "/e hidemain" or message == "/hidemain" then
 		NotificationSound:Play()
 		MainGui.Enabled = false
 		SendNotification("Note", "Type /e showmain to make ui visible", 5, "Okay")
-	elseif message == "/e showmain" then
+	elseif message == "/e showmain" or message == "/showmain" then
 		NotificationSound:Play()
 		MainGui.Enabled = true
 	end
 	
-	if message == "/e newestversion" then
+	if message == "/e newestversion" or message == "/newestversion" then
 		NotificationSound:Play()
 		MakeNewTextPrint("Newest version is V"..NewestVersion)
 		MakeNewTextPrint("You are currently using V"..ScriptVersion.." ("..ScriptVersionCreationDate..")")
@@ -1624,7 +1692,7 @@ Player.Chatted:Connect(function(message)
 		end
 	end
 	
-	if message == "/e respawn" then
+	if message == "/e respawn" or message == "/respawn" then
 		DiedSound:Play()
 		RespawnPos = getRoot(Player.Character).CFrame
 		getRoot(Player.Character).CFrame = CFrame.new(Vector3.new(0,-470,0))
@@ -1645,7 +1713,7 @@ Player.Chatted:Connect(function(message)
 		SendNotification("Respawned", "You may continue of whatever you were doing", 5, "Okay")
 	end
 	
-	if message == "/e getnew" then
+	if message == "/e getnew" or message == "/getnew" then
 		NotificationSound:Play()
 		SendNotification("How to see steps", "Press F9 on your keyboard or type '/e console' in chat or go to 'PRINTS' in your command ui", 30, "Okay")
 		print([[
@@ -1674,28 +1742,29 @@ Player.Chatted:Connect(function(message)
 		MakeNewTextPrint("Step 10; Go back to roblox and say '/e rejoin' and then execute the newest version!")
 	end
 
-	if message == "/e rejoin" then
+	if message == "/e rejoin" or message == "/rejoin" then
 		local TeleportService = game:GetService("TeleportService")
 		TeleportService:Teleport(game.PlaceId, Player)
 	end
 
-	if message == "/e fixgui" then
+	if message == "/e fixgui" or message == "/fixgui" then
 		NotificationSound:Play()
 		MainFrame.Position = UDim2.new(0.5,0,0.5,0)
+		FakeChatFrame.Position = UDim2.new(0.5,0,0.5,0)
 	end
 	
-	if message == "/e bighead" then
+	if message == "/e bighead" or message == "/bighead" then
 		NotificationSound:Play()
 		Head.Size = Vector3.new(5,5,5)
-	elseif message == "/e smallhead" then
+	elseif message == "/e smallhead" or message == "/smallhead" then
 		NotificationSound:Play()
 		Head.Size = Vector3.new(0.3,0.3,0.3)
-	elseif message == "/e normalhead" then
+	elseif message == "/e normalhead" or message == "/normalhead" then
 		NotificationSound:Play()
 		Head.Size = Vector3.new(2, 1, 1)
 	end
 	
-	if message == "/e toolrange" then
+	if message == "/e toolrange" or message == "/toolrange" then
 		local charChildren = Char:GetChildren()
 		local FoundTool = false
 		local Tool = nil
@@ -1716,7 +1785,7 @@ Player.Chatted:Connect(function(message)
 		end
 	end
 	
-	if message == "/e partxray" then
+	if message == "/e partxray" or message == "/partxray" then
 		NotificationSound:Play()
 		for i=1,#WorkspaceChildren do
 			if WorkspaceChildren[i]:IsA("Part") then
@@ -1731,7 +1800,7 @@ Player.Chatted:Connect(function(message)
 				FoundMoreXray(WorkspaceChildren[i])
 			end
 		end
-	elseif message == "/e unpartxray" then
+	elseif message == "/e unpartxray" or message == "/unpartxray" then
 		NotificationSound:Play()
 		for i=1,#WorkspaceChildren do
 			if WorkspaceChildren[i]:IsA("Part") then
@@ -1748,7 +1817,7 @@ Player.Chatted:Connect(function(message)
 		end
 	end
 	
-	if message == "/e findWorkspace" then
+	if message == "/e findWorkspace" or message == "/findWorkspace" then
 		FindWorkspace()
 		wait(0.1)
 		print("Found a total of "..FoundItems.." items!")
@@ -1758,7 +1827,7 @@ Player.Chatted:Connect(function(message)
 		FoundItems=0
 	end
 	
-	if message == "/e clearprints" then
+	if message == "/e clearprints" or message == "/clearprints" then
 		NotificationSound:Play()
 		local C = PrintsFrame:GetChildren()
 		local Total = 0
@@ -1775,13 +1844,13 @@ Player.Chatted:Connect(function(message)
 		PrintsFrame:FindFirstChild("TextLabel"):Remove()
 	end
 	
-	if message == "/e sit" then
+	if message == "/e sit" or message == "/sit" then
 		NotificationSound:Play()
 		Char.Humanoid.Sit = true
 	end
 	
 	for i=1,#Players do
-		if message == "/e follow "..Players[i].Name or message == "/e follow "..Players[i].DisplayName then
+		if message == "/e follow "..Players[i].Name or message == "/e follow "..Players[i].DisplayName or message == "/follow "..Players[i].Name or message == "/follow "..Players[i].DisplayName then
 			local FollowedTorso
 			if Players[i].Character:FindFirstChild("UpperTorso") then
 				FollowedTorso = Players[i].Character.UpperTorso
@@ -1791,17 +1860,17 @@ Player.Chatted:Connect(function(message)
 			Follow(true, FollowedTorso)
 		elseif message == "/e unfollow" then
 			Follow(false, nil)
-		elseif message == "/e to "..Players[i].Name or message == "/e to "..Players[i].DisplayName then
+		elseif message == "/e to "..Players[i].Name or message == "/e to "..Players[i].DisplayName or message == "/to "..Players[i].Name or message == "/to "..Players[i].DisplayName then
 			TeleportTo(Players[i])
-		elseif message == "/e headsit "..Players[i].Name or message == "/e heandsit "..Players[i].DisplayName then
+		elseif message == "/e headsit "..Players[i].Name or message == "/e heandsit "..Players[i].DisplayName or message == "/headsit "..Players[i].Name or message == "/headsit "..Players[i].DisplayName then
 			Headsit(Players[i])
-		elseif message == "/e headstand "..Players[i].Name or message == "/e headstand "..Players[i].DisplayName then
+		elseif message == "/e headstand "..Players[i].Name or message == "/e headstand "..Players[i].DisplayName or message == "/headstand "..Players[i].Name or message == "/headstand "..Players[i].DisplayName then
 			HeadStand(Players[i])
 		end
 	end
 
 	for i=1,#WorkspaceChildren do
-		if message == "/e followpart "..WorkspaceChildren[i].Name then
+		if message == "/e followpart "..WorkspaceChildren[i].Name or message == "/followpart "..WorkspaceChildren[i].Name then
 			local FollowedTorso
 			if WorkspaceChildren[i]:FindFirstChild("UpperTorso") then
 				FollowedTorso = WorkspaceChildren[i].UpperTorso
@@ -1811,110 +1880,116 @@ Player.Chatted:Connect(function(message)
 				FollowedTorso = WorkspaceChildren[i].Torso
 			end
 			FollowNPC(true, FollowedTorso)
-		elseif message == "/e unfollowpart" then
+		elseif message == "/e unfollowpart" or message == "/unfollowpart" then
 			FollowNPC(false, nil)
 		end
 	end
 	
-	if message == "/e firstperson" then
+	if message == "/e firstperson" or message == "/firstperson" then
 		NotificationSound:Play()
 		Player.CameraMode = Enum.CameraMode.LockFirstPerson
-	elseif message == "/e unfirstperson" then
+	elseif message == "/e unfirstperson" or message == "/unfirstperson" then
 		NotificationSound:Play()
 		Player.CameraMode = Enum.CameraMode.Classic
 	end
 	
 	for i=1,10000 do
-		if message == "/e speed "..i then
+		if message == "/e speed "..i or message == "/speed "..i then
 			NotificationSound:Play()
 			Player.Character.Humanoid.WalkSpeed = i
-		elseif message == "/e jumppower "..i then
+		elseif message == "/e jumppower "..i or message == "/jumppower "..i then
 			NotificationSound:Play()
 			Player.Character.Humanoid.JumpPower = i
-		elseif message == "/e fly "..i then
+		elseif message == "/e fly "..i or message == "/fly "..i then
 			Fly(true, i)
-		elseif message == "/e funny3 "..i then
+		elseif message == "/e funny3 "..i or message == "/funny3 "..i then
 			Funny3(true, i)
-		elseif message == "/e spin "..i then
+		elseif message == "/e spin "..i or message == "/spin "..i then
 			Spin(true, i)
-		elseif message == "/e tpwalk "..i then
+		elseif message == "/e tpwalk "..i or message == "/tpwalk "..i then
 			Tpwalk(true, i)
-		elseif message == "/e funny4 "..i then
+		elseif message == "/e funny4 "..i or message == "/funny4 "..i then
 			Funny4(true, i)
-		elseif message == "/e fov "..i then
+		elseif message == "/e fov "..i or message == "/fov "..i then
 			NotificationSound:Play()
 			Camera.FieldOfView = i
-		elseif message == "/e brightness "..i then
+		elseif message == "/e brightness "..i or message == "/brightness "..i then
 			NotificationSound:Play()
 			game.Lighting.Brightness = i
-		elseif message == "/e constantfov "..i then
+		elseif message == "/e constantfov "..i or message == "/constantfov "..i then
 			ConstantFov(true, i)
+		elseif message == "/e fogend "..i or message == "/fogend "..i then
+			NotificationSound:Play()
+			game.Lighting.FogEnd = i
+		elseif message == "/e fogcolor "..i or message == "/fogcolor "..i then
+			NotificationSound:Play()
+			game.Lighting.FogColor = BrickColor.new(i).Color
 		end
 	end
 	
-	if message == "/e fly" then
+	if message == "/e fly" or message == "/fly" then
 		Fly(true, 2)
-	elseif message == "/e unfly" then
+	elseif message == "/e unfly" or message == "/unfly" then
 		Fly(false, 0)
-	elseif message == "/e spin" then
+	elseif message == "/e spin" or message == "/spin" then
 		Spin(true, 50)
-	elseif message == "/e unspin" then
+	elseif message == "/e unspin" or message == "/unspin" then
 		Spin(false, 0)
-	elseif message == "/e tpwalk" then
+	elseif message == "/e tpwalk" or message == "/tpwalk" then
 		Tpwalk(true, 2.5)
-	elseif message == "/e untpwalk" then
+	elseif message == "/e untpwalk" or message == "/untpwalk" then
 		Tpwalk(false, 0)
-	elseif message == "/e unconstantfov" then
+	elseif message == "/e unconstantfov" or message == "/unconstantfov" then
 		ConstantFov(false, 70)
 	end
 	
-	if message == "/e hidegui" then
+	if message == "/e hidegui" or message == "/hidegui" then
 		HideGui(true)
-	elseif message == "/e showgui" then
+	elseif message == "/e showgui" or message == "/showgui" then
 		HideGui(false)
 	end
 
-	if message == "/e removehats" then
+	if message == "/e removehats" or message == "/removehats" then
 		RemoveHats()
-	elseif message == "/e restorehats" then
+	elseif message == "/e restorehats" or message == "/restorehats" then
 		RestoreHats()
 	end
 
-	if message == "/e funny" then
+	if message == "/e funny" or message == "/funny" then
 		Funny(true)
-	elseif message == "/e unfunny" then
+	elseif message == "/e unfunny" or message == "/unfunny" then
 		Funny(false)
 	end
 
-	if message == "/e funny2" then
+	if message == "/e funny2" or message == "/funny2" then
 		Funny2(true)
-	elseif message == "/e unfunny2" then
+	elseif message == "/e unfunny2" or message == "/unfunny2" then
 		Funny2(false)
 	end
 
-	if message == "/e setspawn" then
+	if message == "/e setspawn" or message == "/setspawn" then
 		SetSpawn()
 	end
 
-	if message == "/e flyjump" then
+	if message == "/e flyjump" or message == "/flyjump" then
 		FlyJump(true)
-	elseif message == "/e unflyjump" then
+	elseif message == "/e unflyjump" or message == "/unflyjump" then
 		FlyJump(false)
 	end
 
-	if message == "/e noclip" then
+	if message == "/e noclip" or message == "/noclip" then
 		Noclip(true)
-	elseif message == "/e unnoclip" then
+	elseif message == "/e unnoclip" or message == "/unnoclip" then
 		Noclip(false)
 	end
 
-	if message == "/e float" then
+	if message == "/e float" or message == "/float" then
 		Float(true)
-	elseif message == "/e unfloat" then
+	elseif message == "/e unfloat" or message == "/unfloat" then
 		Float(false)
 	end
 
-	if message == "/e hideprints" then
+	if message == "/e hideprints" or message == "/hideprints" then
 		PrintNothing(600)
 	end
 end)
@@ -1953,6 +2028,10 @@ Player.CharacterRemoving:Connect(function()
 		wait()
 		Player.CharacterAdded:Connect(function()
 			IsRespawning = false
+			if spawnpos ~= nil then
+				wait(0.5)
+				getRoot(Player.Character).CFrame = spawnpos
+			end
 		end)
 	end
 	
@@ -1982,11 +2061,6 @@ Player.CharacterRemoving:Connect(function()
 		LeftLeg = Char["Left Leg"]
 		R15 = false
 	end
-
-	if spawnpos ~= nil then
-		wait(1)
-		getRoot(Player.Character).CFrame = spawnpos
-	end
 end)
 
 local TotalCommands = 0
@@ -2000,6 +2074,7 @@ MakeNewTextPrint("There is a total of "..TotalCommands.." commands! (V"..ScriptV
 print("There is a total of "..TotalCommands.." commands!")
 
 dragify(MainFrame)
+dragify(FakeChatFrame)
 MainGui.Enabled = true
 
 WhileWaitEvent.Event:Connect(function()
@@ -2013,4 +2088,4 @@ WhileWaitEvent:Fire()
 LoadedSound:Play()
 SendNotification("Script loaded!", "There is currently "..TotalCommands.." commands, Have fun!", 5, "Okay!")
 wait(2)
-SendNotification("Important!", "If you lose the ui type /e fixgui", 5, "Noted")
+SendNotification("Important!", "If you lose the ui type /e fixgui, and if commands arnt working use '/' as the prefix (Ex; /hideprints)", 15, "Noted")
