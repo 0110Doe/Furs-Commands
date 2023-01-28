@@ -1699,11 +1699,11 @@ CommandBar.FocusLost:Connect(function()
 	
 	if message == "hidemain" then
 		NotificationSound:Play()
-		MainGui.Enabled = false
+		MainFrame.Visible = false
 		SendNotification("Note", "Type showmain to make ui visible", 5, "Okay")
 	elseif message == "showmain" then
 		NotificationSound:Play()
-		MainGui.Enabled = true
+		MainFrame.Visible = true
 	end
 	
 	if message == "newestversion" then
