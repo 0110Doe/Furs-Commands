@@ -5,9 +5,9 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 	Button1 = "Okay";
 	Icon = "rbxassetid://11570895459";
 })
-local NewestVersion = 1.1
-local ScriptVersion = 1.1
-local ScriptVersionCreationDate = "2023/1/21"
+NewestVersion = 1.1
+ScriptVersion = 1.1
+ScriptVersionCreationDate = "2023/1/21"
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Script is loading..";
 	Text = "Please wait..";
@@ -18,37 +18,36 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 
 wait(wait(game:IsLoaded()))
 wait(1)
-local Player = game.Players.LocalPlayer
-local Players = game.Players:GetPlayers()
-local WorkspaceChildren = workspace:GetChildren()
-local ReplicatedStorage = game.ReplicatedStorage
-local Camera = workspace.CurrentCamera
-local UIS = game:GetService("UserInputService")
-local Mouse = Player:GetMouse()
-local WhileWaitEvent = Instance.new("BindableEvent", Player)
-local TimeUsedScript = 0
-local R15 = false
-local Floating = false
-local Flinging = false
-local Following = true
-local Tpwalking = false
-local Nocliping = false
-local FlyJumping = false
-local Flying = false
-local Funnying = false
-local Funnying2 = false
-local Funnying3 = false
-local Funnying4 = false
-local Spinning = false
-local Tpwalking = false
-local ConstantFoving = false
-local ChatBypassing = false
-local IsTyping = false
-local IsDead = false
-local FakeChatMessage = nil
-local spawnpos = nil
+Player = game.Players.LocalPlayer
+Players = game.Players:GetPlayers()
+WorkspaceChildren = workspace:GetChildren()
+ReplicatedStorage = game.ReplicatedStorage
+Camera = workspace.CurrentCamera
+UIS = game:GetService("UserInputService")
+Mouse = Player:GetMouse()
+WhileWaitEvent = Instance.new("BindableEvent", Player)
+TimeUsedScript = 0
+R15 = false
+Floating = false
+Flinging = false
+Following = true
+Tpwalking = false
+FlyJumping = false
+Flying = false
+Funnying = false
+Funnying2 = false
+Funnying3 = false
+Funnying4 = false
+Spinning = false
+Tpwalking = false
+ConstantFoving = false
+ChatBypassing = false
+IsTyping = false
+IsDead = false
+FakeChatMessage = nil
+spawnpos = nil
 
-local cmds ={
+cmds ={
 	"ClientSided Commands:",
 	"newestversion (Reconmended to use if version is old) {CLIENT}",
 	"partxray {CLIENT}",
@@ -114,24 +113,26 @@ local cmds ={
 	"untpwalk",
 	"rejoin",
 	"respawn",
+	"fling",
+	"unfling",
 }
 
 --Setup
-local MainGui = Instance.new("ScreenGui")
+MainGui = Instance.new("ScreenGui")
 MainGui.Parent = Player.PlayerGui
 MainGui.ResetOnSpawn = false
 MainGui.Enabled = false
-local MainFrame = Instance.new("Frame", MainGui)
+MainFrame = Instance.new("Frame", MainGui)
 MainFrame.Position = UDim2.new(0.179, 0,0.172, 0)
 MainFrame.Size = UDim2.new(0.641, 0,0.656, 0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
-local UiCorner = Instance.new("UICorner", MainFrame)
-local SecondMainFrame = Instance.new("Frame", MainFrame)
+UiCorner = Instance.new("UICorner", MainFrame)
+SecondMainFrame = Instance.new("Frame", MainFrame)
 SecondMainFrame.Position = UDim2.new(0, 0,0.115, 0)
 SecondMainFrame.Size = UDim2.new(1, 0,0.885, 0)
 SecondMainFrame.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
-local UiCorner = Instance.new("UICorner", SecondMainFrame)
-local MinimizeButton = Instance.new("TextButton", MainFrame)
+UiCorner = Instance.new("UICorner", SecondMainFrame)
+MinimizeButton = Instance.new("TextButton", MainFrame)
 MinimizeButton.Position = UDim2.new(0.942, 0,0, 0)
 MinimizeButton.Size = UDim2.new(0.058, 0,0.115, 0)
 MinimizeButton.BackgroundColor3 = Color3.fromRGB(76, 76, 76)
@@ -141,8 +142,8 @@ MinimizeButton.RichText = true
 MinimizeButton.TextStrokeTransparency = 0
 MinimizeButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 MinimizeButton.FontFace = Font.fromEnum(Enum.Font.Arcade)
-local UiCorner = Instance.new("UICorner", MinimizeButton)
-local Title = Instance.new("TextLabel", MainFrame)
+UiCorner = Instance.new("UICorner", MinimizeButton)
+Title = Instance.new("TextLabel", MainFrame)
 Title.Position = UDim2.new(0, 0, 0, 0)
 Title.Size = UDim2.new(0.942, 0,0.115, 0)
 Title.BackgroundTransparency = 1
@@ -154,33 +155,33 @@ Title.FontFace = Font.fromEnum(Enum.Font.Arcade)
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.TextScaled = true
 Title.RichText = true
-local PrintsFrame = Instance.new("ScrollingFrame", SecondMainFrame)
+PrintsFrame = Instance.new("ScrollingFrame", SecondMainFrame)
 PrintsFrame.Position = UDim2.new(0.151, 0,0, 0)
 PrintsFrame.Size = UDim2.new(0.849, 0,1, 0)
 PrintsFrame.BackgroundTransparency = 1
 PrintsFrame.CanvasSize = UDim2.new(0,0,10000,0)
 PrintsFrame.Visible = false
-local UiListLayout = Instance.new("UIListLayout", PrintsFrame)
-local CommandsFrame = Instance.new("ScrollingFrame", SecondMainFrame)
+UiListLayout = Instance.new("UIListLayout", PrintsFrame)
+CommandsFrame = Instance.new("ScrollingFrame", SecondMainFrame)
 CommandsFrame.Position = UDim2.new(0.151, 0,0, 0)
 CommandsFrame.Size = UDim2.new(0.849, 0,1, 0)
 CommandsFrame.BackgroundTransparency = 1
 CommandsFrame.CanvasSize = UDim2.new(0,0,500,0)
 CommandsFrame.Visible = false
-local UiListLayout = Instance.new("UIListLayout", CommandsFrame)
-local PlayerFrame = Instance.new("ScrollingFrame", SecondMainFrame)
+UiListLayout = Instance.new("UIListLayout", CommandsFrame)
+PlayerFrame = Instance.new("ScrollingFrame", SecondMainFrame)
 PlayerFrame.Position = UDim2.new(0.151, 0,0, 0)
 PlayerFrame.Size = UDim2.new(0.849, 0,1, 0)
 PlayerFrame.BackgroundTransparency = 1
-local UiListLayout = Instance.new("UIListLayout", PlayerFrame)
-local ButtonFrame = Instance.new("Frame", SecondMainFrame)
+UiListLayout = Instance.new("UIListLayout", PlayerFrame)
+ButtonFrame = Instance.new("Frame", SecondMainFrame)
 ButtonFrame.Size = UDim2.new(0.151, 0,1, 0)
 ButtonFrame.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 ButtonFrame.BackgroundTransparency = 0.5
-local UiCorner = Instance.new("UICorner", ButtonFrame)
-local UiListLayout = Instance.new("UIListLayout", ButtonFrame)
+UiCorner = Instance.new("UICorner", ButtonFrame)
+UiListLayout = Instance.new("UIListLayout", ButtonFrame)
 UiListLayout.Padding = UDim.new(0, 5)
-local PlayerButton = Instance.new("TextButton", ButtonFrame)
+PlayerButton = Instance.new("TextButton", ButtonFrame)
 PlayerButton.Size = UDim2.new(1, 0,0.13, 0)
 PlayerButton.BackgroundColor3 = Color3.fromRGB(100,100,100)
 PlayerButton.Text = "Player"
@@ -188,8 +189,8 @@ PlayerButton.TextColor3 = Color3.fromRGB(0,0,0)
 PlayerButton.TextStrokeTransparency = 0
 PlayerButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 PlayerButton.TextScaled = true
-local UiCorner = Instance.new("UICorner", PlayerButton)
-local CommandsButton = Instance.new("TextButton", ButtonFrame)
+UiCorner = Instance.new("UICorner", PlayerButton)
+CommandsButton = Instance.new("TextButton", ButtonFrame)
 CommandsButton.Size = UDim2.new(1, 0,0.13, 0)
 CommandsButton.BackgroundColor3 = Color3.fromRGB(100,100,100)
 CommandsButton.Text = "Cmds"
@@ -197,8 +198,8 @@ CommandsButton.TextColor3 = Color3.fromRGB(0,0,0)
 CommandsButton.TextStrokeTransparency = 0
 CommandsButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 CommandsButton.TextScaled = true
-local UiCorner = Instance.new("UICorner", CommandsButton)
-local PrintsButton = Instance.new("TextButton", ButtonFrame)
+UiCorner = Instance.new("UICorner", CommandsButton)
+PrintsButton = Instance.new("TextButton", ButtonFrame)
 PrintsButton.Size = UDim2.new(1, 0,0.13, 0)
 PrintsButton.BackgroundColor3 = Color3.fromRGB(100,100,100)
 PrintsButton.Text = "Prints"
@@ -206,14 +207,14 @@ PrintsButton.TextColor3 = Color3.fromRGB(0,0,0)
 PrintsButton.TextStrokeTransparency = 0
 PrintsButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 PrintsButton.TextScaled = true
-local UiCorner = Instance.new("UICorner", PrintsButton)
-local NightVisionUi = Instance.new("ImageLabel", MainGui)
+UiCorner = Instance.new("UICorner", PrintsButton)
+NightVisionUi = Instance.new("ImageLabel", MainGui)
 NightVisionUi.Image = "rbxassetid://7552884581"
 NightVisionUi.Position = UDim2.new(0,0,-0.1,0)
 NightVisionUi.Size = UDim2.new(1.1,0,1.1,0)
 NightVisionUi.BackgroundTransparency = 1
 NightVisionUi.Visible = false
-local CommandBar = Instance.new("TextBox", MainGui)
+CommandBar = Instance.new("TextBox", MainGui)
 CommandBar.Position = UDim2.new(0.788, 0,0.96, 0)
 CommandBar.Size = UDim2.new(0, 252,0, 23)
 CommandBar.BackgroundTransparency = 0.2
@@ -223,45 +224,45 @@ CommandBar.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 CommandBar.TextScaled = true
 CommandBar.RichText = true
 CommandBar.Text = "Press , to type in a command"
-local UiCorner = Instance.new("UICorner", CommandBar)
+UiCorner = Instance.new("UICorner", CommandBar)
 
-local FakeChatFrame = Instance.new("Frame", MainGui)
+FakeChatFrame = Instance.new("Frame", MainGui)
 FakeChatFrame.Position = UDim2.new(0.5,0,0.5,0)
 FakeChatFrame.Size = UDim2.new(0.315, 0,0.429, 0)
 FakeChatFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 FakeChatFrame.Visible = false
-local UiCorner = Instance.new("UICorner", FakeChatFrame)
-local SecondFakeChatMainFrame = Instance.new("Frame", FakeChatFrame)
+UiCorner = Instance.new("UICorner", FakeChatFrame)
+SecondFakeChatMainFrame = Instance.new("Frame", FakeChatFrame)
 SecondFakeChatMainFrame.Position = UDim2.new(0,0,0.149,0)
 SecondFakeChatMainFrame.Size = UDim2.new(1, 0,0.851, 0)
 SecondFakeChatMainFrame.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
-local CloseFakeChatButton = Instance.new("TextButton", FakeChatFrame)
+CloseFakeChatButton = Instance.new("TextButton", FakeChatFrame)
 CloseFakeChatButton.Position = UDim2.new(0.901,0,0,0)
 CloseFakeChatButton.Size = UDim2.new(0.099, 0,0.149, 0)
 CloseFakeChatButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 CloseFakeChatButton.TextColor3 = Color3.fromRGB(255, 0, 0)
 CloseFakeChatButton.Text = "X"
 CloseFakeChatButton.TextScaled = true
-local UiCorner = Instance.new("UICorner", CloseFakeChatButton)
-local UiCorner = Instance.new("UICorner", SecondFakeChatMainFrame)
-local MessageFakeChatText = Instance.new("TextBox", SecondFakeChatMainFrame)
+UiCorner = Instance.new("UICorner", CloseFakeChatButton)
+UiCorner = Instance.new("UICorner", SecondFakeChatMainFrame)
+MessageFakeChatText = Instance.new("TextBox", SecondFakeChatMainFrame)
 MessageFakeChatText.Position = UDim2.new(0.104, 0,0.127, 0)
 MessageFakeChatText.Size = UDim2.new(0.792, 0,0.354, 0)
 MessageFakeChatText.Text = "Type in a message you want to bypass (YOU CAN SAY ANYTHING)"
 MessageFakeChatText.TextScaled = true
 MessageFakeChatText.ClearTextOnFocus = false
-local UiCorner = Instance.new("UICorner", MessageFakeChatText)
-local ChatFakeChatButton = Instance.new("TextButton", SecondFakeChatMainFrame)
+UiCorner = Instance.new("UICorner", MessageFakeChatText)
+ChatFakeChatButton = Instance.new("TextButton", SecondFakeChatMainFrame)
 ChatFakeChatButton.Position = UDim2.new(0.232, 0,0.613, 0)
 ChatFakeChatButton.Size = UDim2.new(0.533, 0,0.236, 0)
 ChatFakeChatButton.BackgroundColor3 = Color3.fromRGB(24, 104, 0)
 ChatFakeChatButton.TextColor3 = Color3.new(0,0,0)
 ChatFakeChatButton.Text = "Chat"
 ChatFakeChatButton.TextScaled = true
-local UiCorner = Instance.new("UICorner", ChatFakeChatButton)
+UiCorner = Instance.new("UICorner", ChatFakeChatButton)
 
 --Ui PlayerData
-local PlayerName = Instance.new("TextLabel", PlayerFrame)
+PlayerName = Instance.new("TextLabel", PlayerFrame)
 PlayerName.Size = UDim2.new(0.98, 0,0.1, 0)
 PlayerName.BackgroundTransparency = 1
 PlayerName.Text = "Hello, "..Player.Name.."! ("..Player.DisplayName..")"
@@ -270,7 +271,7 @@ PlayerName.TextStrokeTransparency = 0
 PlayerName.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 PlayerName.TextScaled = true
 PlayerName.RichText = true
-local AccountAge = Instance.new("TextLabel", PlayerFrame)
+AccountAge = Instance.new("TextLabel", PlayerFrame)
 AccountAge.Size = UDim2.new(0.98, 0,0.05, 0)
 AccountAge.BackgroundTransparency = 1
 AccountAge.Text = "Account age: "..Player.AccountAge.." Days"
@@ -279,7 +280,7 @@ AccountAge.TextStrokeTransparency = 0
 AccountAge.TextStrokeColor3 = Color3.new(1,1,1)
 AccountAge.TextScaled = true
 AccountAge.RichText = true
-local TimeUsingScript = Instance.new("TextLabel", PlayerFrame)
+TimeUsingScript = Instance.new("TextLabel", PlayerFrame)
 TimeUsingScript.Size = UDim2.new(0.98, 0,0.05, 0)
 TimeUsingScript.BackgroundTransparency = 1
 TimeUsingScript.Text = "You have been using this script for "..TimeUsedScript.." seconds"
@@ -288,7 +289,7 @@ TimeUsingScript.TextStrokeTransparency = 0
 TimeUsingScript.TextStrokeColor3 = Color3.new(1,1,1)
 TimeUsingScript.TextScaled = true
 TimeUsingScript.RichText = true
-local GameName = Instance.new("TextLabel", PlayerFrame)
+GameName = Instance.new("TextLabel", PlayerFrame)
 GameName.Size = UDim2.new(0.98, 0,0.05, 0)
 GameName.BackgroundTransparency = 1
 GameName.Text = "Game updated at "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Name.." ("..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).AssetId..")"
@@ -297,7 +298,7 @@ GameName.TextStrokeTransparency = 0
 GameName.TextStrokeColor3 = Color3.new(1,1,1)
 GameName.TextScaled = true
 GameName.RichText = true
-local GameCreation = Instance.new("TextLabel", PlayerFrame)
+GameCreation = Instance.new("TextLabel", PlayerFrame)
 GameCreation.Size = UDim2.new(0.98, 0,0.05, 0)
 GameCreation.BackgroundTransparency = 1
 GameCreation.Text = "Game created at "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Created
@@ -306,7 +307,7 @@ GameCreation.TextStrokeTransparency = 0
 GameCreation.TextStrokeColor3 = Color3.new(1,1,1)
 GameCreation.TextScaled = true
 GameCreation.RichText = true
-local GameUpdate = Instance.new("TextLabel", PlayerFrame)
+GameUpdate = Instance.new("TextLabel", PlayerFrame)
 GameUpdate.Size = UDim2.new(0.98, 0,0.05, 0)
 GameUpdate.BackgroundTransparency = 1
 GameUpdate.Text = "Game updated at "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Updated
@@ -315,7 +316,7 @@ GameUpdate.TextStrokeTransparency = 0
 GameUpdate.TextStrokeColor3 = Color3.new(1,1,1)
 GameUpdate.TextScaled = true
 GameUpdate.RichText = true
-local CreatorName = Instance.new("TextLabel", PlayerFrame)
+CreatorName = Instance.new("TextLabel", PlayerFrame)
 CreatorName.Size = UDim2.new(0.98, 0,0.05, 0)
 CreatorName.BackgroundTransparency = 1
 CreatorName.Text = "Creator: "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Creator.Name.." ("..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Creator.CreatorTargetId..")"
@@ -325,23 +326,21 @@ CreatorName.TextStrokeColor3 = Color3.new(1,1,1)
 CreatorName.TextScaled = true
 CreatorName.RichText = true
 
-print(game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset))
-
-local NotificationSound = Instance.new("Sound", Player)
+NotificationSound = Instance.new("Sound", Player)
 NotificationSound.SoundId = "rbxassetid://6647898215"
-local NotificationSound2 = Instance.new("Sound", Player)
+NotificationSound2 = Instance.new("Sound", Player)
 NotificationSound2.SoundId = "rbxassetid://6647897822"
-local FunnyNotificationSound = Instance.new("Sound", Player)
+FunnyNotificationSound = Instance.new("Sound", Player)
 FunnyNotificationSound.SoundId = "rbxassetid://9125845655"
-local DiedSound = Instance.new("Sound", Player)
+DiedSound = Instance.new("Sound", Player)
 DiedSound.SoundId = "rbxassetid://6598984092"
-local ErrorSound = Instance.new("Sound", Player)
+ErrorSound = Instance.new("Sound", Player)
 ErrorSound.SoundId = "rbxassetid://9066063340"
-local NightVisionSound = Instance.new("Sound", Player)
+NightVisionSound = Instance.new("Sound", Player)
 NightVisionSound.SoundId = "rbxassetid://376178316"
-local ClickSound = Instance.new("Sound", Player)
+ClickSound = Instance.new("Sound", Player)
 ClickSound.SoundId = "rbxassetid://6895079853"
-local LoadedSound = Instance.new("Sound", Player)
+LoadedSound = Instance.new("Sound", Player)
 LoadedSound.SoundId = "rbxassetid://7383525713"
 
 --Getting character
@@ -1197,43 +1196,28 @@ local function FoundMoreunNoclip(Model)
 	end
 end
 
-local function Noclip(State)
+local Clip
+local function Noclip()
 	NotificationSound:Play()
-	Nocliping = State
-	local function MakeNoCollison(Part)
-		Part.CanCollide = false
-	end
-
-	if R15 == true then
-		RightHand.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		UpperRightArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		LowerRightArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		LeftHand.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		UpperLeftArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		LowerLeftArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		Torso.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		LowerTorso.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		Head.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-	else
-		RightArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		LeftArm.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		Torso.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-		Head.Touched:Connect(function(Part) if Nocliping == true and IsDead == false then MakeNoCollison(Part) end end)
-	end
-
-	if Nocliping == false then
-		for i=1,#WorkspaceChildren do
-			if WorkspaceChildren[i]:IsA("Part") then
-				WorkspaceChildren[i].CanCollide = true
-			end
-			local OtherChildren = WorkspaceChildren[i]:GetChildren()
-			local Num = 0
-			for i=1,#OtherChildren do Num=Num+1 end
-			if Num > 1 then
-				FoundMoreunNoclip(WorkspaceChildren[i])
+	Clip = false
+	wait(0.1)
+	local function NoclipLoop()
+		if Clip == false and Player.Character ~= nil then
+			for _, child in pairs(Player.Character:GetDescendants()) do
+				if child:IsA("BasePart") and child.CanCollide == true then
+					child.CanCollide = false
+				end
 			end
 		end
 	end
+	Nocliping = RunService.Stepped:Connect(NoclipLoop)
+end
+
+local function Unnoclip()
+	if Nocliping then
+		Nocliping:Disconnect()
+	end
+	Clip = true
 end
 
 local function TeleportTo(PlayerTo)
@@ -1472,10 +1456,77 @@ end
 local function Spin(State, Number)
 	NotificationSound:Play()
 	Spinning = State
-	while Spinning == true and IsDead == false do
-		wait()
-		getRoot(Player.Character).CFrame = getRoot(Player.Character).CFrame * CFrame.fromEulerAnglesXYZ(0,(Number),0)
+	for _, child in pairs(Player.Character:GetDescendants()) do
+		if child:IsA("BasePart") then
+			child.CustomPhysicalProperties = PhysicalProperties.new(math.huge, 0.3, 0.5)
+		end
 	end
+	
+	wait(.1)
+	local bambam = Instance.new("BodyAngularVelocity")
+	bambam.Name = "idk"
+	bambam.Parent = getRoot(Player.Character)
+	bambam.AngularVelocity = Vector3.new(0,9999999,0)
+	bambam.MaxTorque = Vector3.new(0,math.huge,0)
+	bambam.P = math.huge
+	local Char = Player.Character:GetChildren()
+	for i, v in next, Char do
+		if v:IsA("BasePart") then
+			v.CanCollide = false
+			v.Massless = true
+			v.Velocity = Vector3.new(0, 0, 0)
+		end
+	end
+	
+	repeat
+		bambam.AngularVelocity = Vector3.new(0,Number,0)
+		wait()
+		bambam.AngularVelocity = Vector3.new(0,0,0)
+		wait()
+	until Spinning == false
+	bambam:Remove()
+	getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
+end
+
+local function Fling(State)
+	Flinging = State
+	for _, child in pairs(Player.Character:GetDescendants()) do
+		if child:IsA("BasePart") then
+			child.CustomPhysicalProperties = PhysicalProperties.new(math.huge, 0.3, 0.5)
+		end
+	end
+
+	wait(.1)
+	local bambam = Instance.new("BodyAngularVelocity")
+	bambam.Name = "idk"
+	bambam.Parent = getRoot(Player.Character)
+	bambam.AngularVelocity = Vector3.new(0,9999999,0)
+	bambam.MaxTorque = Vector3.new(0,math.huge,0)
+	bambam.P = math.huge
+	local Char = Player.Character:GetChildren()
+	for i, v in next, Char do
+		if v:IsA("BasePart") then
+			v.CanCollide = false
+			v.Massless = true
+			v.Velocity = Vector3.new(0, 0, 0)
+		end
+	end
+
+	if Flinging == true then
+		Noclip()
+	else
+		NotificationSound:Play()
+		Unnoclip()
+	end
+	repeat
+		bambam.AngularVelocity = Vector3.new(0,999999999999,0)
+		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
+		wait(.2)
+		bambam.AngularVelocity = Vector3.new(0,0,0)
+		wait(.1)
+	until Flinging == false
+	bambam:Remove()
+	getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
 end
 
 local function HideGui(State)
@@ -1921,6 +1972,12 @@ CommandBar.FocusLost:Connect(function()
 		Player.CameraMode = Enum.CameraMode.Classic
 	end
 	
+	if message == "fling" then
+		Fling(true)
+	elseif message == "unfling" then
+		Fling(false)
+	end
+	
 	for i=1,10000 do
 		if message == "speed "..i then
 			NotificationSound:Play()
@@ -2006,9 +2063,9 @@ CommandBar.FocusLost:Connect(function()
 	end
 
 	if message == "noclip" then
-		Noclip(true)
+		Noclip()
 	elseif message == "unnoclip" then
-		Noclip(false)
+		Unnoclip()
 	end
 
 	if message == "float" then
@@ -2028,7 +2085,6 @@ local function StopCommands()
 	Float(false)
 	FlyJump(false)
 	Fly(false , 0)
-	Noclip(false)
 	Funny(false)
 	Funny2(false)
 	Funny3(false, 0)
@@ -2091,9 +2147,9 @@ Player.CharacterRemoving:Connect(function()
 	end
 end)
 
-local TotalCommands = 0
+TotalCommands = 0
 for i=1,#cmds do
-	local cmd = cmds[i]
+	cmd = cmds[i]
 	TotalCommands=TotalCommands+1
 	MakeNewTextCommand(cmd)
 end
