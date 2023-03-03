@@ -1,3 +1,13 @@
+if FC_LOADED and CURRENT_FC_ENDED == false and not _G.FC_DEBUG == true then
+	print([[Furs commands is already running!
+	If you want to run a new one,
+	first type in "endscript",
+	then you relaunch furs commands!
+	]])
+	return
+end
+pcall(function() getgenv().FC_LOADED = true getgenv().CURRENT_FC_ENDED = false end)
+
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Important";
 	Text = "This script is currently still being built! So it may be buggy or brake on death,";
@@ -45,6 +55,7 @@ ChatBypassing = false
 IsTyping = false
 IsDead = false
 FakeChatMessage = nil
+FakeChatAmount = 1
 spawnpos = nil
 
 cmds ={
@@ -83,8 +94,8 @@ cmds ={
 	"brightness [Number between 1-10000 (1 defult) {CLIENT}",
 	"fogend [Number between 1-10000] {CLIENT}",
 	"fogcolor [Number between 1-156] {CLIENT}",
-	"showbypasschat",
-	"hidebypasschat",
+	"showspamchat",
+	"hidespamchat",
 	"Shift+P [Enables freecam] {CLIENT}",
 	"ServerSided Commands:",
 	"float",
@@ -123,8 +134,8 @@ MainGui.Parent = Player.PlayerGui
 MainGui.ResetOnSpawn = false
 MainGui.Enabled = false
 MainFrame = Instance.new("Frame", MainGui)
-MainFrame.Position = UDim2.new(0.179, 0,0.172, 0)
-MainFrame.Size = UDim2.new(0.641, 0,0.656, 0)
+MainFrame.Position = UDim2.new(0.604, 0,0.549, 0)
+MainFrame.Size = UDim2.new(0.395, 0,0.41, 0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 UiCorner = Instance.new("UICorner", MainFrame)
 SecondMainFrame = Instance.new("Frame", MainFrame)
@@ -215,8 +226,8 @@ NightVisionUi.Size = UDim2.new(1.1,0,1.1,0)
 NightVisionUi.BackgroundTransparency = 1
 NightVisionUi.Visible = false
 CommandBar = Instance.new("TextBox", MainGui)
-CommandBar.Position = UDim2.new(0.788, 0,0.96, 0)
-CommandBar.Size = UDim2.new(0, 252,0, 23)
+CommandBar.Position = UDim2.new(0.792, 0,0.959, 0)
+CommandBar.Size = UDim2.new(0.208, 0,0.04, 0)
 CommandBar.BackgroundTransparency = 0.2
 CommandBar.BackgroundColor3 = Color3.fromRGB(56,56,56)
 CommandBar.TextStrokeTransparency = 0
@@ -227,8 +238,8 @@ CommandBar.Text = "Press , to type in a command"
 UiCorner = Instance.new("UICorner", CommandBar)
 
 FakeChatFrame = Instance.new("Frame", MainGui)
-FakeChatFrame.Position = UDim2.new(0.5,0,0.5,0)
-FakeChatFrame.Size = UDim2.new(0.315, 0,0.429, 0)
+FakeChatFrame.Position = UDim2.new(-0, 0,0.717, 0)
+FakeChatFrame.Size = UDim2.new(0.21, 0,0.283, 0)
 FakeChatFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 FakeChatFrame.Visible = false
 UiCorner = Instance.new("UICorner", FakeChatFrame)
@@ -236,6 +247,7 @@ SecondFakeChatMainFrame = Instance.new("Frame", FakeChatFrame)
 SecondFakeChatMainFrame.Position = UDim2.new(0,0,0.149,0)
 SecondFakeChatMainFrame.Size = UDim2.new(1, 0,0.851, 0)
 SecondFakeChatMainFrame.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+UiCorner = Instance.new("UICorner", SecondFakeChatMainFrame)
 CloseFakeChatButton = Instance.new("TextButton", FakeChatFrame)
 CloseFakeChatButton.Position = UDim2.new(0.901,0,0,0)
 CloseFakeChatButton.Size = UDim2.new(0.099, 0,0.149, 0)
@@ -244,22 +256,36 @@ CloseFakeChatButton.TextColor3 = Color3.fromRGB(255, 0, 0)
 CloseFakeChatButton.Text = "X"
 CloseFakeChatButton.TextScaled = true
 UiCorner = Instance.new("UICorner", CloseFakeChatButton)
-UiCorner = Instance.new("UICorner", SecondFakeChatMainFrame)
 MessageFakeChatText = Instance.new("TextBox", SecondFakeChatMainFrame)
-MessageFakeChatText.Position = UDim2.new(0.104, 0,0.127, 0)
-MessageFakeChatText.Size = UDim2.new(0.792, 0,0.354, 0)
-MessageFakeChatText.Text = "Type in a message you want to bypass (YOU CAN SAY ANYTHING)"
+MessageFakeChatText.Position = UDim2.new(0.045, 0,0.127, 0)
+MessageFakeChatText.Size = UDim2.new(0.643, 0,0.354, 0)
+MessageFakeChatText.Text = "Spam chat using this :3"
 MessageFakeChatText.TextScaled = true
 MessageFakeChatText.ClearTextOnFocus = false
 UiCorner = Instance.new("UICorner", MessageFakeChatText)
+SpamFakeChatAmountText = Instance.new("TextBox", SecondFakeChatMainFrame)
+SpamFakeChatAmountText.Position = UDim2.new(0.753, 0,0.127, 0)
+SpamFakeChatAmountText.Size = UDim2.new(0.196, 0,0.354, 0)
+SpamFakeChatAmountText.Text = "1"
+SpamFakeChatAmountText.TextScaled = true
+SpamFakeChatAmountText.ClearTextOnFocus = false
+UiCorner = Instance.new("UICorner", SpamFakeChatAmountText)
 ChatFakeChatButton = Instance.new("TextButton", SecondFakeChatMainFrame)
-ChatFakeChatButton.Position = UDim2.new(0.232, 0,0.613, 0)
-ChatFakeChatButton.Size = UDim2.new(0.533, 0,0.236, 0)
+ChatFakeChatButton.Position = UDim2.new(0.102, 0,0.656, 0)
+ChatFakeChatButton.Size = UDim2.new(0.345, 0,0.236, 0)
 ChatFakeChatButton.BackgroundColor3 = Color3.fromRGB(24, 104, 0)
 ChatFakeChatButton.TextColor3 = Color3.new(0,0,0)
 ChatFakeChatButton.Text = "Chat"
 ChatFakeChatButton.TextScaled = true
 UiCorner = Instance.new("UICorner", ChatFakeChatButton)
+SpamFakeChatAmountButton = Instance.new("TextButton", SecondFakeChatMainFrame)
+SpamFakeChatAmountButton.Position = UDim2.new(0.551, 0,0.656, 0)
+SpamFakeChatAmountButton.Size = UDim2.new(0.345, 0,0.236, 0)
+SpamFakeChatAmountButton.BackgroundColor3 = Color3.fromRGB(24, 104, 0)
+SpamFakeChatAmountButton.TextColor3 = Color3.new(0,0,0)
+SpamFakeChatAmountButton.Text = "Amount"
+SpamFakeChatAmountButton.TextScaled = true
+UiCorner = Instance.new("UICorner", SpamFakeChatAmountButton)
 
 --Ui PlayerData
 PlayerName = Instance.new("TextLabel", PlayerFrame)
@@ -395,12 +421,12 @@ MinimizeButton.MouseButton1Click:Connect(function()
 	ClickSound:Play()
 	if SecondMainFrame.Visible == true then
 		SecondMainFrame.Visible = false
-		MainFrame.Size = UDim2.new(0.3, 0,0.075, 0)
+		MainFrame.Size = UDim2.new(0.125, 0,0.041, 0)
 		MinimizeButton.Size = UDim2.new(0.11, 0,1, 0)
 		Title.Size = UDim2.new(0.942, 0,1, 0)
 	else
 		SecondMainFrame.Visible = true
-		MainFrame.Size = UDim2.new(0.641, 0,0.656, 0)
+		MainFrame.Size = UDim2.new(0.395, 0,0.41, 0)
 		MinimizeButton.Size = UDim2.new(0.058, 0,0.115, 0)
 		Title.Size = UDim2.new(0.942, 0,0.115, 0)
 	end
@@ -450,6 +476,30 @@ UIS.InputBegan:Connect(function(input,gameProcessed)
 	end
 end)
 
+local ForceStop = false
+SpamFakeChatAmountButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
+	if SpamFakeChatAmountButton.Text == "Amount" then
+		local Amount = FakeChatAmount
+		SpamFakeChatAmountButton.Text = "Stop"
+		SpamFakeChatAmountButton.BackgroundColor3 = Color3.fromRGB(255,0,0)
+		repeat
+			wait()
+			ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(FakeChatMessage, "All")
+			Amount=Amount-1
+		until Amount == 0 or ForceStop == true
+		wait(1)
+		SpamFakeChatAmountButton.Text = "Amount"
+		SpamFakeChatAmountButton.BackgroundColor3 = Color3.fromRGB(24, 104, 0)
+	else
+		SpamFakeChatAmountButton.Text = "Stopping.."
+		SpamFakeChatAmountButton.BackgroundColor3 = Color3.fromRGB(255,0,0)
+		ForceStop = true
+		wait(1)
+		ForceStop = false
+	end
+end)
+
 ChatFakeChatButton.MouseButton1Click:Connect(function()
 	ClickSound:Play()
 	ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(FakeChatMessage, "All")
@@ -457,12 +507,21 @@ end)
 
 MessageFakeChatText.FocusLost:Connect(function()
 	FakeChatMessage = MessageFakeChatText.Text
+	if FakeChatMessage == "" then
+		MessageFakeChatText.Text = "No message here xd (Chat will not show)"
+	end
+end)
+
+SpamFakeChatAmountText.FocusLost:Connect(function()
+	FakeChatAmount = SpamFakeChatAmountText.Text
 end)
 
 CloseFakeChatButton.MouseButton1Click:Connect(function()
 	ClickSound:Play()
 	FakeChatFrame.Visible = false
+	FakeChatFrame.Position = UDim2.new(-0, 0,0.717, 0)
 end)
+
 --Freecam
 local pi    = math.pi
 local abs   = math.abs
@@ -1519,10 +1578,11 @@ local function Fling(State)
 		Unnoclip()
 	end
 	repeat
-		bambam.AngularVelocity = Vector3.new(0,999999999999,0)
+		bambam.AngularVelocity = Vector3.new(0,999999999999999999999999,0)--999999999999
 		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
 		wait(.2)
-		bambam.AngularVelocity = Vector3.new(0,0,0)
+		--bambam.AngularVelocity = Vector3.new(0,0,0)
+		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
 		wait(.1)
 	until Flinging == false
 	bambam:Remove()
@@ -1669,11 +1729,20 @@ local DefultOutdoorAmbient = game.Lighting.OutdoorAmbient
 local RespawnPos = Instance.new("StringValue", nil)
 --Chatted commands
 CommandBar.FocusLost:Connect(function()
-	local message = CommandBar.Text
-	if message == "showbypasschat" then
+	local message = CommandBar.Text:lower()
+	
+	if message == "endscript" then
+		pcall(function()
+			getgenv().CURRENT_FC_ENDED = true
+			MainGui:Remove()
+			warn("Furs commands has ended succesfuly")
+		end)
+	end
+	
+	if message == "showspamchat" then
 		NotificationSound:Play()
 		FakeChatFrame.Visible = true
-	elseif message == "hidebypasschat" then
+	elseif message == "hidespamchat" then
 		NotificationSound:Play()
 		FakeChatFrame.Visible = false
 	end
