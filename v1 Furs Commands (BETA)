@@ -1,3 +1,7 @@
+NewestVersion = "1.0.15"
+ScriptVersion = "1.0.15"
+ScriptVersionCreationDate = "2023/1/21"
+
 if FC_LOADED and CURRENT_FC_ENDED == false and not _G.FC_DEBUG == true then
 	print([[Furs commands is already running!
 	If you want to run a new one,
@@ -15,9 +19,6 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 	Button1 = "Okay";
 	Icon = "rbxassetid://11570895459";
 })
-NewestVersion = 1.1
-ScriptVersion = 1.1
-ScriptVersionCreationDate = "2023/1/21"
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Script is loading..";
 	Text = "Please wait..";
@@ -29,7 +30,7 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 wait(wait(game:IsLoaded()))
 wait(1)
 Player = game.Players.LocalPlayer
-Players = game.Players:GetPlayers()
+Players = game:GetService("Players"):GetChildren()
 WorkspaceChildren = workspace:GetChildren()
 ReplicatedStorage = game.ReplicatedStorage
 Camera = workspace.CurrentCamera
@@ -51,6 +52,9 @@ Funnying4 = false
 Spinning = false
 Tpwalking = false
 ConstantFoving = false
+ConstantSpeeding = false
+ConstantJumpPowering = false
+AutoJumping = false
 ChatBypassing = false
 IsTyping = false
 IsDead = false
@@ -59,19 +63,17 @@ FakeChatAmount = 1
 spawnpos = nil
 
 cmds ={
-	"ClientSided Commands:",
-	"newestversion (Reconmended to use if version is old) {CLIENT}",
+	"{{{{{{{ ClientSided Commands }}}}}}}",
+	"newestversion (Used to check if script is upto date) {CLIENT}",
+	"getnew (Use if you need latest version) {CLIENT}",
+	"endscript {CLIENT}",
+	"cmds {CLIENT}",
 	"partxray {CLIENT}",
-	"unpartxray {CLIENT}",
 	"hideprints {CLIENT}",
 	"clearprints {CLIENT}",
 	"findWorkspace {CLIENT}",
 	"funny {CLIENT}",
-	"unfunny {CLIENT}",
 	"funny2 {CLIENT}",
-	"unfunny2 {CLIENT}",
-	"funny3 [Number between 1-10000] {CLIENT}",
-	"unfunny3 {CLIENT}",
 	"bighead {CLIENT}",
 	"smallhead {CLIENT}",
 	"normalhead {CLIENT}",
@@ -81,51 +83,59 @@ cmds ={
 	"hidemain {CLIENT}",
 	"showmain {CLIENT}",
 	"firstperson {CLIENT}",
-	"unfirstperson {CLIENT}",
 	"nightvision {CLIENT}",
-	"unnightvision {CLIENT}",
 	"day {CLIENT}",
 	"night {CLIENT",
 	"light {CLIENT}",
-	"unlight",
+	"showspamchat {CLIENT}",
+	"Shift+P [Enables freecam] {CLIENT}",
 	"fov [Number between 1-120 (70 defult)] {CLIENT}",
 	"constantfov [Number between 1-120 (70 defult)] {CLIENT}",
-	"unconstantfov",
+	"fogcolor [Number between 1-156] {CLIENT}",
 	"brightness [Number between 1-10000 (1 defult) {CLIENT}",
 	"fogend [Number between 1-10000] {CLIENT}",
-	"fogcolor [Number between 1-156] {CLIENT}",
-	"showspamchat",
-	"hidespamchat",
-	"Shift+P [Enables freecam] {CLIENT}",
-	"ServerSided Commands:",
+	"funny3 [Number between 1-10000] {CLIENT}",
+	"hidespamchat {CLIENT}",
+	"unconstantfov {CLIENT}",
+	"unpartxray {CLIENT}",
+	"unfunny {CLIENT}",
+	"unfirstperson {CLIENT}",
+	"unnightvision {CLIENT}",
+	"unlight {CLIENT}",
+	"unfunny2 {CLIENT}",
+	"unfunny3 {CLIENT}",
+	"{{{{{{{ ServerSided Commands }}}}}}}",
+	"vr [Uses fe vr script by Abacaxl @V3rmillion]",
 	"float",
-	"unfloat",
-	"follow [Player name or display]",
-	"unfollow",
-	"followpart [Model name showed in workspace]",
-	"unfollowpart",
 	"noclip",
-	"unnoclip",
 	"sit",
-	"to [Player name or display]",
-	"speed [Number between 1-10000 (Defult 16)]",
-	"jumppower [Number between 1-10000 (Defult 50)]",
 	"flyjump",
-	"unflyjump",
-	"fly [Number for fly speed (Defult 2)]",
-	"unfly",
 	"setspawn",
 	"toolrange",
-	"spin [Number between 1-10000]",
-	"unspin",
-	"headsit [Player name or display]",
-	"headstand [Player name or display]",
-	"tpwalk [Number between 1-10000]",
-	"untpwalk",
 	"rejoin",
 	"respawn",
 	"fling",
+	"followpart [Model name showed in workspace]",
+	"headsit [Player name or display]",
+	"headstand [Player name or display]",
+	"to [Player name or display]",
+	"follow [Player name or display]",
+	"speed [Number between 1-10000 (Defult 16)]",
+	"jumppower [Number between 1-10000 (Defult 50)]",
+	"constantspeed [Number between 1-10000]",
+	"constantjumppower [Number between 1-10000]",
+	"tpwalk [Number between 1-10000]",
+	"spin [Number between 1-10000]",
+	"fly [Number bewtween 1-10000 (Defult 2)]",
 	"unfling",
+	"unfloat",
+	"unfollow",
+	"unfollowpart",
+	"unspin",
+	"untpwalk",
+	"unflyjump",
+	"unfly",
+	"unnoclip",
 }
 
 --Setup
@@ -134,7 +144,7 @@ MainGui.Parent = Player.PlayerGui
 MainGui.ResetOnSpawn = false
 MainGui.Enabled = false
 MainFrame = Instance.new("Frame", MainGui)
-MainFrame.Position = UDim2.new(0.604, 0,0.549, 0)
+MainFrame.Position = UDim2.new(0.604, 0,0.561, 0)
 MainFrame.Size = UDim2.new(0.395, 0,0.41, 0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 UiCorner = Instance.new("UICorner", MainFrame)
@@ -144,7 +154,7 @@ SecondMainFrame.Size = UDim2.new(1, 0,0.885, 0)
 SecondMainFrame.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
 UiCorner = Instance.new("UICorner", SecondMainFrame)
 MinimizeButton = Instance.new("TextButton", MainFrame)
-MinimizeButton.Position = UDim2.new(0.942, 0,0, 0)
+MinimizeButton.Position = UDim2.new(0.883, 0,0, 0)
 MinimizeButton.Size = UDim2.new(0.058, 0,0.115, 0)
 MinimizeButton.BackgroundColor3 = Color3.fromRGB(76, 76, 76)
 MinimizeButton.Text = "-"
@@ -154,6 +164,17 @@ MinimizeButton.TextStrokeTransparency = 0
 MinimizeButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 MinimizeButton.FontFace = Font.fromEnum(Enum.Font.Arcade)
 UiCorner = Instance.new("UICorner", MinimizeButton)
+CloseButton = Instance.new("TextButton", MainFrame)
+CloseButton.Position = UDim2.new(0.942, 0,0, 0)
+CloseButton.Size = UDim2.new(0.058, 0,0.115, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(102, 0, 0)
+CloseButton.Text = "X"
+CloseButton.TextScaled = true
+CloseButton.RichText = true
+CloseButton.TextStrokeTransparency = 0
+CloseButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+CloseButton.FontFace = Font.fromEnum(Enum.Font.Arcade)
+UiCorner = Instance.new("UICorner", CloseButton)
 Title = Instance.new("TextLabel", MainFrame)
 Title.Position = UDim2.new(0, 0, 0, 0)
 Title.Size = UDim2.new(0.942, 0,0.115, 0)
@@ -226,8 +247,8 @@ NightVisionUi.Size = UDim2.new(1.1,0,1.1,0)
 NightVisionUi.BackgroundTransparency = 1
 NightVisionUi.Visible = false
 CommandBar = Instance.new("TextBox", MainGui)
-CommandBar.Position = UDim2.new(0.792, 0,0.959, 0)
-CommandBar.Size = UDim2.new(0.208, 0,0.04, 0)
+CommandBar.Position = UDim2.new(0.835, 0,0.971, 0)
+CommandBar.Size = UDim2.new(0.165, 0,0.028, 0)
 CommandBar.BackgroundTransparency = 0.2
 CommandBar.BackgroundColor3 = Color3.fromRGB(56,56,56)
 CommandBar.TextStrokeTransparency = 0
@@ -237,12 +258,21 @@ CommandBar.RichText = true
 CommandBar.Text = "Press , to type in a command"
 UiCorner = Instance.new("UICorner", CommandBar)
 
+--FakeChat
 FakeChatFrame = Instance.new("Frame", MainGui)
 FakeChatFrame.Position = UDim2.new(-0, 0,0.717, 0)
 FakeChatFrame.Size = UDim2.new(0.21, 0,0.283, 0)
 FakeChatFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 FakeChatFrame.Visible = false
 UiCorner = Instance.new("UICorner", FakeChatFrame)
+FakeChatTitle = Instance.new("TextLabel", FakeChatFrame)
+FakeChatTitle.Size = UDim2.new(1, 0,0.144, 0)
+FakeChatTitle.BackgroundTransparency = 1
+FakeChatTitle.Text = "Spam Chat"
+FakeChatTitle.TextScaled = true
+FakeChatTitle.TextXAlignment = Enum.TextXAlignment.Left
+FakeChatTitle.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+FakeChatTitle.TextStrokeTransparency = 0
 SecondFakeChatMainFrame = Instance.new("Frame", FakeChatFrame)
 SecondFakeChatMainFrame.Position = UDim2.new(0,0,0.149,0)
 SecondFakeChatMainFrame.Size = UDim2.new(1, 0,0.851, 0)
@@ -287,6 +317,40 @@ SpamFakeChatAmountButton.Text = "Amount"
 SpamFakeChatAmountButton.TextScaled = true
 UiCorner = Instance.new("UICorner", SpamFakeChatAmountButton)
 
+--CommandList
+CommandListFrame = Instance.new("Frame", MainGui)
+CommandListFrame.Position = UDim2.new(-0, 0,0.60, 0)
+CommandListFrame.Size = UDim2.new(0.326, 0,0.409, 0)
+CommandListFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
+CommandListFrame.Visible = false
+UiCorner = Instance.new("UICorner", CommandListFrame)
+CommandListCloseButton = Instance.new("TextButton", CommandListFrame)
+CommandListCloseButton.Position = UDim2.new(0.901,0,0,0)
+CommandListCloseButton.Size = UDim2.new(0.099, 0,0.149, 0)
+CommandListCloseButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+CommandListCloseButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+CommandListCloseButton.Text = "X"
+CommandListCloseButton.TextScaled = true
+UiCorner = Instance.new("UICorner", CommandListCloseButton)
+CommandListTitle = Instance.new("TextLabel", CommandListFrame)
+CommandListTitle.Size = UDim2.new(1, 0,0.144, 0)
+CommandListTitle.BackgroundTransparency = 1
+CommandListTitle.Text = "Command List"
+CommandListTitle.TextScaled = true
+CommandListTitle.TextXAlignment = Enum.TextXAlignment.Left
+CommandListTitle.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+CommandListTitle.TextStrokeTransparency = 0
+CommandListSecondMainFrame = Instance.new("Frame", CommandListFrame)
+CommandListSecondMainFrame.Position = UDim2.new(-0.003, 0,0.149, 0)
+CommandListSecondMainFrame.Size = UDim2.new(1, 0,0.851, 0)
+CommandListSecondMainFrame.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+UiCorner = Instance.new("UICorner", CommandListSecondMainFrame)
+CommandListScrollingFrame = Instance.new("ScrollingFrame", CommandListSecondMainFrame)
+CommandListScrollingFrame.Size = UDim2.new(1, 0,1, 0)
+CommandListScrollingFrame.BackgroundTransparency = 1
+CommandListScrollingFrame.CanvasSize = UDim2.new(0,0,500,0)
+UiListLayout = Instance.new("UIListLayout", CommandListScrollingFrame)
+
 --Ui PlayerData
 PlayerName = Instance.new("TextLabel", PlayerFrame)
 PlayerName.Size = UDim2.new(0.98, 0,0.1, 0)
@@ -318,7 +382,7 @@ TimeUsingScript.RichText = true
 GameName = Instance.new("TextLabel", PlayerFrame)
 GameName.Size = UDim2.new(0.98, 0,0.05, 0)
 GameName.BackgroundTransparency = 1
-GameName.Text = "Game updated at "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Name.." ("..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).AssetId..")"
+GameName.Text = "Game Name: "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Name.." ("..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).AssetId..")"
 GameName.TextColor3 = Color3.new(0,0,0)
 GameName.TextStrokeTransparency = 0
 GameName.TextStrokeColor3 = Color3.new(1,1,1)
@@ -327,7 +391,7 @@ GameName.RichText = true
 GameCreation = Instance.new("TextLabel", PlayerFrame)
 GameCreation.Size = UDim2.new(0.98, 0,0.05, 0)
 GameCreation.BackgroundTransparency = 1
-GameCreation.Text = "Game created at "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Created
+GameCreation.Text = "Game created at: "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Created
 GameCreation.TextColor3 = Color3.new(0,0,0)
 GameCreation.TextStrokeTransparency = 0
 GameCreation.TextStrokeColor3 = Color3.new(1,1,1)
@@ -336,7 +400,7 @@ GameCreation.RichText = true
 GameUpdate = Instance.new("TextLabel", PlayerFrame)
 GameUpdate.Size = UDim2.new(0.98, 0,0.05, 0)
 GameUpdate.BackgroundTransparency = 1
-GameUpdate.Text = "Game updated at "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Updated
+GameUpdate.Text = "Game updated at: "..game.MarketplaceService:GetProductInfo(game.PlaceId, Enum.InfoType.Asset).Updated
 GameUpdate.TextColor3 = Color3.new(0,0,0)
 GameUpdate.TextStrokeTransparency = 0
 GameUpdate.TextStrokeColor3 = Color3.new(1,1,1)
@@ -370,26 +434,26 @@ LoadedSound = Instance.new("Sound", Player)
 LoadedSound.SoundId = "rbxassetid://7383525713"
 
 --Getting character
-local Char = Player.Character
-local Head = Char.Head
-local Torso
-local LowerTorso
-local LeftArm
-local UpperLeftArm
-local LowerLeftArm
-local LeftHand
-local RightArm
-local UpperRightArm
-local LowerRightArm
-local RightHand
-local LeftLeg
-local UpperLeftLeg
-local LowerLeftLeg
-local LeftFoot
-local RightLeg
-local UpperRightLeg
-local LowerRightLeg
-local RightFoot
+Char = Player.Character
+Head = Char.Head
+Torso = nil
+LowerTorso = nil
+LeftArm = nil
+UpperLeftArm = nil
+LowerLeftArm = nil
+LeftHand = nil
+RightArm = nil
+UpperRightArm = nil
+LowerRightArm = nil
+RightHand = nil
+LeftLeg = nil
+UpperLeftLeg = nil
+LowerLeftLeg = nil
+LeftFoot = nil
+RightLeg = nil
+UpperRightLeg = nil
+LowerRightLeg = nil
+RightFoot = nil
 
 if Char:FindFirstChild("UpperTorso") then
 	Torso = Char.UpperTorso
@@ -423,13 +487,22 @@ MinimizeButton.MouseButton1Click:Connect(function()
 		SecondMainFrame.Visible = false
 		MainFrame.Size = UDim2.new(0.125, 0,0.041, 0)
 		MinimizeButton.Size = UDim2.new(0.11, 0,1, 0)
+		MinimizeButton.Position = MinimizeButton.Position - UDim2.new(0.05,0,0)
+		CloseButton.Size = UDim2.new(0.11, 0,1, 0)
 		Title.Size = UDim2.new(0.942, 0,1, 0)
 	else
 		SecondMainFrame.Visible = true
 		MainFrame.Size = UDim2.new(0.395, 0,0.41, 0)
 		MinimizeButton.Size = UDim2.new(0.058, 0,0.115, 0)
+		MinimizeButton.Position = MinimizeButton.Position + UDim2.new(0.05,0,0)
+		CloseButton.Size = UDim2.new(0.058, 0,0.115, 0)
 		Title.Size = UDim2.new(0.942, 0,0.115, 0)
 	end
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
+	MainFrame.Visible = false
 end)
 
 PlayerButton.MouseButton1Click:Connect(function()
@@ -476,7 +549,7 @@ UIS.InputBegan:Connect(function(input,gameProcessed)
 	end
 end)
 
-local ForceStop = false
+ForceStop = false
 SpamFakeChatAmountButton.MouseButton1Click:Connect(function()
 	ClickSound:Play()
 	if SpamFakeChatAmountButton.Text == "Amount" then
@@ -522,32 +595,37 @@ CloseFakeChatButton.MouseButton1Click:Connect(function()
 	FakeChatFrame.Position = UDim2.new(-0, 0,0.717, 0)
 end)
 
+CommandListCloseButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
+	CommandListFrame.Visible = false
+end)
+
 --Freecam
-local pi    = math.pi
-local abs   = math.abs
-local clamp = math.clamp
-local exp   = math.exp
-local rad   = math.rad
-local sign  = math.sign
-local sqrt  = math.sqrt
-local tan   = math.tan
+pi    = math.pi
+abs   = math.abs
+clamp = math.clamp
+exp   = math.exp
+rad   = math.rad
+sign  = math.sign
+sqrt  = math.sqrt
+tan   = math.tan
 
-local ContextActionService = game:GetService("ContextActionService")
-local RunService = game:GetService("RunService")
-local StarterGui = game:GetService("StarterGui")
-local Playerss = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
+ContextActionService = game:GetService("ContextActionService")
+RunService = game:GetService("RunService")
+StarterGui = game:GetService("StarterGui")
+Playerss = game:GetService("Players")
+UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
-local Settings = UserSettings()
-local GameSettings = Settings.GameSettings
+Settings = UserSettings()
+GameSettings = Settings.GameSettings
 
-local LocalPlayer = Playerss.LocalPlayer
+LocalPlayer = Playerss.LocalPlayer
 if not LocalPlayer then
 	Playerss:GetPropertyChangedSignal("LocalPlayer"):Wait()
 	LocalPlayer = Playerss.LocalPlayer
 end
 
-local Camera = Workspace.CurrentCamera
+Camera = Workspace.CurrentCamera
 Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
 	local newCamera = Workspace.CurrentCamera
 	if newCamera then
@@ -555,7 +633,7 @@ Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
 	end
 end)
 
-local FFlagUserExitFreecamBreaksWithShiftlock
+FFlagUserExitFreecamBreaksWithShiftlock = nil
 do
 	local success, result = pcall(function()
 		return UserSettings():IsUserFeatureEnabled("UserExitFreecamBreaksWithShiftlock")
@@ -565,23 +643,23 @@ end
 
 ------------------------------------------------------------------------
 
-local TOGGLE_INPUT_PRIORITY = Enum.ContextActionPriority.Low.Value
-local INPUT_PRIORITY = Enum.ContextActionPriority.High.Value
-local FREECAM_MACRO_KB = {Enum.KeyCode.LeftShift, Enum.KeyCode.P}
+TOGGLE_INPUT_PRIORITY = Enum.ContextActionPriority.Low.Value
+INPUT_PRIORITY = Enum.ContextActionPriority.High.Value
+FREECAM_MACRO_KB = {Enum.KeyCode.LeftShift, Enum.KeyCode.P}
 
-local NAV_GAIN = Vector3.new(1, 1, 1)*64
-local PAN_GAIN = Vector2.new(0.75, 1)*8
-local FOV_GAIN = 300
+NAV_GAIN = Vector3.new(1, 1, 1)*64
+PAN_GAIN = Vector2.new(0.75, 1)*8
+FOV_GAIN = 300
 
-local PITCH_LIMIT = rad(90)
+PITCH_LIMIT = rad(90)
 
-local VEL_STIFFNESS = 1.5
-local PAN_STIFFNESS = 1.0
-local FOV_STIFFNESS = 4.0
+VEL_STIFFNESS = 1.5
+PAN_STIFFNESS = 1.0
+FOV_STIFFNESS = 4.0
 
 ------------------------------------------------------------------------
 
-local Spring = {} do
+Spring = {} do
 	Spring.__index = Spring
 
 	function Spring.new(freq, pos)
@@ -617,17 +695,17 @@ end
 
 ------------------------------------------------------------------------
 
-local cameraPos = Vector3.new()
-local cameraRot = Vector2.new()
-local cameraFov = 0
+cameraPos = Vector3.new()
+cameraRot = Vector2.new()
+cameraFov = 0
 
-local velSpring = Spring.new(VEL_STIFFNESS, Vector3.new())
-local panSpring = Spring.new(PAN_STIFFNESS, Vector2.new())
-local fovSpring = Spring.new(FOV_STIFFNESS, 0)
+velSpring = Spring.new(VEL_STIFFNESS, Vector3.new())
+panSpring = Spring.new(PAN_STIFFNESS, Vector2.new())
+fovSpring = Spring.new(FOV_STIFFNESS, 0)
 
 ------------------------------------------------------------------------
 
-local Input = {} do
+Input = {} do
 	local thumbstickCurve do
 		local K_CURVATURE = 2.0
 		local K_DEADZONE = 0.15
@@ -645,7 +723,7 @@ local Input = {} do
 		end
 	end
 
-	local gamepad = {
+	gamepad = {
 		ButtonX = 0,
 		ButtonY = 0,
 		DPadDown = 0,
@@ -656,7 +734,7 @@ local Input = {} do
 		Thumbstick2 = Vector2.new(),
 	}
 
-	local keyboard = {
+	keyboard = {
 		W = 0,
 		A = 0,
 		S = 0,
@@ -675,21 +753,21 @@ local Input = {} do
 		RightShift = 0,
 	}
 
-	local mouse = {
+	mouse = {
 		Delta = Vector2.new(),
 		MouseWheel = 0,
 	}
 
-	local NAV_GAMEPAD_SPEED  = Vector3.new(1, 1, 1)
-	local NAV_KEYBOARD_SPEED = Vector3.new(1, 1, 1)
-	local PAN_MOUSE_SPEED    = Vector2.new(1, 1)*(pi/64)
-	local PAN_GAMEPAD_SPEED  = Vector2.new(1, 1)*(pi/8)
-	local FOV_WHEEL_SPEED    = 1.0
-	local FOV_GAMEPAD_SPEED  = 0.25
-	local NAV_ADJ_SPEED      = 0.75
-	local NAV_SHIFT_MUL      = 0.25
+	NAV_GAMEPAD_SPEED  = Vector3.new(1, 1, 1)
+	NAV_KEYBOARD_SPEED = Vector3.new(1, 1, 1)
+	PAN_MOUSE_SPEED    = Vector2.new(1, 1)*(pi/64)
+	PAN_GAMEPAD_SPEED  = Vector2.new(1, 1)*(pi/8)
+	FOV_WHEEL_SPEED    = 1.0
+	FOV_GAMEPAD_SPEED  = 0.25
+	NAV_ADJ_SPEED      = 0.75
+	NAV_SHIFT_MUL      = 0.25
 
-	local navSpeed = 1
+	navSpeed = 1
 
 	function Input.Vel(dt)
 		navSpeed = clamp(navSpeed + dt*(keyboard.Up - keyboard.Down)*NAV_ADJ_SPEED, 0.01, 4)
@@ -729,38 +807,38 @@ local Input = {} do
 	end
 
 	do
-		local function Keypress(action, state, input)
+		function Keypress(action, state, input)
 			keyboard[input.KeyCode.Name] = state == Enum.UserInputState.Begin and 1 or 0
 			return Enum.ContextActionResult.Sink
 		end
 
-		local function GpButton(action, state, input)
+		function GpButton(action, state, input)
 			gamepad[input.KeyCode.Name] = state == Enum.UserInputState.Begin and 1 or 0
 			return Enum.ContextActionResult.Sink
 		end
 
-		local function MousePan(action, state, input)
+		function MousePan(action, state, input)
 			local delta = input.Delta
 			mouse.Delta = Vector2.new(-delta.y, -delta.x)
 			return Enum.ContextActionResult.Sink
 		end
 
-		local function Thumb(action, state, input)
+		function Thumb(action, state, input)
 			gamepad[input.KeyCode.Name] = input.Position
 			return Enum.ContextActionResult.Sink
 		end
 
-		local function Trigger(action, state, input)
+		function Trigger(action, state, input)
 			gamepad[input.KeyCode.Name] = input.Position.z
 			return Enum.ContextActionResult.Sink
 		end
 
-		local function MouseWheel(action, state, input)
+		function MouseWheel(action, state, input)
 			mouse[input.UserInputType.Name] = -input.Position.z
 			return Enum.ContextActionResult.Sink
 		end
 
-		local function Zero(t)
+		function Zero(t)
 			for k, v in pairs(t) do
 				t[k] = v*0
 			end
@@ -798,7 +876,7 @@ local Input = {} do
 	end
 end
 
-local function GetFocusDistance(cameraFrame)
+function GetFocusDistance(cameraFrame)
 	local znear = 0.1
 	local viewport = Camera.ViewportSize
 	local projy = 2*tan(cameraFov/2)
@@ -830,7 +908,7 @@ end
 
 ------------------------------------------------------------------------
 
-local function StepFreecam(dt)
+function StepFreecam(dt)
 	local vel = velSpring:Update(dt, Input.Vel(dt))
 	local pan = panSpring:Update(dt, Input.Pan(dt))
 	local fov = fovSpring:Update(dt, Input.Fov(dt))
@@ -849,7 +927,7 @@ local function StepFreecam(dt)
 	Camera.FieldOfView = cameraFov
 end
 
-local function CheckMouseLockAvailability()
+function CheckMouseLockAvailability()
 	local devAllowsMouseLock = Playerss.LocalPlayer.DevEnableMouseLock
 	local devMovementModeIsScriptable = Playerss.LocalPlayer.DevComputerMovementMode == Enum.DevComputerMovementMode.Scriptable
 	local userHasMouseLockModeEnabled = GameSettings.ControlMode == Enum.ControlMode.MouseLockSwitch
@@ -861,7 +939,7 @@ end
 
 ------------------------------------------------------------------------
 
-local PlayerState = {} do
+PlayerState = {} do
 	local mouseBehavior
 	local mouseIconEnabled
 	local cameraType
@@ -875,7 +953,7 @@ local PlayerState = {} do
 		Health = true,
 		PlayerList = true,
 	}
-	local setCores = {
+	setCores = {
 		BadgesNotificationsActive = true,
 		PointsNotificationsActive = true,
 	}
@@ -954,7 +1032,7 @@ local PlayerState = {} do
 	end
 end
 
-local function StartFreecam()
+function StartFreecam()
 	local cameraCFrame = Camera.CFrame
 	cameraRot = Vector2.new(cameraCFrame:toEulerAnglesYXZ())
 	cameraPos = cameraCFrame.p
@@ -969,7 +1047,7 @@ local function StartFreecam()
 	Input.StartCapture()
 end
 
-local function StopFreecam()
+function StopFreecam()
 	Input.StopCapture()
 	RunService:UnbindFromRenderStep("Freecam")
 	PlayerState.Pop()
@@ -980,7 +1058,7 @@ end
 do
 	local enabled = false
 
-	local function ToggleFreecam()
+	function ToggleFreecam()
 		if enabled then
 			StopFreecam()
 		else
@@ -989,7 +1067,7 @@ do
 		enabled = not enabled
 	end
 
-	local function CheckMacro(macro)
+	function CheckMacro(macro)
 		for i = 1, #macro - 1 do
 			if not UserInputService:IsKeyDown(macro[i]) then
 				return
@@ -998,7 +1076,7 @@ do
 		ToggleFreecam()
 	end
 
-	local function HandleActivationInput(action, state, input)
+	function HandleActivationInput(action, state, input)
 		if state == Enum.UserInputState.Begin then
 			if input.KeyCode == FREECAM_MACRO_KB[#FREECAM_MACRO_KB] then
 				CheckMacro(FREECAM_MACRO_KB)
@@ -1052,7 +1130,7 @@ function dragify(Frame)
 	end)
 end
 
-local function PrintNothing(Amount)
+function PrintNothing(Amount)
 	local Second = false
 	for i=1,Amount do
 		wait()
@@ -1066,7 +1144,7 @@ local function PrintNothing(Amount)
 	end
 end
 
-local function SendNotification(TitleText, Text, Duration, Button1Text)
+function SendNotification(TitleText, Text, Duration, Button1Text)
 	game:GetService("StarterGui"):SetCore("SendNotification", {
 		Title = TitleText;
 		Text = Text;
@@ -1075,11 +1153,10 @@ local function SendNotification(TitleText, Text, Duration, Button1Text)
 	})
 end
 
-local function MakeNewTextPrint(Text)
+function MakeNewTextPrint(Text)
 	local TextLabel = Instance.new("TextLabel")
 	TextLabel.Parent = PrintsFrame
 	TextLabel.Size = UDim2.new(0.97,0,0.00001,0)
-	TextLabel.BackgroundTransparency = 1
 	TextLabel.TextStrokeTransparency = 0
 	TextLabel.TextColor3 = Color3.new(0.176471, 0.176471, 0.176471)
 	TextLabel.TextStrokeColor3 = Color3.new(1,1,1)
@@ -1089,13 +1166,32 @@ local function MakeNewTextPrint(Text)
 	TextLabel.RichText = true
 end
 
-local function MakeNewTextCommand(Text)
+function MakeNewTextCommand(Text)
 	local TextLabel = Instance.new("TextLabel")
 	TextLabel.Parent = CommandsFrame
 	TextLabel.Size = UDim2.new(0.97,0,0.00025,0)
-	TextLabel.BackgroundTransparency = 1
 	TextLabel.TextStrokeTransparency = 0
-	TextLabel.TextColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+	if Text == "{{{{{{{ ServerSided Commands }}}}}}}" or Text == "{{{{{{{ ClientSided Commands }}}}}}}" then
+		TextLabel.TextColor3 = Color3.new(0.54902, 0, 0)
+	else
+		TextLabel.TextColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+	end
+	TextLabel.TextStrokeColor3 = Color3.new(1, 1, 1)
+	TextLabel.Text = Text
+	TextLabel.TextScaled = true
+	TextLabel.TextWrapped = true
+	TextLabel.RichText = true
+	
+	--Command List
+	local TextLabel = Instance.new("TextLabel")
+	TextLabel.Parent = CommandListScrollingFrame
+	TextLabel.Size = UDim2.new(0.97,0,0.00025,0)
+	TextLabel.TextStrokeTransparency = 0
+	if Text == "{{{{{{{ ServerSided Commands }}}}}}}" or Text == "{{{{{{{ ClientSided Commands }}}}}}}" then
+		TextLabel.TextColor3 = Color3.new(0.54902, 0, 0)
+	else
+		TextLabel.TextColor3 = Color3.new(0.176471, 0.176471, 0.176471)
+	end
 	TextLabel.TextStrokeColor3 = Color3.new(1, 1, 1)
 	TextLabel.Text = Text
 	TextLabel.TextScaled = true
@@ -1104,7 +1200,7 @@ local function MakeNewTextCommand(Text)
 end
 
 
-local function Float(State)
+function Float(State)
 	NotificationSound:Play()
 	Floating = State
 	local Lower = false
@@ -1154,7 +1250,7 @@ local function Float(State)
 	end
 end
 
-local function Follow(State, Followed)
+function Follow(State, Followed)
 	NotificationSound:Play()
 	Following = State
 	while Following == true and IsDead == false do
@@ -1163,7 +1259,7 @@ local function Follow(State, Followed)
 	end
 end
 
-local function FollowNPC(State, Followed)
+function FollowNPC(State, Followed)
 	NotificationSound:Play()
 	Following = State
 	while Following == true and IsDead == false do
@@ -1172,8 +1268,8 @@ local function FollowNPC(State, Followed)
 	end
 end
 
-local FoundItems = 0
-local function FoundMore(Model)
+FoundItems = 0
+function FoundMore(Model)
 	local ModelChildren = Model:GetChildren()
 	for i=1,#ModelChildren do
 		wait()
@@ -1189,7 +1285,7 @@ local function FoundMore(Model)
 	end
 end
 
-local function FindWorkspace()
+function FindWorkspace()
 	PrintNothing(10)
 	NotificationSound2:Play()
 	for i=1,#WorkspaceChildren do
@@ -1206,7 +1302,7 @@ local function FindWorkspace()
 	end
 end
 
-local function FoundMoreXray(Model)
+function FoundMoreXray(Model)
 	local ModelChildren = Model:GetChildren()
 	for i=1,#ModelChildren do
 		if ModelChildren[i]:IsA("Part") then
@@ -1223,7 +1319,7 @@ local function FoundMoreXray(Model)
 	end
 end
 
-local function FoundMoreUnxray(Model)
+function FoundMoreUnxray(Model)
 	local ModelChildren = Model:GetChildren()
 	for i=1,#ModelChildren do
 		if ModelChildren[i]:IsA("Part") then
@@ -1240,7 +1336,7 @@ local function FoundMoreUnxray(Model)
 	end
 end
 
-local function FoundMoreunNoclip(Model)
+function FoundMoreunNoclip(Model)
 	local ModelChildren = Model:GetChildren()
 	for i=1,#ModelChildren do
 		if ModelChildren[i]:IsA("Part") then
@@ -1255,8 +1351,8 @@ local function FoundMoreunNoclip(Model)
 	end
 end
 
-local Clip
-local function Noclip()
+Clip = nil
+function Noclip()
 	NotificationSound:Play()
 	Clip = false
 	wait(0.1)
@@ -1272,19 +1368,20 @@ local function Noclip()
 	Nocliping = RunService.Stepped:Connect(NoclipLoop)
 end
 
-local function Unnoclip()
+function Unnoclip()
+	NotificationSound:Play()
 	if Nocliping then
 		Nocliping:Disconnect()
 	end
 	Clip = true
 end
 
-local function TeleportTo(PlayerTo)
+function TeleportTo(PlayerTo)
 	NotificationSound:Play()
 	getRoot(Player.Character).CFrame = PlayerTo.Character.HumanoidRootPart
 end
 
-local function FlyJump(State)
+function FlyJump(State)
 	NotificationSound:Play()
 	FlyJumping = State
 	while FlyJumping == true and IsDead == false do
@@ -1302,13 +1399,13 @@ local function FlyJump(State)
 	end
 end
 
-local function SetSpawn()
+function SetSpawn()
 	NotificationSound:Play()
 	spawnpos = getRoot(Player.Character).CFrame
 	SendNotification('Spawn Point','Spawn point created at '..tostring(spawnpos))
 end
 
-local function ToolRange(Tool)
+function ToolRange(Tool)
 	if Tool:FindFirstChild("Handle") then
 		NotificationSound:Play()
 		Tool.Handle.Size = Vector3.new(1,1,35)
@@ -1320,10 +1417,10 @@ local function ToolRange(Tool)
 	end
 end
 
-local lplayer = game:GetService("Players").LocalPlayer
-local flying = false
-local a = 1
-local function Fly(State, Number)
+lplayer = game:GetService("Players").LocalPlayer
+flying = false
+a = 1
+function Fly(State, Number)
 	NotificationSound:Play()
 	if State == true then
 		SendNotification("Note,", "You can noclip by pressing E", 5, "Okay")
@@ -1437,7 +1534,7 @@ local function Fly(State, Number)
 	end
 end
 
-local function Funny(State)
+function Funny(State)
 	Funnying = State
 	FunnyNotificationSound:Play()
 	while Funnying == true and IsDead == false do
@@ -1466,7 +1563,7 @@ local function Funny(State)
 	end
 end
 
-local function Funny2(State)
+function Funny2(State)
 	FunnyNotificationSound:Play()
 	Funnying2 = State
 	while Funnying2 == true and IsDead == false do
@@ -1481,7 +1578,7 @@ local function Funny2(State)
 	end
 end
 
-local function RemoveHats()
+function RemoveHats()
 	NotificationSound:Play()
 	local CharC = Char:GetChildren()
 
@@ -1492,7 +1589,7 @@ local function RemoveHats()
 	end
 end
 
-local function RestoreHats()
+function RestoreHats()
 	NotificationSound:Play()
 	local CharC = Char:GetChildren()
 
@@ -1503,7 +1600,7 @@ local function RestoreHats()
 	end
 end
 
-local function Funny3(State, Number)
+function Funny3(State, Number)
 	FunnyNotificationSound:Play()
 	Funnying3 = State
 	while Funnying3 == true and IsDead == false do
@@ -1512,7 +1609,7 @@ local function Funny3(State, Number)
 	end
 end
 
-local function Spin(State, Number)
+function Spin(State, Number)
 	NotificationSound:Play()
 	Spinning = State
 	for _, child in pairs(Player.Character:GetDescendants()) do
@@ -1520,7 +1617,7 @@ local function Spin(State, Number)
 			child.CustomPhysicalProperties = PhysicalProperties.new(math.huge, 0.3, 0.5)
 		end
 	end
-	
+
 	wait(.1)
 	local bambam = Instance.new("BodyAngularVelocity")
 	bambam.Name = "idk"
@@ -1536,7 +1633,7 @@ local function Spin(State, Number)
 			v.Velocity = Vector3.new(0, 0, 0)
 		end
 	end
-	
+
 	repeat
 		bambam.AngularVelocity = Vector3.new(0,Number,0)
 		wait()
@@ -1547,7 +1644,7 @@ local function Spin(State, Number)
 	getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
 end
 
-local function Fling(State)
+function Fling(State)
 	Flinging = State
 	for _, child in pairs(Player.Character:GetDescendants()) do
 		if child:IsA("BasePart") then
@@ -1574,22 +1671,18 @@ local function Fling(State)
 	if Flinging == true then
 		Noclip()
 	else
-		NotificationSound:Play()
 		Unnoclip()
 	end
 	repeat
 		bambam.AngularVelocity = Vector3.new(0,999999999999999999999999,0)--999999999999
-		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
 		wait(.2)
-		--bambam.AngularVelocity = Vector3.new(0,0,0)
-		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
+		bambam.AngularVelocity = Vector3.new(0,0,0)
 		wait(.1)
 	until Flinging == false
 	bambam:Remove()
-	getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
 end
 
-local function HideGui(State)
+function HideGui(State)
 	NotificationSound:Play()
 	local PlayerGui = Player.PlayerGui:GetChildren()
 	if State == true and IsDead == false then
@@ -1611,64 +1704,42 @@ local function HideGui(State)
 	end
 end
 
-local function Headsit(PlayerTo)
+--0,0.2,0.7
+function Headsit(PlayerTo)
+	if headSit then headSit:Disconnect() end
 	NotificationSound:Play()
 	Player.Character.Humanoid.Sit = true
-	if PlayerTo.Character:FindFirstChild("Torso") then
-		PlayerTo.Character.Torso.Anchored = true
-	else
-		PlayerTo.Character.UpperTorso.Anchored = true
-	end
-	local Weld = Instance.new("Weld", Player.Character.HumanoidRootPart)
-	Weld.Part0 = Player.Character.HumanoidRootPart
-	Weld.Part1 = PlayerTo.Character.Head
-	Weld.C1 = CFrame.fromMatrix(Vector3.new(0,0.2,0.7), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
-	if PlayerTo.Character:FindFirstChild("Torso") then
-		PlayerTo.Character.Torso.Anchored = false
-	else
-		PlayerTo.Character.UpperTorso.Anchored = false
-	end
-	
+
 	while Player.Character.Humanoid.Sit == true and IsDead == false do
 		wait()
-		if Player.Character.Humanoid.Sit == false then
-			Weld:Remove()
-		end
+		headSit = RunService.Heartbeat:Connect(function()
+			if Player.Character.Humanoid.Sit == true then
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,1.6,0.4)
+			else
+				headSit:Disconnect()
+			end
+		end)
 	end
 end
 
-local function HeadStand(PlayerTo)
+function HeadStand(PlayerTo)
+	if headStand then headStand:Disconnect() end
 	NotificationSound:Play()
 	Player.Character.Humanoid.PlatformStand = true
-	if PlayerTo.Character:FindFirstChild("Torso") then
-		PlayerTo.Character.Torso.Anchored = true
-	else
-		PlayerTo.Character.UpperTorso.Anchored = true
-	end
-	local Weld = Instance.new("Weld", Torso)
-	Weld.Part0 = Torso
-	Weld.Part1 = PlayerTo.Character.Head
-	Weld.C1 = CFrame.fromMatrix(Vector3.new(0,3.5,0), Vector3.xAxis, Vector3.yAxis, Vector3.zAxis)
-	if PlayerTo.Character:FindFirstChild("Torso") then
-		PlayerTo.Character.Torso.Anchored = false
-	else
-		PlayerTo.Character.UpperTorso.Anchored = false
-	end
-	
+
 	while Player.Character.Humanoid.PlatformStand == true and IsDead == false do
 		wait()
-		if Player.Character.Humanoid.Jump == true then
-			Weld:Remove()
-			Player.Character.Humanoid.PlatformStand = false
-		end
+		headStand = RunService.Heartbeat:Connect(function()
+			if Player.Character.Humanoid.PlatformStand == true then
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,5,0)
+			else
+				headStand:Disconnect()
+			end
+		end)
 	end
 end
 
-local Forward = false
-local Backward = false
-local Left = false
-local Right = false
-local function Tpwalk(State, Number)
+function Tpwalk(State, Number)
 	local Speed
 	NotificationSound:Play()
 	Tpwalking = State
@@ -1684,7 +1755,7 @@ local function Tpwalk(State, Number)
 	end
 end
 
-local function Funny4(State, Number)
+function Funny4(State, Number)
 	NotificationSound:Play()
 	Funnying4 = State
 	while Funnying4 == true and IsDead == false do
@@ -1699,22 +1770,43 @@ local function Funny4(State, Number)
 	end
 end
 
-local ConstantFovNumber
-local function ConstantFov(State, Number)
+function ConstantFov(State, Number)
 	ConstantFoving = State
-	ConstantFovNumber = Number
-	
-	while ConstantFoving == true do
-		wait()
-		Camera.FieldOfView = ConstantFovNumber
+
+	while ConstantFoving == true do wait()
+		Camera.FieldOfView = Number
 	end
 end
 
-local DefultAtmoColor
-local DefultAtmoDecay
-local DefultAtmoDensity
-local DefultFogColor
-local DefultFogEnd
+function ConstantSpeed(State, Number)
+	ConstantSpeeding = State
+	
+	while ConstantSpeeding == true do
+		Player.Character.Humanoid.WalkSpeed = Number
+	end
+end
+
+function ConstantJumpPower(State, Number)
+	ConstantJumpPowering = State
+
+	while ConstantJumpPowering == true do wait()
+		Player.Character.Humanoid.JumpPower = Number
+	end
+end
+
+function AutoJump(State)
+	AutoJumping = State
+	
+	while AutoJumping == true do wait()
+		Player.Character.Humanoid.Jump = true
+	end
+end
+
+DefultAtmoColor = nil
+DefultAtmoDecay = nil
+DefultAtmoDensity = nil
+DefultFogColor = nil
+DefultFogEnd = nil
 if game.Lighting:FindFirstChildOfClass("Atmosphere") then
 	DefultAtmoColor = game.Lighting:FindFirstChildOfClass("Atmosphere").Color
 	DefultAtmoDecay = game.Lighting:FindFirstChildOfClass("Atmosphere").Decay
@@ -1723,14 +1815,14 @@ else
 	DefultFogColor = game.Lighting.FogColor
 	DefultFogEnd = game.Lighting.FogEnd
 end
-local DefultBrightness = game.Lighting.Brightness
-local DefultAmbientColor = game.Lighting.Ambient
-local DefultOutdoorAmbient = game.Lighting.OutdoorAmbient
-local RespawnPos = Instance.new("StringValue", nil)
+DefultBrightness = game.Lighting.Brightness
+DefultAmbientColor = game.Lighting.Ambient
+DefultOutdoorAmbient = game.Lighting.OutdoorAmbient
+RespawnPos = Instance.new("StringValue", nil)
 --Chatted commands
 CommandBar.FocusLost:Connect(function()
 	local message = CommandBar.Text:lower()
-	
+
 	if message == "endscript" then
 		pcall(function()
 			getgenv().CURRENT_FC_ENDED = true
@@ -1739,6 +1831,16 @@ CommandBar.FocusLost:Connect(function()
 		end)
 	end
 	
+	if message == "cmds" then
+		NotificationSound:Play()
+		CommandListFrame.Visible = true
+	end
+	
+	if message == "vr" then
+		SendNotification("Wait..", "Fe Vr is loading..", 5, nil)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/vr.lua"))()
+	end
+
 	if message == "showspamchat" then
 		NotificationSound:Play()
 		FakeChatFrame.Visible = true
@@ -1746,7 +1848,7 @@ CommandBar.FocusLost:Connect(function()
 		NotificationSound:Play()
 		FakeChatFrame.Visible = false
 	end
-	
+
 	if message == "day" then
 		NotificationSound:Play()
 		game.Lighting.TimeOfDay = "14:00:00"
@@ -1754,7 +1856,7 @@ CommandBar.FocusLost:Connect(function()
 		NotificationSound:Play()
 		game.Lighting.TimeOfDay = "0:00:00"
 	end
-	
+
 	if message == "light" then
 		NotificationSound:Play()
 		local Light = Instance.new("PointLight", Player.Character.HumanoidRootPart)
@@ -1766,14 +1868,14 @@ CommandBar.FocusLost:Connect(function()
 			Player.Character.HumanoidRootPart.PointLight:Remove()
 		end
 	end
-	
+
 	if message == "nightvision" then
 		NightVisionSound:Play()
 		NightVisionUi.Visible = true
 		game.Lighting.Brightness=game.Lighting.Brightness+7
 		game.Lighting.Ambient = Color3.fromRGB(0, 124, 21)
 		game.Lighting.OutdoorAmbient = Color3.fromRGB(0, 124, 21)
-		
+
 		if game.Lighting:FindFirstChildOfClass("Atmosphere") then
 			game.Lighting:FindFirstChildOfClass("Atmosphere").Color = Color3.new(0,0,0)
 			game.Lighting:FindFirstChildOfClass("Atmosphere").Decay = Color3.new(0,0,0)
@@ -1797,7 +1899,7 @@ CommandBar.FocusLost:Connect(function()
 		game.Lighting.Brightness = DefultBrightness
 		game.Lighting.Ambient = DefultAmbientColor
 		game.Lighting.OutdoorAmbient = DefultOutdoorAmbient
-		
+
 		if game.Lighting:FindFirstChildOfClass("Atmosphere") then
 			game.Lighting:FindFirstChildOfClass("Atmosphere").Color = Color3.new(0,0,0)
 			game.Lighting:FindFirstChildOfClass("Atmosphere").Decay = Color3.new(0,0,0)
@@ -1817,7 +1919,7 @@ CommandBar.FocusLost:Connect(function()
 			game.Lighting.FogColor = DefultFogColor
 		end
 	end
-	
+
 	if message == "hidemain" then
 		NotificationSound:Play()
 		MainFrame.Visible = false
@@ -1826,7 +1928,7 @@ CommandBar.FocusLost:Connect(function()
 		NotificationSound:Play()
 		MainFrame.Visible = true
 	end
-	
+
 	if message == "newestversion" then
 		NotificationSound:Play()
 		MakeNewTextPrint("Newest version is V"..NewestVersion)
@@ -1839,7 +1941,7 @@ CommandBar.FocusLost:Connect(function()
 			SendNotification("Current script version", "(V"..ScriptVersion.."["..ScriptVersionCreationDate.."] {type getnew to get newest version,})", 5, "Okay")
 		end
 	end
-	
+
 	if message == "respawn" then
 		DiedSound:Play()
 		RespawnPos = getRoot(Player.Character).CFrame
@@ -1860,10 +1962,10 @@ CommandBar.FocusLost:Connect(function()
 		end
 		SendNotification("Respawned", "You may continue of whatever you were doing", 5, "Okay")
 	end
-	
+
 	if message == "getnew" then
 		NotificationSound:Play()
-		SendNotification("How to see steps", "Press F9 on your keyboard or type 'console' in chat or go to 'PRINTS' in your command ui", 30, "Okay")
+		SendNotification("How to see steps", "Press F9 on your keyboard or type '/console' in chat or go to 'PRINTS' in your command ui", 30, "Okay")
 		print([[
 		How to get newest version:
 		Step 1; Go to github.com in your browser (Create an account if needed)
@@ -1887,9 +1989,15 @@ CommandBar.FocusLost:Connect(function()
 		MakeNewTextPrint("Step 7; Click on the newest version file and click 'Raw'")
 		MakeNewTextPrint("Step 8; Go to the search bar of your browser and copy the link (Ctrl+C)")
 		MakeNewTextPrint("Step 9; Move to your executor and type in 'loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()")
-		MakeNewTextPrint("Step 10; Go back to roblox and type 'rejoin' and then execute the newest version!")
+		MakeNewTextPrint("Step 10; Go back to roblox and type 'endscript' and then execute the newest version!")
 	end
-
+	
+	if message == "autojump" then
+		AutoJump(true)
+	elseif message == "unautojump" then
+		AutoJump(false)
+	end
+	
 	if message == "rejoin" then
 		local TeleportService = game:GetService("TeleportService")
 		TeleportService:Teleport(game.PlaceId, Player)
@@ -1900,7 +2008,7 @@ CommandBar.FocusLost:Connect(function()
 		MainFrame.Position = UDim2.new(0.5,0,0.5,0)
 		FakeChatFrame.Position = UDim2.new(0.5,0,0.5,0)
 	end
-	
+
 	if message == "bighead" then
 		NotificationSound:Play()
 		Head.Size = Vector3.new(5,5,5)
@@ -1911,7 +2019,7 @@ CommandBar.FocusLost:Connect(function()
 		NotificationSound:Play()
 		Head.Size = Vector3.new(2, 1, 1)
 	end
-	
+
 	if message == "toolrange" then
 		local charChildren = Char:GetChildren()
 		local FoundTool = false
@@ -1932,7 +2040,7 @@ CommandBar.FocusLost:Connect(function()
 			print("Please equip a tool for command to work!")
 		end
 	end
-	
+
 	if message == "partxray" then
 		NotificationSound:Play()
 		for i=1,#WorkspaceChildren do
@@ -1974,7 +2082,7 @@ CommandBar.FocusLost:Connect(function()
 		end
 		FoundItems=0
 	end
-	
+
 	if message == "clearprints" then
 		NotificationSound:Play()
 		local C = PrintsFrame:GetChildren()
@@ -1991,12 +2099,12 @@ CommandBar.FocusLost:Connect(function()
 		wait(5)
 		PrintsFrame:FindFirstChild("TextLabel"):Remove()
 	end
-	
+
 	if message == "sit" then
 		NotificationSound:Play()
 		Char.Humanoid.Sit = true
 	end
-	
+
 	for i=1,#Players do
 		if message == "follow "..Players[i].Name or message == "follow "..Players[i].DisplayName then
 			local FollowedTorso
@@ -2032,7 +2140,7 @@ CommandBar.FocusLost:Connect(function()
 			FollowNPC(false, nil)
 		end
 	end
-	
+
 	if message == "firstperson" then
 		NotificationSound:Play()
 		Player.CameraMode = Enum.CameraMode.LockFirstPerson
@@ -2040,13 +2148,13 @@ CommandBar.FocusLost:Connect(function()
 		NotificationSound:Play()
 		Player.CameraMode = Enum.CameraMode.Classic
 	end
-	
+
 	if message == "fling" then
 		Fling(true)
 	elseif message == "unfling" then
 		Fling(false)
 	end
-	
+
 	for i=1,10000 do
 		if message == "speed "..i then
 			NotificationSound:Play()
@@ -2072,6 +2180,10 @@ CommandBar.FocusLost:Connect(function()
 			game.Lighting.Brightness = i
 		elseif message == "constantfov "..i then
 			ConstantFov(true, i)
+		elseif message == "constantspeed "..i then
+			ConstantSpeed(true, i)
+		elseif message == "constantjumppower" then
+			ConstantJumpPower(true, i)
 		elseif message == "fogend "..i then
 			NotificationSound:Play()
 			game.Lighting.FogEnd = i
@@ -2080,7 +2192,7 @@ CommandBar.FocusLost:Connect(function()
 			game.Lighting.FogColor = BrickColor.new(i).Color
 		end
 	end
-	
+
 	if message == "fly" then
 		Fly(true, 2)
 	elseif message == "unfly" then
@@ -2096,7 +2208,7 @@ CommandBar.FocusLost:Connect(function()
 	elseif message == "unconstantfov" then
 		ConstantFov(false, 70)
 	end
-	
+
 	if message == "hidegui" then
 		HideGui(true)
 	elseif message == "showgui" then
@@ -2148,7 +2260,7 @@ CommandBar.FocusLost:Connect(function()
 	end
 end)
 
-local function StopCommands()
+function StopCommands()
 	Follow(false, nil)
 	FollowNPC(false, nil)
 	Float(false)
@@ -2160,6 +2272,7 @@ local function StopCommands()
 	Funny4(false, 0)
 	Tpwalk(false, 0)
 	Spin(false, 0)
+	Fling(false)
 end
 
 Player.Character.Humanoid.Died:Connect(function()
@@ -2175,7 +2288,7 @@ end)
 Player.CharacterRemoving:Connect(function()
 	SendNotification("Please wait,", "Stuff are loading..", 5, "Okay")
 	StopCommands()
-	
+
 	local IsRespawning = true
 	while IsRespawning == true do
 		wait()
@@ -2187,7 +2300,7 @@ Player.CharacterRemoving:Connect(function()
 			end
 		end)
 	end
-	
+
 	Char = Player.Character
 	Head = Char.Head
 	if Char:FindFirstChild("UpperTorso") then
@@ -2224,10 +2337,11 @@ for i=1,#cmds do
 end
 TotalCommands=TotalCommands-2
 MakeNewTextPrint("There is a total of "..TotalCommands.." commands! (V"..ScriptVersion..")")
-print("There is a total of "..TotalCommands.." commands!")
+print("There is a total of "..TotalCommands.." commands! (V"..ScriptVersion..")")
 
 dragify(MainFrame)
 dragify(FakeChatFrame)
+dragify(CommandListFrame)
 MainGui.Enabled = true
 
 WhileWaitEvent.Event:Connect(function()
