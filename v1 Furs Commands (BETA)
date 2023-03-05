@@ -31,10 +31,19 @@ wait(wait(game:IsLoaded()))
 wait(1)
 Player = game.Players.LocalPlayer
 Players = game:GetService("Players"):GetChildren()
+ContextActionService = game:GetService("ContextActionService")
+RunService = game:GetService("RunService")
+StarterGui = game:GetService("StarterGui")
+Playerss = game:GetService("Players")
+UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+Settings = UserSettings()
+GameSettings = Settings.GameSettings
 WorkspaceChildren = workspace:GetChildren()
 ReplicatedStorage = game.ReplicatedStorage
 Camera = workspace.CurrentCamera
 UIS = game:GetService("UserInputService")
+PFS = game:GetService("PathfindingService")
 Mouse = Player:GetMouse()
 WhileWaitEvent = Instance.new("BindableEvent", Player)
 TimeUsedScript = 0
@@ -56,6 +65,7 @@ ConstantSpeeding = false
 ConstantJumpPowering = false
 AutoJumping = false
 ChatBypassing = false
+PathFindFollowing = false
 IsTyping = false
 IsDead = false
 FakeChatMessage = nil
@@ -66,47 +76,51 @@ TotalCommands = 0
 
 cmds ={
 	"{{{{{{{ ClientSided Commands }}}}}}}",
-	"newestversion (Used to check if script is upto date) {CLIENT}",
-	"getnew (Use if you need latest version) {CLIENT}",
-	"endscript {CLIENT}",
-	"cmds {CLIENT}",
-	"partxray {CLIENT}",
-	"maxwell {CLIENT}",
-	"hideprints {CLIENT}",
-	"clearprints {CLIENT}",
-	"findWorkspace {CLIENT}",
-	"funny {CLIENT}",
-	"funny2 {CLIENT}",
-	"bighead {CLIENT}",
-	"smallhead {CLIENT}",
-	"normalhead {CLIENT}",
-	"removehats {CLIENT}",
-	"restorehats {CLIENT}",
-	"fixgui (To position the ui if lost)",
-	"hidemain {CLIENT}",
-	"showmain {CLIENT}",
-	"firstperson {CLIENT}",
-	"nightvision {CLIENT}",
-	"day {CLIENT}",
-	"night {CLIENT",
-	"light {CLIENT}",
-	"showspamchat {CLIENT}",
-	"Shift+P [Enables freecam] {CLIENT}",
-	"fov [Number between 1-120 (70 defult)] {CLIENT}",
-	"constantfov [Number between 1-120 (70 defult)] {CLIENT}",
-	"fogcolor [Number between 1-156] {CLIENT}",
-	"brightness [Number between 1-10000 (1 defult) {CLIENT}",
-	"fogend [Number between 1-10000] {CLIENT}",
-	"funny3 [Number between 1-10000] {CLIENT}",
-	"hidespamchat {CLIENT}",
-	"unconstantfov {CLIENT}",
-	"unpartxray {CLIENT}",
-	"unfunny {CLIENT}",
-	"unfirstperson {CLIENT}",
-	"unnightvision {CLIENT}",
-	"unlight {CLIENT}",
-	"unfunny2 {CLIENT}",
-	"unfunny3 {CLIENT}",
+	"newestversion (Used to check if script is upto date) {client}",
+	"getnew (Use if you need latest version) {client}",
+	"endscript {client}",
+	"cmds {client}",
+	"partxray {client}",
+	"maxwell {client}",
+	"hideprints {client}",
+	"clearprints {client}",
+	"findWorkspace {client}",
+	"funny {client}",
+	"funny2 {client}",
+	"bighead {client}",
+	"smallhead {client}",
+	"normalhead {client}",
+	"removehats {client}",
+	"restorehats {client}",
+	"fixgui (To position the ui if lost) {client}",
+	"hidemain {client}",
+	"showmain {client}",
+	"firstperson {client}",
+	"nightvision {client}",
+	"day {client}",
+	"night {client",
+	"light {client}",
+	"showplayerlist {client}",
+	"showspamchat {client}",
+	"Shift+P [Enables freecam] {client}",
+	"view [Player you want to view] {client}",
+	"fov [Number between 1-120 (70 defult)] {client}",
+	"constantfov [Number between 1-120 (70 defult)] {client}",
+	"fogcolor [Number between 1-156] {client}",
+	"brightness [Number between 1-10000 (1 defult) {client}",
+	"fogend [Number between 1-10000] {client}",
+	"funny3 [Number between 1-10000] {client}",
+	"hidespamchat {client}",
+	"unconstantfov {client}",
+	"unpartxray {client}",
+	"unfunny {client}",
+	"unfirstperson {client}",
+	"unnightvision {client}",
+	"unlight {client}",
+	"hideplayerlist {client}",
+	"unfunny2 {client}",
+	"unfunny3 {client}",
+	"unview {client}",
 	"{{{{{{{ ServerSided Commands }}}}}}}",
 	"vr [Uses fe vr script by Abacaxl @V3rmillion]",
 	"float",
@@ -123,6 +137,7 @@ cmds ={
 	"headstand [Player name or display]",
 	"to [Player name or display]",
 	"follow [Player name or display]",
+	"pathfindfollow [Player name or display]",
 	"speed [Number between 1-10000 (Defult 16)]",
 	"jumppower [Number between 1-10000 (Defult 50)]",
 	"constantspeed [Number between 1-10000]",
@@ -130,6 +145,7 @@ cmds ={
 	"tpwalk [Number between 1-10000]",
 	"spin [Number between 1-10000]",
 	"fly [Number bewtween 1-10000 (Defult 2)]",
+	"unpathfindfollow",
 	"unfling",
 	"unfloat",
 	"unfollow",
@@ -146,16 +162,19 @@ MainGui = Instance.new("ScreenGui")
 MainGui.Parent = Player.PlayerGui
 MainGui.ResetOnSpawn = false
 MainGui.Enabled = false
+
 MainFrame = Instance.new("Frame", MainGui)
 MainFrame.Position = UDim2.new(0.604, 0,0.561, 0)
 MainFrame.Size = UDim2.new(0.395, 0,0.41, 0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 UiCorner = Instance.new("UICorner", MainFrame)
+
 SecondMainFrame = Instance.new("Frame", MainFrame)
 SecondMainFrame.Position = UDim2.new(0, 0,0.115, 0)
 SecondMainFrame.Size = UDim2.new(1, 0,0.885, 0)
 SecondMainFrame.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
 UiCorner = Instance.new("UICorner", SecondMainFrame)
+
 MinimizeButton = Instance.new("TextButton", MainFrame)
 MinimizeButton.Position = UDim2.new(0.883, 0,0, 0)
 MinimizeButton.Size = UDim2.new(0.058, 0,0.115, 0)
@@ -167,6 +186,7 @@ MinimizeButton.TextStrokeTransparency = 0
 MinimizeButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 MinimizeButton.FontFace = Font.fromEnum(Enum.Font.Arcade)
 UiCorner = Instance.new("UICorner", MinimizeButton)
+
 CloseButton = Instance.new("TextButton", MainFrame)
 CloseButton.Position = UDim2.new(0.942, 0,0, 0)
 CloseButton.Size = UDim2.new(0.058, 0,0.115, 0)
@@ -178,6 +198,7 @@ CloseButton.TextStrokeTransparency = 0
 CloseButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 CloseButton.FontFace = Font.fromEnum(Enum.Font.Arcade)
 UiCorner = Instance.new("UICorner", CloseButton)
+
 Title = Instance.new("TextLabel", MainFrame)
 Title.Position = UDim2.new(0, 0, 0, 0)
 Title.Size = UDim2.new(0.942, 0,0.115, 0)
@@ -190,6 +211,7 @@ Title.FontFace = Font.fromEnum(Enum.Font.Arcade)
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.TextScaled = true
 Title.RichText = true
+
 PrintsFrame = Instance.new("ScrollingFrame", SecondMainFrame)
 PrintsFrame.Position = UDim2.new(0.151, 0,0, 0)
 PrintsFrame.Size = UDim2.new(0.849, 0,1, 0)
@@ -197,6 +219,7 @@ PrintsFrame.BackgroundTransparency = 1
 PrintsFrame.CanvasSize = UDim2.new(0,0,10000,0)
 PrintsFrame.Visible = false
 UiListLayout = Instance.new("UIListLayout", PrintsFrame)
+
 CommandsFrame = Instance.new("ScrollingFrame", SecondMainFrame)
 CommandsFrame.Position = UDim2.new(0.151, 0,0, 0)
 CommandsFrame.Size = UDim2.new(0.849, 0,1, 0)
@@ -204,18 +227,22 @@ CommandsFrame.BackgroundTransparency = 1
 CommandsFrame.CanvasSize = UDim2.new(0,0,500,0)
 CommandsFrame.Visible = false
 UiListLayout = Instance.new("UIListLayout", CommandsFrame)
+
 PlayerFrame = Instance.new("ScrollingFrame", SecondMainFrame)
 PlayerFrame.Position = UDim2.new(0.151, 0,0, 0)
 PlayerFrame.Size = UDim2.new(0.849, 0,1, 0)
 PlayerFrame.BackgroundTransparency = 1
 UiListLayout = Instance.new("UIListLayout", PlayerFrame)
+
 ButtonFrame = Instance.new("Frame", SecondMainFrame)
 ButtonFrame.Size = UDim2.new(0.151, 0,1, 0)
 ButtonFrame.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 ButtonFrame.BackgroundTransparency = 0.5
 UiCorner = Instance.new("UICorner", ButtonFrame)
+
 UiListLayout = Instance.new("UIListLayout", ButtonFrame)
 UiListLayout.Padding = UDim.new(0, 5)
+
 PlayerButton = Instance.new("TextButton", ButtonFrame)
 PlayerButton.Size = UDim2.new(1, 0,0.13, 0)
 PlayerButton.BackgroundColor3 = Color3.fromRGB(100,100,100)
@@ -225,6 +252,7 @@ PlayerButton.TextStrokeTransparency = 0
 PlayerButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 PlayerButton.TextScaled = true
 UiCorner = Instance.new("UICorner", PlayerButton)
+
 CommandsButton = Instance.new("TextButton", ButtonFrame)
 CommandsButton.Size = UDim2.new(1, 0,0.13, 0)
 CommandsButton.BackgroundColor3 = Color3.fromRGB(100,100,100)
@@ -234,6 +262,7 @@ CommandsButton.TextStrokeTransparency = 0
 CommandsButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 CommandsButton.TextScaled = true
 UiCorner = Instance.new("UICorner", CommandsButton)
+
 PrintsButton = Instance.new("TextButton", ButtonFrame)
 PrintsButton.Size = UDim2.new(1, 0,0.13, 0)
 PrintsButton.BackgroundColor3 = Color3.fromRGB(100,100,100)
@@ -243,12 +272,14 @@ PrintsButton.TextStrokeTransparency = 0
 PrintsButton.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 PrintsButton.TextScaled = true
 UiCorner = Instance.new("UICorner", PrintsButton)
+
 NightVisionUi = Instance.new("ImageLabel", MainGui)
 NightVisionUi.Image = "rbxassetid://7552884581"
 NightVisionUi.Position = UDim2.new(0,0,-0.1,0)
 NightVisionUi.Size = UDim2.new(1.1,0,1.1,0)
 NightVisionUi.BackgroundTransparency = 1
 NightVisionUi.Visible = false
+
 CommandBar = Instance.new("TextBox", MainGui)
 CommandBar.Position = UDim2.new(0.835, 0,0.971, 0)
 CommandBar.Size = UDim2.new(0.165, 0,0.028, 0)
@@ -268,6 +299,7 @@ FakeChatFrame.Size = UDim2.new(0.21, 0,0.283, 0)
 FakeChatFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 FakeChatFrame.Visible = false
 UiCorner = Instance.new("UICorner", FakeChatFrame)
+
 FakeChatTitle = Instance.new("TextLabel", FakeChatFrame)
 FakeChatTitle.Size = UDim2.new(1, 0,0.144, 0)
 FakeChatTitle.BackgroundTransparency = 1
@@ -276,11 +308,13 @@ FakeChatTitle.TextScaled = true
 FakeChatTitle.TextXAlignment = Enum.TextXAlignment.Left
 FakeChatTitle.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 FakeChatTitle.TextStrokeTransparency = 0
+
 SecondFakeChatMainFrame = Instance.new("Frame", FakeChatFrame)
 SecondFakeChatMainFrame.Position = UDim2.new(0,0,0.149,0)
 SecondFakeChatMainFrame.Size = UDim2.new(1, 0,0.851, 0)
 SecondFakeChatMainFrame.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
 UiCorner = Instance.new("UICorner", SecondFakeChatMainFrame)
+
 CloseFakeChatButton = Instance.new("TextButton", FakeChatFrame)
 CloseFakeChatButton.Position = UDim2.new(0.901,0,0,0)
 CloseFakeChatButton.Size = UDim2.new(0.099, 0,0.149, 0)
@@ -289,6 +323,7 @@ CloseFakeChatButton.TextColor3 = Color3.fromRGB(255, 0, 0)
 CloseFakeChatButton.Text = "X"
 CloseFakeChatButton.TextScaled = true
 UiCorner = Instance.new("UICorner", CloseFakeChatButton)
+
 MessageFakeChatText = Instance.new("TextBox", SecondFakeChatMainFrame)
 MessageFakeChatText.Position = UDim2.new(0.045, 0,0.127, 0)
 MessageFakeChatText.Size = UDim2.new(0.643, 0,0.354, 0)
@@ -296,6 +331,7 @@ MessageFakeChatText.Text = "Spam chat using this :3"
 MessageFakeChatText.TextScaled = true
 MessageFakeChatText.ClearTextOnFocus = false
 UiCorner = Instance.new("UICorner", MessageFakeChatText)
+
 SpamFakeChatAmountText = Instance.new("TextBox", SecondFakeChatMainFrame)
 SpamFakeChatAmountText.Position = UDim2.new(0.753, 0,0.127, 0)
 SpamFakeChatAmountText.Size = UDim2.new(0.196, 0,0.354, 0)
@@ -303,6 +339,7 @@ SpamFakeChatAmountText.Text = "1"
 SpamFakeChatAmountText.TextScaled = true
 SpamFakeChatAmountText.ClearTextOnFocus = false
 UiCorner = Instance.new("UICorner", SpamFakeChatAmountText)
+
 ChatFakeChatButton = Instance.new("TextButton", SecondFakeChatMainFrame)
 ChatFakeChatButton.Position = UDim2.new(0.102, 0,0.656, 0)
 ChatFakeChatButton.Size = UDim2.new(0.345, 0,0.236, 0)
@@ -311,6 +348,7 @@ ChatFakeChatButton.TextColor3 = Color3.new(0,0,0)
 ChatFakeChatButton.Text = "Chat"
 ChatFakeChatButton.TextScaled = true
 UiCorner = Instance.new("UICorner", ChatFakeChatButton)
+
 SpamFakeChatAmountButton = Instance.new("TextButton", SecondFakeChatMainFrame)
 SpamFakeChatAmountButton.Position = UDim2.new(0.551, 0,0.656, 0)
 SpamFakeChatAmountButton.Size = UDim2.new(0.345, 0,0.236, 0)
@@ -327,6 +365,7 @@ CommandListFrame.Size = UDim2.new(0.326, 0,0.409, 0)
 CommandListFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 CommandListFrame.Visible = false
 UiCorner = Instance.new("UICorner", CommandListFrame)
+
 CommandListCloseButton = Instance.new("TextButton", CommandListFrame)
 CommandListCloseButton.Position = UDim2.new(0.901,0,0,0)
 CommandListCloseButton.Size = UDim2.new(0.099, 0,0.149, 0)
@@ -335,6 +374,7 @@ CommandListCloseButton.TextColor3 = Color3.fromRGB(255, 0, 0)
 CommandListCloseButton.Text = "X"
 CommandListCloseButton.TextScaled = true
 UiCorner = Instance.new("UICorner", CommandListCloseButton)
+
 CommandListTitle = Instance.new("TextLabel", CommandListFrame)
 CommandListTitle.Size = UDim2.new(1, 0,0.144, 0)
 CommandListTitle.BackgroundTransparency = 1
@@ -343,17 +383,20 @@ CommandListTitle.TextScaled = true
 CommandListTitle.TextXAlignment = Enum.TextXAlignment.Left
 CommandListTitle.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 CommandListTitle.TextStrokeTransparency = 0
+
 CommandListSecondMainFrame = Instance.new("Frame", CommandListFrame)
 CommandListSecondMainFrame.Position = UDim2.new(-0.003, 0,0.149, 0)
 CommandListSecondMainFrame.Size = UDim2.new(1, 0,0.851, 0)
 CommandListSecondMainFrame.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
 UiCorner = Instance.new("UICorner", CommandListSecondMainFrame)
+
 CommandListScrollingFrame = Instance.new("ScrollingFrame", CommandListSecondMainFrame)
 CommandListScrollingFrame.Position = UDim2.new(0, 0,0.145, 0)
 CommandListScrollingFrame.Size = UDim2.new(1, 0,0.855, 0)
 CommandListScrollingFrame.BackgroundTransparency = 1
 CommandListScrollingFrame.CanvasSize = UDim2.new(0,0,500,0)
 UiListLayout = Instance.new("UIListLayout", CommandListScrollingFrame)
+
 CommandListSearchBar = Instance.new("TextBox", CommandListSecondMainFrame)
 CommandListSearchBar.Size = UDim2.new(1, 0,0.140, 0)
 CommandListSearchBar.BackgroundTransparency = 0.5
@@ -363,6 +406,45 @@ CommandListSearchBar.TextScaled = true
 CommandListSearchBar.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 CommandListSearchBar.TextStrokeTransparency = 0
 UiListLayout = Instance.new("UIListLayout", CommandListSearchBar)
+
+--Player List
+PlayerListFrame = Instance.new("Frame", MainGui)
+PlayerListFrame.Position = UDim2.new(-0, 0,0.59, 0)
+PlayerListFrame.Size = UDim2.new(0.236, 0,0.409, 0)
+PlayerListFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
+PlayerListFrame.Visible = false
+UiCorner = Instance.new("UICorner", PlayerListFrame)
+
+PlayerListCloseButton = Instance.new("TextButton", PlayerListFrame)
+PlayerListCloseButton.Position = UDim2.new(0.901,0,0,0)
+PlayerListCloseButton.Size = UDim2.new(0.099, 0,0.149, 0)
+PlayerListCloseButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+PlayerListCloseButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+PlayerListCloseButton.Text = "X"
+PlayerListCloseButton.TextScaled = true
+UiCorner = Instance.new("UICorner", PlayerListCloseButton)
+
+PlayerListTitle = Instance.new("TextLabel", PlayerListFrame)
+PlayerListTitle.Size = UDim2.new(1, 0,0.144, 0)
+PlayerListTitle.BackgroundTransparency = 1
+PlayerListTitle.Text = "Players"
+PlayerListTitle.TextScaled = true
+PlayerListTitle.TextXAlignment = Enum.TextXAlignment.Left
+PlayerListTitle.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+PlayerListTitle.TextStrokeTransparency = 0
+
+PlayerListSecondFrame = Instance.new("Frame", PlayerListFrame)
+PlayerListSecondFrame.Position = UDim2.new(0, 0,0.149, 0)
+PlayerListSecondFrame.Size = UDim2.new(1, 0,0.851, 0)
+PlayerListSecondFrame.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+UiCorner = Instance.new("UICorner", PlayerListSecondFrame)
+
+PlayerListScrollingFrame = Instance.new("ScrollingFrame", PlayerListSecondFrame)
+PlayerListScrollingFrame.Position = UDim2.new(0, 0,0.145, 0)
+PlayerListScrollingFrame.Size = UDim2.new(1, 0,0.863, 0)
+PlayerListScrollingFrame.BackgroundTransparency = 1
+PlayerListScrollingFrame.CanvasSize = UDim2.new(0,0,125,0)
+UiListLayout = Instance.new("UIListLayout", PlayerListScrollingFrame)
 
 --Ui PlayerData
 PlayerName = Instance.new("TextLabel", PlayerFrame)
@@ -447,8 +529,7 @@ LoadedSound = Instance.new("Sound", Player)
 LoadedSound.SoundId = "rbxassetid://7383525713"
 
 --Getting character
-Char = Player.Character
-Head = Char.Head
+Head = Player.Character.Head
 Torso = nil
 LowerTorso = nil
 LeftArm = nil
@@ -468,28 +549,28 @@ UpperRightLeg = nil
 LowerRightLeg = nil
 RightFoot = nil
 
-if Char:FindFirstChild("UpperTorso") then
-	Torso = Char.UpperTorso
-	LowerTorso = Char.LowerTorso
-	UpperLeftArm = Char.LeftUpperArm
-	LowerLeftArm = Char.LeftLowerArm
-	LeftHand = Char.LeftHand
-	UpperRightArm = Char.RightUpperArm
-	LowerRightArm = Char.RightLowerArm
-	RightHand = Char.RightHand
-	UpperLeftLeg = Char.LeftUpperLeg
-	LowerLeftLeg = Char.LeftLowerLeg
-	LeftFoot = Char.LeftFoot
-	UpperRightLeg = Char.RightUpperLeg
-	LowerRightLeg = Char.RightLowerLeg
-	RightFoot = Char.RightFoot
+if Player.Character:FindFirstChild("UpperTorso") then
+	Torso = Player.Character.UpperTorso
+	LowerTorso = Player.Character.LowerTorso
+	UpperLeftArm = Player.Character.LeftUpperArm
+	LowerLeftArm = Player.Character.LeftLowerArm
+	LeftHand = Player.Character.LeftHand
+	UpperRightArm = Player.Character.RightUpperArm
+	LowerRightArm = Player.Character.RightLowerArm
+	RightHand = Player.Character.RightHand
+	UpperLeftLeg = Player.Character.LeftUpperLeg
+	LowerLeftLeg = Player.Character.LeftLowerLeg
+	LeftFoot = Player.Character.LeftFoot
+	UpperRightLeg = Player.Character.RightUpperLeg
+	LowerRightLeg = Player.Character.RightLowerLeg
+	RightFoot = Player.Character.RightFoot
 	R15 = true
-elseif Char:FindFirstChild("Torso") then
-	Torso = Char.Torso
-	RightArm = Char["Right Arm"]
-	LeftArm = Char["Left Arm"]
-	RightLeg =  Char["Right Leg"]
-	LeftLeg = Char["Left Leg"]
+elseif Player.Character:FindFirstChild("Torso") then
+	Torso = Player.Character.Torso
+	RightArm = Player.Character["Right Arm"]
+	LeftArm = Player.Character["Left Arm"]
+	RightLeg =  Player.Character["Right Leg"]
+	LeftLeg = Player.Character["Left Leg"]
 	R15 = false
 end
 
@@ -659,6 +740,42 @@ CommandListSearchBar.FocusLost:Connect(function()
 	end
 end)
 
+PlayerListCloseButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
+	PlayerListFrame.Visible = false
+end)
+
+for _, Playerr in pairs(Players) do
+	local TextLable = Instance.new("TextLabel", PlayerListScrollingFrame)
+	TextLable.Name = Playerr.Name
+	TextLable.Size = UDim2.new(0.95, 0,0.001425, 0)
+	TextLable.Text = Playerr.Name.." ("..Playerr.DisplayName..")"
+	TextLable.TextScaled = true
+	TextLable.TextColor3 = Color3.fromRGB(255,255,255)
+	TextLable.TextStrokeTransparency = 0
+end
+
+Playerss.PlayerAdded:Connect(function(Plr)
+	local TextLable = Instance.new("TextLabel", PlayerListScrollingFrame)
+	TextLable.Name = Plr.Name
+	TextLable.Size = UDim2.new(0.95, 0,0.001425, 0)
+	TextLable.Text = Plr.Name.." ("..Plr.DisplayName..")"
+	TextLable.TextScaled = true
+	TextLable.TextColor3 = Color3.fromRGB(255,255,255)
+	TextLable.TextStrokeTransparency = 0
+end)
+
+Playerss.PlayerRemoving:Connect(function(Plr)
+	local C = PlayerListScrollingFrame:GetChildren()
+	for _, TextLabel in pairs(C) do
+		if TextLabel:IsA("TextLabel") then
+			if TextLabel.Name == Plr.Name then
+				TextLabel:Remove()
+			end
+		end
+	end
+end)
+
 --Freecam
 pi    = math.pi
 abs   = math.abs
@@ -668,15 +785,6 @@ rad   = math.rad
 sign  = math.sign
 sqrt  = math.sqrt
 tan   = math.tan
-
-ContextActionService = game:GetService("ContextActionService")
-RunService = game:GetService("RunService")
-StarterGui = game:GetService("StarterGui")
-Playerss = game:GetService("Players")
-UserInputService = game:GetService("UserInputService")
-local Workspace = game:GetService("Workspace")
-Settings = UserSettings()
-GameSettings = Settings.GameSettings
 
 LocalPlayer = Playerss.LocalPlayer
 if not LocalPlayer then
@@ -1477,10 +1585,58 @@ function FlyJump(State)
 	end
 end
 
+function View(Player)
+	for i,v in pairs(Players) do
+		if viewDied then
+			viewDied:Disconnect()
+			viewChanged:Disconnect()
+		end
+		viewing = Players[v]
+		workspace.CurrentCamera.CameraSubject = viewing.Character
+		local function viewDiedFunc()
+			repeat wait() until Players[v].Character ~= nil and getRoot(Players[v].Character)
+			workspace.CurrentCamera.CameraSubject = viewing.Character
+		end
+		viewDied = Players[v].CharacterAdded:Connect(viewDiedFunc)
+		local function viewChangedFunc()
+			workspace.CurrentCamera.CameraSubject = viewing.Character
+		end
+		viewChanged = workspace.CurrentCamera:GetPropertyChangedSignal("CameraSubject"):Connect(viewChangedFunc)
+	end
+end
+
+
 function SetSpawn()
 	NotificationSound:Play()
 	spawnpos = getRoot(Player.Character).CFrame
 	SendNotification('Spawn Point','Spawn point created at '..tostring(spawnpos))
+end
+
+function PathFindFollow(State ,Plr)
+	NotificationSound:Play()
+	PathFindFollowing = State
+	
+	local path = PFS:CreatePath()
+	repeat wait()
+		local success, response = pcall(function()
+			path:ComputeAsync(getRoot(Player.Character).Position, Plr.Position)
+			local waypoints = path:GetWaypoints()
+			local distance
+			for waypointIndex, waypoint in pairs(waypoints) do
+				local waypointPosition = waypoint.Position
+				Player.Character.Humanoid:MoveTo(waypointPosition)
+				repeat
+					Player.Character.Humanoid:MoveTo(waypointPosition)
+					distance = (waypointPosition - Player.Character.Humanoid.Parent.PrimaryPart.Position).magnitude
+					wait()
+				until
+				distance <= 6
+			end	 
+		end)
+		if not success then
+			Player.Character:FindFirstChildOfClass('Humanoid'):MoveTo(Plr.Position)
+		end
+	until Players == nil or not getRoot(Players) or PathFindFollowing == false
 end
 
 function ToolRange(Tool)
@@ -1658,7 +1814,7 @@ end
 
 function RemoveHats()
 	NotificationSound:Play()
-	local CharC = Char:GetChildren()
+	local CharC = Player.Character:GetChildren()
 
 	for i=1,#CharC do
 		if CharC[i]:IsA("Accessory") or CharC[i]:IsA("Hat") then
@@ -1752,9 +1908,12 @@ function Fling(State)
 		Unnoclip()
 	end
 	repeat
+		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
 		bambam.AngularVelocity = Vector3.new(0,999999999999999999999999,0)--999999999999
+		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
 		wait(.2)
-		bambam.AngularVelocity = Vector3.new(0,0,0)
+		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
+		--bambam.AngularVelocity = Vector3.new(0,0,0)
 		wait(.1)
 	until Flinging == false
 	bambam:Remove()
@@ -1826,9 +1985,9 @@ function Tpwalk(State, Number)
 	while Tpwalking == true and IsDead == false do
 		wait()
 		local delta = hb:Wait()
-		if Char.Humanoid.MoveDirection.Magnitude > 0 then
-			Char:TranslateBy(Char.Humanoid.MoveDirection * tonumber(Number) * delta * 10)
-			Char:TranslateBy(Char.Humanoid.MoveDirection * delta * 10)
+		if Player.Character.Humanoid.MoveDirection.Magnitude > 0 then
+			Player.Character:TranslateBy(Player.Character.Humanoid.MoveDirection * tonumber(Number) * delta * 10)
+			Player.Character:TranslateBy(Player.Character.Humanoid.MoveDirection * delta * 10)
 		end
 	end
 end
@@ -1909,12 +2068,27 @@ CommandBar.FocusLost:Connect(function()
 		end)
 	end
 	
+	if message == "showplayerlist" then
+		NotificationSound:Play()
+		PlayerListFrame.Visible = true
+	elseif message == "hideplayerlist" then
+		NotificationSound:Play()
+		PlayerListFrame.Visible = false
+	end
+	
+	if message == "reduselag" or message == "lesslag" then
+		local Lighting = game.Lighting:GetChildren()
+		for _, instance in pairs(Lighting) do
+			instance:Remove()
+		end
+	end
+	
 	if message == "maxwell" then
 		NotificationSound2:Play()
 		MAXWELLGAME(Workspace)
 	end
 	
-	if message == "cmds" then
+	if message == "cmds" or message == "commands" then
 		NotificationSound:Play()
 		CommandListFrame.Visible = true
 	end
@@ -1924,10 +2098,10 @@ CommandBar.FocusLost:Connect(function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/vr.lua"))()
 	end
 
-	if message == "showspamchat" then
+	if message == "showspamchat" or message == "spamchat" then
 		NotificationSound:Play()
 		FakeChatFrame.Visible = true
-	elseif message == "hidespamchat" then
+	elseif message == "hidespamchat" or message == "unspamchat" then
 		NotificationSound:Play()
 		FakeChatFrame.Visible = false
 	end
@@ -2012,7 +2186,7 @@ CommandBar.FocusLost:Connect(function()
 		MainFrame.Visible = true
 	end
 
-	if message == "newestversion" then
+	if message == "newestversion" or message == "checkversion" then
 		NotificationSound:Play()
 		MakeNewTextPrint("Newest version is V"..NewestVersion)
 		MakeNewTextPrint("You are currently using V"..ScriptVersion.." ("..ScriptVersionCreationDate..")")
@@ -2185,38 +2359,40 @@ CommandBar.FocusLost:Connect(function()
 
 	if message == "sit" then
 		NotificationSound:Play()
-		Char.Humanoid.Sit = true
+		Player.Character.Humanoid.Sit = true
 	end
 
-	for i=1,#Players do
-		if message == "follow "..Players[i].Name or message == "follow "..Players[i].DisplayName then
-			local FollowedTorso
-			if Players[i].Character:FindFirstChild("UpperTorso") then
-				FollowedTorso = Players[i].Character.UpperTorso
-			else
-				FollowedTorso = Players[i].Character.Torso
+	for _,Plr in pairs(Players) do
+		if message:find(Plr.Name) or message:find(Plr.DisplayName) then
+			if message:find("follow") then
+				Follow(true, getRoot(Plr.Character))
+			elseif message:find("pathfindfollow") then
+				PathFindFollow(true, getRoot(Plr.Character))
+			elseif message:find("to") then
+				TeleportTo(Plr)
+			elseif message:find("headsit") then
+				Headsit(Plr)
+			elseif message:find("headstand") then
+				HeadStand(Plr)
+			elseif message:find("view") then
+				View(Plr)
 			end
-			Follow(true, FollowedTorso)
-		elseif message == "unfollow" then
-			Follow(false, nil)
-		elseif message == "to "..Players[i].Name or message == "to "..Players[i].DisplayName then
-			TeleportTo(Players[i])
-		elseif message == "headsit "..Players[i].Name or message == "heandsit "..Players[i].DisplayName then
-			Headsit(Players[i])
-		elseif message == "headstand "..Players[i].Name or message == "headstand "..Players[i].DisplayName then
-			HeadStand(Players[i])
 		end
+	end
+	
+	if message == "unpathfindfollow" then
+		PathFindFollow(false, nil)
+	elseif message == "unview" then
+		View(Player)
+	elseif message == "unfollow" then
+		Follow(false, nil)
 	end
 
 	for i=1,#WorkspaceChildren do
 		if message == "followpart "..WorkspaceChildren[i].Name then
 			local FollowedTorso
-			if WorkspaceChildren[i]:FindFirstChild("UpperTorso") then
-				FollowedTorso = WorkspaceChildren[i].UpperTorso
-			elseif WorkspaceChildren[i]:IsA("Part") then
-				FollowedTorso = WorkspaceChildren[i]
-			else
-				FollowedTorso = WorkspaceChildren[i].Torso
+			if WorkspaceChildren[i]:FindFirstChild("HumanoidRootPart") then
+				FollowedTorso = WorkspaceChildren[i]:FindFirstChild("HumanoidRootPart")
 			end
 			FollowNPC(true, FollowedTorso)
 		elseif message == "unfollowpart" then
@@ -2424,6 +2600,7 @@ print("There is a total of "..TotalCommands.." commands! (V"..ScriptVersion..")"
 dragify(MainFrame)
 dragify(FakeChatFrame)
 dragify(CommandListFrame)
+dragify(PlayerListFrame)
 MainGui.Enabled = true
 
 WhileWaitEvent.Event:Connect(function()
@@ -2462,7 +2639,6 @@ function loadData()
 		It is reconmmended to use a executor that has ( readfile ) for a better experience!]])
 	end
 end
-
 loadData()
 
 WhileWaitEvent:Fire()
