@@ -614,7 +614,7 @@ function loadData()
 		It is reconmmended to use a executor that has ( readfile ) for a better experience!]])
 	end
 end
-loadData()
+--loadData()
 
 --unknown functions
 MinimizeButton.MouseButton1Click:Connect(function()
