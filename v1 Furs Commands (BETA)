@@ -66,6 +66,7 @@ ConstantJumpPowering = false
 AutoJumping = false
 ChatBypassing = false
 PathFindFollowing = false
+Viewing = false
 IsTyping = false
 IsDead = false
 FakeChatMessage = nil
@@ -456,6 +457,7 @@ PlayerName.TextStrokeTransparency = 0
 PlayerName.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 PlayerName.TextScaled = true
 PlayerName.RichText = true
+
 AccountAge = Instance.new("TextLabel", PlayerFrame)
 AccountAge.Size = UDim2.new(0.98, 0,0.05, 0)
 AccountAge.BackgroundTransparency = 1
@@ -465,6 +467,7 @@ AccountAge.TextStrokeTransparency = 0
 AccountAge.TextStrokeColor3 = Color3.new(1,1,1)
 AccountAge.TextScaled = true
 AccountAge.RichText = true
+
 TimeUsingScript = Instance.new("TextLabel", PlayerFrame)
 TimeUsingScript.Size = UDim2.new(0.98, 0,0.05, 0)
 TimeUsingScript.BackgroundTransparency = 1
@@ -474,6 +477,7 @@ TimeUsingScript.TextStrokeTransparency = 0
 TimeUsingScript.TextStrokeColor3 = Color3.new(1,1,1)
 TimeUsingScript.TextScaled = true
 TimeUsingScript.RichText = true
+
 GameName = Instance.new("TextLabel", PlayerFrame)
 GameName.Size = UDim2.new(0.98, 0,0.05, 0)
 GameName.BackgroundTransparency = 1
@@ -483,6 +487,7 @@ GameName.TextStrokeTransparency = 0
 GameName.TextStrokeColor3 = Color3.new(1,1,1)
 GameName.TextScaled = true
 GameName.RichText = true
+
 GameCreation = Instance.new("TextLabel", PlayerFrame)
 GameCreation.Size = UDim2.new(0.98, 0,0.05, 0)
 GameCreation.BackgroundTransparency = 1
@@ -492,6 +497,7 @@ GameCreation.TextStrokeTransparency = 0
 GameCreation.TextStrokeColor3 = Color3.new(1,1,1)
 GameCreation.TextScaled = true
 GameCreation.RichText = true
+
 GameUpdate = Instance.new("TextLabel", PlayerFrame)
 GameUpdate.Size = UDim2.new(0.98, 0,0.05, 0)
 GameUpdate.BackgroundTransparency = 1
@@ -501,6 +507,7 @@ GameUpdate.TextStrokeTransparency = 0
 GameUpdate.TextStrokeColor3 = Color3.new(1,1,1)
 GameUpdate.TextScaled = true
 GameUpdate.RichText = true
+
 CreatorName = Instance.new("TextLabel", PlayerFrame)
 CreatorName.Size = UDim2.new(0.98, 0,0.05, 0)
 CreatorName.BackgroundTransparency = 1
@@ -529,50 +536,33 @@ LoadedSound = Instance.new("Sound", Player)
 LoadedSound.SoundId = "rbxassetid://7383525713"
 
 --Getting character
-Head = Player.Character.Head
-Torso = nil
-LowerTorso = nil
-LeftArm = nil
-UpperLeftArm = nil
-LowerLeftArm = nil
-LeftHand = nil
-RightArm = nil
-UpperRightArm = nil
-LowerRightArm = nil
-RightHand = nil
-LeftLeg = nil
-UpperLeftLeg = nil
-LowerLeftLeg = nil
-LeftFoot = nil
-RightLeg = nil
-UpperRightLeg = nil
-LowerRightLeg = nil
-RightFoot = nil
+--Char = Player.Character
+--Head = Player.Character.Head
 
-if Player.Character:FindFirstChild("UpperTorso") then
-	Torso = Player.Character.UpperTorso
-	LowerTorso = Player.Character.LowerTorso
-	UpperLeftArm = Player.Character.LeftUpperArm
-	LowerLeftArm = Player.Character.LeftLowerArm
-	LeftHand = Player.Character.LeftHand
-	UpperRightArm = Player.Character.RightUpperArm
-	LowerRightArm = Player.Character.RightLowerArm
-	RightHand = Player.Character.RightHand
-	UpperLeftLeg = Player.Character.LeftUpperLeg
-	LowerLeftLeg = Player.Character.LeftLowerLeg
-	LeftFoot = Player.Character.LeftFoot
-	UpperRightLeg = Player.Character.RightUpperLeg
-	LowerRightLeg = Player.Character.RightLowerLeg
-	RightFoot = Player.Character.RightFoot
-	R15 = true
-elseif Player.Character:FindFirstChild("Torso") then
-	Torso = Player.Character.Torso
-	RightArm = Player.Character["Right Arm"]
-	LeftArm = Player.Character["Left Arm"]
-	RightLeg =  Player.Character["Right Leg"]
-	LeftLeg = Player.Character["Left Leg"]
-	R15 = false
-end
+--if Player.Character:FindFirstChild("UpperTorso") then
+--	Torso = Player.Character.UpperTorso
+--	LowerTorso = Player.Character.LowerTorso
+--	UpperLeftArm = Player.Character.LeftUpperArm
+--	LowerLeftArm = Player.Character.LeftLowerArm
+--	LeftHand = Player.Character.LeftHand
+--	UpperRightArm = Player.Character.RightUpperArm
+--	LowerRightArm = Player.Character.RightLowerArm
+--	RightHand = Player.Character.RightHand
+--	UpperLeftLeg = Player.Character.LeftUpperLeg
+--	LowerLeftLeg = Player.Character.LeftLowerLeg
+--	LeftFoot = Player.Character.LeftFoot
+--	UpperRightLeg = Player.Character.RightUpperLeg
+--	LowerRightLeg = Player.Character.RightLowerLeg
+--	RightFoot = Player.Character.RightFoot
+--	R15 = true
+--elseif Player.Character:FindFirstChild("Torso") then
+--	Torso = Player.Character.Torso
+--	RightArm = Player.Character["Right Arm"]
+--	LeftArm = Player.Character["Left Arm"]
+--	RightLeg =  Player.Character["Right Leg"]
+--	LeftLeg = Player.Character["Left Leg"]
+--	R15 = false
+--end
 
 _G.DataTable = {
 	
@@ -594,6 +584,37 @@ function saveData()
 		It is reconmmended to use a executor that has ( writefile ) for a better experience!]])
 	end
 end
+
+function loadData()
+	if (readfile) then
+		if pcall(function() readfile(fileName) end) then
+			if readfile(fileName) ~= nil then
+				local success, response = pcall(function()
+					_G.DataTable = HttpService:JSONDecode(readfile(fileName))
+				end)
+				if not success then
+					warn("Save data error:", response)
+					warn("Overwriting save file")
+					local json = HttpService:JSONEncode(Data)
+					writefile(fileName, json)
+				end
+			else
+				local json = HttpService:JSONEncode(Data)
+				writefile(fileName, json)
+			end
+		else
+			local json = HttpService:JSONEncode(Data)
+			writefile(fileName, json)
+		end
+	elseif ReadFileError == false then
+		SendNotifcation("Error!", "Your executor is not supported to load data! (Type /console for more info)", 15, nil, nil)
+		warn([[Error!
+		Your executor is not supported to run this function!
+		Your data made in this game will NOT load
+		It is reconmmended to use a executor that has ( readfile ) for a better experience!]])
+	end
+end
+loadData()
 
 --unknown functions
 MinimizeButton.MouseButton1Click:Connect(function()
@@ -1372,6 +1393,12 @@ function Float(State)
 	Floating = State
 	local Lower = false
 	local Higher = false
+	local Torso
+	if Player.Character:FindFirstChild("Torso") then
+		Torso = Player.Character.Torso
+	else
+		Torso = Player.Character.UpperTorso
+	end
 	while Floating == true and IsDead == false do
 		local Part = Instance.new("Part")
 		Part.Parent = workspace
@@ -1576,7 +1603,7 @@ function FlyJump(State)
 			local Part = Instance.new("Part")
 			Part.Parent = workspace
 			Part.Transparency = 1
-			Part.Position = Torso.Position
+			Part.Position = Player.Character.Torso.Position
 			Part.Size = Vector3.new(5,1,5)
 			Part.Position=Part.Position-Vector3.new(0,4,0)
 			wait()
@@ -1585,24 +1612,42 @@ function FlyJump(State)
 	end
 end
 
-function View(Player)
+function View(State ,Player)
+	NotificationSound:Play()
+	local Stopped = false
+	Viewing = State
+	
+	if Viewing == false then
+		Player = game.Players.LocalPlayer
+		workspace.CurrentCamera.CameraSubject = Player.Character.Humanoid
+		Stopped = true
+	end
+	
 	for i,v in pairs(Players) do
+		local viewing = Player
+		workspace.CurrentCamera.CameraSubject = viewing.Character.Humanoid
+		local function viewDiedFunc()
+			if Stopped == false then
+				repeat wait() until Player.Character ~= nil and getRoot(Player.Character)
+				workspace.CurrentCamera.CameraSubject = viewing.Character.Humanoid
+			end
+		end
+		local viewDied = Player.CharacterAdded:Connect(viewDiedFunc)
+		local function viewChangedFunc()
+			if Stopped == false then
+				workspace.CurrentCamera.CameraSubject = viewing.Character.Humanoid
+			end
+		end
+		local viewChanged = workspace.CurrentCamera:GetPropertyChangedSignal("CameraSubject"):Connect(viewChangedFunc)
+		
 		if viewDied then
 			viewDied:Disconnect()
 			viewChanged:Disconnect()
 		end
-		viewing = Players[v]
-		workspace.CurrentCamera.CameraSubject = viewing.Character
-		local function viewDiedFunc()
-			repeat wait() until Players[v].Character ~= nil and getRoot(Players[v].Character)
-			workspace.CurrentCamera.CameraSubject = viewing.Character
-		end
-		viewDied = Players[v].CharacterAdded:Connect(viewDiedFunc)
-		local function viewChangedFunc()
-			workspace.CurrentCamera.CameraSubject = viewing.Character
-		end
-		viewChanged = workspace.CurrentCamera:GetPropertyChangedSignal("CameraSubject"):Connect(viewChangedFunc)
 	end
+	
+	repeat wait() until Viewing == false
+	Stopped = true
 end
 
 
@@ -1774,25 +1819,25 @@ function Funny(State)
 	while Funnying == true and IsDead == false do
 		wait()
 		if R15 == true then
-			Torso.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			LeftHand.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			UpperLeftArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			LowerLeftArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			RightHand.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			UpperRightArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			LowerRightArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			LeftFoot.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			UpperLeftLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			LowerLeftLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			RightFoot.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			UpperRightLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			LowerRightLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.Torso.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.LeftHand.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.LeftUpperArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.LeftLowerArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.RightHand.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.RightUpperArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.RightLowerArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.LeftFoot.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.LeftUpperLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.LeftLowerLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.RightFoot.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.RightUpperLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.RightLowerLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
 		else
-			Torso.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			RightArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			LeftArm.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			RightLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
-			LeftLeg.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character.Torso.Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character["Right Arm"].Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character["Left Arm"].Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character["Right Leg"].Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
+			Player.Character["Left Leg"].Orientation = Vector3.new(math.random(1,360),math.random(1,360),math.random(1,360))
 		end
 	end
 end
@@ -1803,11 +1848,11 @@ function Funny2(State)
 	while Funnying2 == true and IsDead == false do
 		for i=1,40 do
 			wait()
-			Head.Size=Head.Size+Vector3.new(0.1,0.1,0.1)
+			Player.Character.Head.Size=Player.Character.Head.Size+Vector3.new(0.1,0.1,0.1)
 		end
 		for i=1,40 do
 			wait()
-			Head.Size=Head.Size-Vector3.new(0.1,0.1,0.1)
+			Player.Character.Head.Size=Player.Character.Head.Size-Vector3.new(0.1,0.1,0.1)
 		end
 	end
 end
@@ -1825,7 +1870,7 @@ end
 
 function RestoreHats()
 	NotificationSound:Play()
-	local CharC = Char:GetChildren()
+	local CharC = Player.Character:GetChildren()
 
 	for i=1,#CharC do
 		if CharC[i]:IsA("Accessory") or CharC[i]:IsA("Hat") then
@@ -1839,7 +1884,7 @@ function Funny3(State, Number)
 	Funnying3 = State
 	while Funnying3 == true and IsDead == false do
 		wait()
-		Torso.Orientation = Vector3.new(Number,0,0)
+		Player.Character.Torso.Orientation = Vector3.new(Number,0,0)
 	end
 end
 
@@ -2068,10 +2113,10 @@ CommandBar.FocusLost:Connect(function()
 		end)
 	end
 	
-	if message == "showplayerlist" then
+	if message == "showplayerlist" or message == "playerlist" then
 		NotificationSound:Play()
 		PlayerListFrame.Visible = true
-	elseif message == "hideplayerlist" then
+	elseif message == "hideplayerlist" or message == "unplayerlist" then
 		NotificationSound:Play()
 		PlayerListFrame.Visible = false
 	end
@@ -2268,17 +2313,17 @@ CommandBar.FocusLost:Connect(function()
 
 	if message == "bighead" then
 		NotificationSound:Play()
-		Head.Size = Vector3.new(5,5,5)
+		Player.Character.Head.Size = Vector3.new(5,5,5)
 	elseif message == "smallhead" then
 		NotificationSound:Play()
-		Head.Size = Vector3.new(0.3,0.3,0.3)
+		Player.Character.Head.Size = Vector3.new(0.3,0.3,0.3)
 	elseif message == "normalhead" then
 		NotificationSound:Play()
-		Head.Size = Vector3.new(2, 1, 1)
+		Player.Character.Head.Size = Vector3.new(2, 1, 1)
 	end
 
 	if message == "toolrange" then
-		local charChildren = Char:GetChildren()
+		local charChildren = Player.Character:GetChildren()
 		local FoundTool = false
 		local Tool = nil
 		for i=1,#charChildren do
@@ -2363,19 +2408,42 @@ CommandBar.FocusLost:Connect(function()
 	end
 
 	for _,Plr in pairs(Players) do
-		if message:find(Plr.Name) or message:find(Plr.DisplayName) then
-			if message:find("follow") then
+		if message:find("follow") and not message:find("unfollow") then
+			local Name = message:split("follow ")
+			
+			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				Follow(true, getRoot(Plr.Character))
-			elseif message:find("pathfindfollow") then
+			end
+		elseif message:find("pathfindfollow") and not message:find("unpathfindfollow") then
+			local Name = message:split("pathfindfollow ")
+			
+			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				PathFindFollow(true, getRoot(Plr.Character))
-			elseif message:find("to") then
+			end
+		elseif message:find("to") then
+			local Name = message:split("to ")
+			
+			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				TeleportTo(Plr)
-			elseif message:find("headsit") then
+			end
+		elseif message:find("headsit") then
+			local Name = message:split("headsit ")
+			
+			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				Headsit(Plr)
-			elseif message:find("headstand") then
+			end
+		elseif message:find("headstand") then
+			local Name = message:split("headstand ")
+			
+			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				HeadStand(Plr)
-			elseif message:find("view") then
-				View(Plr)
+			end
+		elseif message:find("view") and not message:find("unview") then
+			print("hi")
+			local Name = message:split("view ")
+			print(Name)
+			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
+				View(true, Plr)
 			end
 		end
 	end
@@ -2383,7 +2451,7 @@ CommandBar.FocusLost:Connect(function()
 	if message == "unpathfindfollow" then
 		PathFindFollow(false, nil)
 	elseif message == "unview" then
-		View(Player)
+		View(false, nil)
 	elseif message == "unfollow" then
 		Follow(false, nil)
 	end
@@ -2530,8 +2598,6 @@ function StopCommands()
 	Funny3(false, 0)
 	Funny4(false, 0)
 	Tpwalk(false, 0)
-	Spin(false, 0)
-	Fling(false)
 end
 
 Player.Character.Humanoid.Died:Connect(function()
@@ -2560,32 +2626,32 @@ Player.CharacterRemoving:Connect(function()
 		end)
 	end
 
-	Char = Player.Character
-	Head = Char.Head
-	if Char:FindFirstChild("UpperTorso") then
-		Torso = Char.UpperTorso
-		LowerTorso = Char.LowerTorso
-		UpperLeftArm = Char.LeftUpperArm
-		LowerLeftArm = Char.LeftLowerArm
-		LeftHand = Char.LeftHand
-		UpperRightArm = Char.RightUpperArm
-		LowerRightArm = Char.RightLowerArm
-		RightHand = Char.RightHand
-		UpperLeftLeg = Char.LeftUpperLeg
-		LowerLeftLeg = Char.LeftLowerLeg
-		LeftFoot = Char.LeftFoot
-		UpperRightLeg = Char.RightUpperLeg
-		LowerRightLeg = Char.RightLowerLeg
-		RightFoot = Char.RightFoot
-		R15 = true
-	elseif Char:FindFirstChild("Torso") then
-		Torso = Char.Torso
-		RightArm = Char["Right Arm"]
-		LeftArm = Char["Left Arm"]
-		RightLeg =  Char["Right Leg"]
-		LeftLeg = Char["Left Leg"]
-		R15 = false
-	end
+	--Char = Player.Character
+	--Head = Char.Head
+	--if Char:FindFirstChild("UpperTorso") then
+	--	Torso = Char.UpperTorso
+	--	LowerTorso = Char.LowerTorso
+	--	UpperLeftArm = Char.LeftUpperArm
+	--	LowerLeftArm = Char.LeftLowerArm
+	--	LeftHand = Char.LeftHand
+	--	UpperRightArm = Char.RightUpperArm
+	--	LowerRightArm = Char.RightLowerArm
+	--	RightHand = Char.RightHand
+	--	UpperLeftLeg = Char.LeftUpperLeg
+	--	LowerLeftLeg = Char.LeftLowerLeg
+	--	LeftFoot = Char.LeftFoot
+	--	UpperRightLeg = Char.RightUpperLeg
+	--	LowerRightLeg = Char.RightLowerLeg
+	--	RightFoot = Char.RightFoot
+	--	R15 = true
+	--elseif Char:FindFirstChild("Torso") then
+	--	Torso = Char.Torso
+	--	RightArm = Char["Right Arm"]
+	--	LeftArm = Char["Left Arm"]
+	--	RightLeg =  Char["Right Leg"]
+	--	LeftLeg = Char["Left Leg"]
+	--	R15 = false
+	--end
 end)
 
 for i=1,#cmds do
@@ -2609,37 +2675,6 @@ WhileWaitEvent.Event:Connect(function()
 		TimeUsingScript.Text = "You have been using this script for "..TimeUsedScript.." seconds"
 	end
 end)
-
-function loadData()
-	if (readfile) then
-		if pcall(function() readfile(fileName) end) then
-			if readfile(fileName) ~= nil then
-				local success, response = pcall(function()
-					_G.DataTable = HttpService:JSONDecode(readfile(fileName))
-				end)
-				if not success then
-					warn("Save data error:", response)
-					warn("Overwriting save file")
-					local json = HttpService:JSONEncode(Data)
-					writefile(fileName, json)
-				end
-			else
-				local json = HttpService:JSONEncode(Data)
-				writefile(fileName, json)
-			end
-		else
-			local json = HttpService:JSONEncode(Data)
-			writefile(fileName, json)
-		end
-	elseif ReadFileError == false then
-		SendNotifcation("Error!", "Your executor is not supported to load data! (Type /console for more info)", 15, nil, nil)
-		warn([[Error!
-		Your executor is not supported to run this function!
-		Your data made in this game will NOT load
-		It is reconmmended to use a executor that has ( readfile ) for a better experience!]])
-	end
-end
-loadData()
 
 WhileWaitEvent:Fire()
 LoadedSound:Play()
