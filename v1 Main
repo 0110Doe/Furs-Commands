@@ -1,5 +1,5 @@
-NewestVersion = "1.0.49"
-ScriptVersion = "1.0.49"
+NewestVersion = "1.0.5"
+ScriptVersion = "1.0.5"
 ScriptVersionCreationDate = "2023/1/21"
 
 if FC_LOADED and CURRENT_FC_ENDED == false and not _G.FC_DEBUG == true then
@@ -109,6 +109,7 @@ cmds ={
 	"showplayerlist {client}",
 	"showspamchat {client}",
 	"playerxray {client}",
+	"jobid {client}",
 	"Shift+P [Enables freecam] {client}",
 	"view [Player you want to view] {client}",
 	"fov [Number between 1-120 (70 defult)] {client}",
@@ -424,6 +425,33 @@ CommandListSearchBar.TextScaled = true
 CommandListSearchBar.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 CommandListSearchBar.TextStrokeTransparency = 0
 UiListLayout = Instance.new("UIListLayout", CommandListSearchBar)
+
+--JobId Ui
+JobIdFrame = Instance.new("Frame", MainGui)
+JobIdFrame.Position = UDim2.new(0.363, 0,0.347, 0)
+JobIdFrame.Size = UDim2.new(0, 333,0, 175)
+JobIdFrame.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
+UiCorner = Instance.new("UICorner", JobIdFrame)
+
+JobIdTextBox = Instance.new("TextBox", JobIdFrame)
+JobIdTextBox.Position = UDim2.new(0.114, 0,0.463, 0)
+JobIdTextBox.Size = UDim2.new(0, 257,0, 67)
+JobIdTextBox.BackgroundTransparency = Color3.fromRGB(68, 68, 68)
+JobIdTextBox.ClearTextOnFocus = false
+JobIdTextBox.TextEditable = false
+JobIdTextBox.TextScaled = true
+JobIdTextBox.TextStrokeTransparency = 0
+JobIdTextBox.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+UiCorner = Instance.new("UICorner", JobIdTextBox)
+
+JobIdTitle = Instance.new("TextLabel", JobIdFrame)
+JobIdTitle.Position = UDim2.new(0, 0,0.074, 0)
+JobIdTitle.Size = UDim2.new(0, 332,0, 50)
+JobIdTitle.BackgroundTransparency = 1
+JobIdTitle.Text = "Game Job ID"
+JobIdTitle.TextScaled = true
+JobIdTitle.TextStrokeTransparency = 0
+JobIdTitle.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 
 --Player List
 PlayerListFrame = Instance.new("Frame", MainGui)
@@ -2180,6 +2208,14 @@ CommandBar.FocusLost:Connect(function()
 		end)
 	end
 	
+	if message == "jobid" then
+		NotificationSound:Play()
+		JobIdFrame.Visible = true
+		JobIdTextBox.Text = game.JobId
+		wait(10)
+		JobIdFrame.Visible = false
+	end
+	
 	if message == "playerxray" then
 		PlayerHighlight(true)
 	elseif message == "unplayerxray" then
@@ -2187,8 +2223,10 @@ CommandBar.FocusLost:Connect(function()
 	end
 	
 	if message == "enablefreecam" then
+		NotificationSound:Play()
 		FreeCamEnabled = true
 	elseif message == "disablefreecam" then
+		NotificationSound:Play()
 		FreeCamEnabled = false
 	end
 	
