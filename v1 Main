@@ -1,11 +1,11 @@
-NewestVersion = "1.0.46"
-ScriptVersion = "1.0.46"
+NewestVersion = "1.0.49"
+ScriptVersion = "1.0.49"
 ScriptVersionCreationDate = "2023/1/21"
 
 if FC_LOADED and CURRENT_FC_ENDED == false and not _G.FC_DEBUG == true then
 	print([[Furs commands is already running!
 	If you want to run a new one,
-	first type in "endscript",
+	first type in "endscript" or chat "/stop",
 	then you relaunch furs commands!
 	]])
 	return
@@ -68,6 +68,7 @@ ConstantJumpPowering = false
 AutoJumping = false
 ChatBypassing = false
 PathFindFollowing = false
+PlayerXraying = false
 FreeCamEnabled = true
 Viewing = false
 IsTyping = false
@@ -107,6 +108,7 @@ cmds ={
 	"enablefreecam {client}",
 	"showplayerlist {client}",
 	"showspamchat {client}",
+	"playerxray {client}",
 	"Shift+P [Enables freecam] {client}",
 	"view [Player you want to view] {client}",
 	"fov [Number between 1-120 (70 defult)] {client}",
@@ -125,12 +127,13 @@ cmds ={
 	"hideplayerlist {client}",
 	"unfunny2 {client}",
 	"unfunny3 {client}",
+	"unplayerxray {client}",
 	"unview {client}",
 	"disablefreecam {client}",
 	"{{{{{{{ ServerSided Commands }}}}}}}",
-	"vr [Uses script by Abacaxl @V3rmillion]",
+	"Vr [Uses script by Abacaxl @V3rmillion]",
 	"WalkOnWalls [Uses script by @NICOLASTHEEXPLOITER on PasteBin]",
-	"car [Makes you have a 'car']",
+	"Car [Makes you have a 'car']",
 	"OpScript [Script made by @Tescalus on github]",
 	"RemoteSpy [Made by @exx and @Frosty]", 
 	"float",
@@ -172,11 +175,13 @@ MainGui = Instance.new("ScreenGui")
 MainGui.Parent = Player.PlayerGui
 MainGui.ResetOnSpawn = false
 MainGui.Enabled = false
+MainGui.DisplayOrder = 1000000000
 
 MainFrame = Instance.new("Frame", MainGui)
-MainFrame.Position = UDim2.new(0.604, 0,0.561, 0)
+MainFrame.Position = UDim2.new(0, 0,0.59, 0)
 MainFrame.Size = UDim2.new(0.395, 0,0.41, 0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
+MainFrame.LayoutOrder = 999999999
 UiCorner = Instance.new("UICorner", MainFrame)
 
 SecondMainFrame = Instance.new("Frame", MainFrame)
@@ -300,14 +305,16 @@ CommandBar.TextStrokeColor3 = Color3.fromRGB(255,255,255)
 CommandBar.TextScaled = true
 CommandBar.RichText = true
 CommandBar.Text = "Press , to type in a command"
+CommandBar.LayoutOrder = 999999999
 UiCorner = Instance.new("UICorner", CommandBar)
 
 --FakeChat
 FakeChatFrame = Instance.new("Frame", MainGui)
-FakeChatFrame.Position = UDim2.new(-0, 0,0.717, 0)
+FakeChatFrame.Position = UDim2.new(0.79, 0,0.717, 0)
 FakeChatFrame.Size = UDim2.new(0.21, 0,0.283, 0)
 FakeChatFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 FakeChatFrame.Visible = false
+FakeChatFrame.LayoutOrder = 999999998
 UiCorner = Instance.new("UICorner", FakeChatFrame)
 
 FakeChatTitle = Instance.new("TextLabel", FakeChatFrame)
@@ -370,10 +377,11 @@ UiCorner = Instance.new("UICorner", SpamFakeChatAmountButton)
 
 --CommandList
 CommandListFrame = Instance.new("Frame", MainGui)
-CommandListFrame.Position = UDim2.new(-0, 0,0.60, 0)
+CommandListFrame.Position = UDim2.new(0.673, 0,0.59, 0)
 CommandListFrame.Size = UDim2.new(0.326, 0,0.409, 0)
 CommandListFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 CommandListFrame.Visible = false
+CommandListFrame.LayoutOrder = 999999998
 UiCorner = Instance.new("UICorner", CommandListFrame)
 
 CommandListCloseButton = Instance.new("TextButton", CommandListFrame)
@@ -419,10 +427,11 @@ UiListLayout = Instance.new("UIListLayout", CommandListSearchBar)
 
 --Player List
 PlayerListFrame = Instance.new("Frame", MainGui)
-PlayerListFrame.Position = UDim2.new(-0, 0,0.59, 0)
+PlayerListFrame.Position = UDim2.new(0.764, 0,0.59, 0)
 PlayerListFrame.Size = UDim2.new(0.236, 0,0.409, 0)
 PlayerListFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
 PlayerListFrame.Visible = false
+PlayerListFrame.LayoutOrder = 999999998
 UiCorner = Instance.new("UICorner", PlayerListFrame)
 
 PlayerListCloseButton = Instance.new("TextButton", PlayerListFrame)
@@ -527,20 +536,28 @@ CreatorName.TextStrokeColor3 = Color3.new(1,1,1)
 CreatorName.TextScaled = true
 CreatorName.RichText = true
 
+--Sounds
 NotificationSound = Instance.new("Sound", SoundFolder)
 NotificationSound.SoundId = "rbxassetid://6647898215"
+
 NotificationSound2 = Instance.new("Sound", SoundFolder)
 NotificationSound2.SoundId = "rbxassetid://6647897822"
+
 FunnyNotificationSound = Instance.new("Sound", SoundFolder)
 FunnyNotificationSound.SoundId = "rbxassetid://9125845655"
+
 DiedSound = Instance.new("Sound", SoundFolder)
 DiedSound.SoundId = "rbxassetid://6598984092"
+
 ErrorSound = Instance.new("Sound", SoundFolder)
 ErrorSound.SoundId = "rbxassetid://9066063340"
+
 NightVisionSound = Instance.new("Sound", SoundFolder)
 NightVisionSound.SoundId = "rbxassetid://376178316"
+
 ClickSound = Instance.new("Sound", SoundFolder)
 ClickSound.SoundId = "rbxassetid://6895079853"
+
 LoadedSound = Instance.new("Sound", SoundFolder)
 LoadedSound.SoundId = "rbxassetid://7383525713"
 
@@ -572,6 +589,17 @@ LoadedSound.SoundId = "rbxassetid://7383525713"
 --	LeftLeg = Player.Character["Left Leg"]
 --	R15 = false
 --end
+
+Player.Chatted:Connect(function(msg)
+	if msg == "/stop" then
+		pcall(function()
+			getgenv().CURRENT_FC_ENDED = true
+			MainGui:Remove()
+			SoundFolder:Remove()
+			warn("Furs commands has ended succesfuly")
+		end)
+	end
+end)
 
 _G.DataTable = {
 
@@ -1680,6 +1708,45 @@ function PathFindFollow(State ,Plr)
 	until Players == nil or not getRoot(Players) or PathFindFollowing == false
 end
 
+function PlayerHighlight(State)
+	NotificationSound:Play()
+	PlayerXraying = State
+	
+	if PlayerXraying == true then
+		local Number = 0
+		while PlayerXraying == true do wait()
+			for _, Plr in pairs(Players) do
+				if not getRoot(Plr.Character):FindFirstChildOfClass("Highlight") and not getRoot(Plr.Character):FindFirstChildOfClass("BillboardGui")  and PlayerXraying == true then
+					Number=Number+1
+					getRoot(Plr.Character).Transparency = 0.9
+					local Highlight = Instance.new("Highlight", getRoot(Plr.Character))
+					Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+					Highlight.OutlineTransparency = 1
+					local BillboardUi = Instance.new("BillboardGui", getRoot(Plr.Character))
+					BillboardUi.Size = UDim2.new(0,75,0,75)
+					BillboardUi.AlwaysOnTop = true
+					local TextLabel = Instance.new("TextLabel", BillboardUi)
+					TextLabel.BackgroundTransparency = 1
+					TextLabel.Size = UDim2.new(1,0,1,0)
+					TextLabel.Text = Plr.Name.." ["..Number.."]"
+					TextLabel.TextScaled = true
+					TextLabel.TextColor3 = Color3.fromRGB(255, 191, 0)
+					TextLabel.TextStrokeTransparency = 0
+				end
+			end
+		end
+	else
+		for _, Plr in pairs(Players) do
+			if getRoot(Plr.Character):FindFirstChildOfClass("Highlight") then
+				getRoot(Plr.Character):FindFirstChildOfClass("Highlight"):Remove()
+			end
+			if getRoot(Plr.Character):FindFirstChildOfClass("BillboardGui") then
+				getRoot(Plr.Character):FindFirstChildOfClass("BillboardGui"):Remove()
+			end
+		end
+	end
+end
+
 function ToolRange(Tool)
 	if Tool:FindFirstChild("Handle") then
 		NotificationSound:Play()
@@ -2014,6 +2081,7 @@ function HeadStand(PlayerTo)
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,5,0)
 			else
 				Stopped = true
+				Player.Character.Humanoid.PlatformStand = false
 			end
 		end)
 	end
@@ -2107,8 +2175,15 @@ CommandBar.FocusLost:Connect(function()
 		pcall(function()
 			getgenv().CURRENT_FC_ENDED = true
 			MainGui:Remove()
+			SoundFolder:Remove()
 			warn("Furs commands has ended succesfuly")
 		end)
+	end
+	
+	if message == "playerxray" then
+		PlayerHighlight(true)
+	elseif message == "unplayerxray" then
+		PlayerHighlight(false)
 	end
 	
 	if message == "enablefreecam" then
