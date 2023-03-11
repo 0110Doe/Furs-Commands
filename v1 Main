@@ -1,5 +1,5 @@
-NewestVersion = "1.0.15"
-ScriptVersion = "1.0.15"
+NewestVersion = "1.0.25"
+ScriptVersion = "1.0.25"
 ScriptVersionCreationDate = "2023/1/21"
 
 if FC_LOADED and CURRENT_FC_ENDED == false and not _G.FC_DEBUG == true then
@@ -30,7 +30,7 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 wait(wait(game:IsLoaded()))
 wait(1)
 Player = game.Players.LocalPlayer
-Players = game:GetService("Players"):GetChildren()
+Players = game:GetService("Players"):GetPlayers()
 ContextActionService = game:GetService("ContextActionService")
 RunService = game:GetService("RunService")
 StarterGui = game:GetService("StarterGui")
@@ -68,6 +68,7 @@ ConstantJumpPowering = false
 AutoJumping = false
 ChatBypassing = false
 PathFindFollowing = false
+FreeCamEnabled = true
 Viewing = false
 IsTyping = false
 IsDead = false
@@ -103,6 +104,7 @@ cmds ={
 	"day {client}",
 	"night {client",
 	"light {client}",
+	"enablefreecam {client}",
 	"showplayerlist {client}",
 	"showspamchat {client}",
 	"Shift+P [Enables freecam] {client}",
@@ -124,8 +126,13 @@ cmds ={
 	"unfunny2 {client}",
 	"unfunny3 {client}",
 	"unview {client}",
+	"disablefreecam {client}",
 	"{{{{{{{ ServerSided Commands }}}}}}}",
 	"vr [Uses script by Abacaxl @V3rmillion]",
+	"WalkOnWalls [Uses script by @NICOLASTHEEXPLOITER on PasteBin]",
+	"car [Makes you have a 'car']",
+	"OpScript [Script made by @Tescalus on github]",
+	"RemoteSpy [Made by @exx and @Frosty]", 
 	"float",
 	"noclip",
 	"sit",
@@ -567,7 +574,7 @@ LoadedSound.SoundId = "rbxassetid://7383525713"
 --end
 
 _G.DataTable = {
-	
+
 }
 Data = _G.DataTable
 fileName = "Furs_Cmds_Data"
@@ -743,7 +750,7 @@ CommandListSearchBar.FocusLost:Connect(function()
 	if CommandListSearch == "" then
 		CommandListSearchBar.Text = "Search"
 	end
-	
+
 	for _, command in pairs(cmds) do
 		if command:find(CommandListSearch:lower()) then
 			local C = CommandListScrollingFrame:GetChildren()
@@ -791,10 +798,8 @@ end)
 Playerss.PlayerRemoving:Connect(function(Plr)
 	local C = PlayerListScrollingFrame:GetChildren()
 	for _, TextLabel in pairs(C) do
-		if TextLabel:IsA("TextLabel") then
-			if TextLabel.Name == Plr.Name then
-				TextLabel:Remove()
-			end
+		if TextLabel.Name == Plr.Name then
+			TextLabel:Remove()
 		end
 	end
 end)
@@ -1249,12 +1254,14 @@ do
 	local enabled = false
 
 	function ToggleFreecam()
-		if enabled then
-			StopFreecam()
-		else
-			StartFreecam()
+		if FreeCamEnabled == true then
+			if enabled then
+				StopFreecam()
+			else
+				StartFreecam()
+			end
+			enabled = not enabled
 		end
-		enabled = not enabled
 	end
 
 	function CheckMacro(macro)
@@ -1371,7 +1378,7 @@ function MakeNewTextCommand(Text)
 	TextLabel.TextScaled = true
 	TextLabel.TextWrapped = true
 	TextLabel.RichText = true
-	
+
 	--Command List
 	local TextLabel = Instance.new("TextLabel")
 	TextLabel.Parent = CommandListScrollingFrame
@@ -1578,7 +1585,7 @@ end
 
 function TeleportTo(PlayerTo)
 	NotificationSound:Play()
-	getRoot(Player.Character).CFrame = PlayerTo.Character.HumanoidRootPart
+	getRoot(Player.Character).CFrame = CFrame.new(getRoot(PlayerTo.Character).Position)
 end
 
 function FlyJump(State)
@@ -1603,7 +1610,7 @@ function View(State ,Player)
 	NotificationSound:Play()
 	local Stopped = false
 	Viewing = State
-	
+
 	if Viewing == false then
 		Player = game.Players.LocalPlayer
 		workspace.CurrentCamera.CameraSubject = Player.Character.Humanoid
@@ -1613,7 +1620,7 @@ function View(State ,Player)
 	for i,v in pairs(Players) do
 		local viewing = Player
 		workspace.CurrentCamera.CameraSubject = viewing.Character.Humanoid
-		
+
 		local function viewDiedFunc()
 			if Stopped == false then
 				repeat wait() until Player.Character ~= nil and getRoot(Player.Character)
@@ -1621,26 +1628,22 @@ function View(State ,Player)
 			end
 		end
 		local viewDied = Player.CharacterAdded:Connect(viewDiedFunc)
-		
+
 		local function viewChangedFunc()
 			if Stopped == false then
 				workspace.CurrentCamera.CameraSubject = viewing.Character.Humanoid
 			end
 		end
 		local viewChanged = workspace.CurrentCamera:GetPropertyChangedSignal("CameraSubject"):Connect(viewChangedFunc)
-		
+
 		if viewDied or Stopped == true then
 			viewDied:Disconnect()
 			viewChanged:Disconnect()
 		end
 	end
-	
+
 	repeat wait() until Viewing == false
 	Stopped = true
-	if viewDied or viewChanged then
-		viewDied:Disconnect()
-		viewChanged:Disconnect()
-	end
 end
 
 
@@ -1653,7 +1656,7 @@ end
 function PathFindFollow(State ,Plr)
 	NotificationSound:Play()
 	PathFindFollowing = State
-	
+
 	local path = PFS:CreatePath()
 	repeat wait()
 		local success, response = pcall(function()
@@ -1981,34 +1984,36 @@ end
 
 --0,0.2,0.7
 function Headsit(PlayerTo)
-	if headSit then headSit:Disconnect() end
+	local Stopped = false
+	if headSit then Stopped = true end
 	NotificationSound:Play()
 	Player.Character.Humanoid.Sit = true
 
 	while Player.Character.Humanoid.Sit == true and IsDead == false do
 		wait()
 		headSit = RunService.Heartbeat:Connect(function()
-			if Player.Character.Humanoid.Sit == true then
+			if Player.Character.Humanoid.Sit == true and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,1.6,0.4)
 			else
-				headSit:Disconnect()
+				Stopped = true
 			end
 		end)
 	end
 end
 
 function HeadStand(PlayerTo)
-	if headStand then headStand:Disconnect() end
+	local Stopped = false
+	if headStand then Stopped = true end
 	NotificationSound:Play()
 	Player.Character.Humanoid.PlatformStand = true
 
 	while Player.Character.Humanoid.PlatformStand == true and IsDead == false do
 		wait()
 		headStand = RunService.Heartbeat:Connect(function()
-			if Player.Character.Humanoid.Jump == false then
+			if Player.Character.Humanoid.Jump == false and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,5,0)
 			else
-				headStand:Disconnect()
+				Stopped = true
 			end
 		end)
 	end
@@ -2055,7 +2060,7 @@ end
 
 function ConstantSpeed(State, Number)
 	ConstantSpeeding = State
-	
+
 	while ConstantSpeeding == true do wait()
 		Player.Character.Humanoid.WalkSpeed = Number
 	end
@@ -2071,7 +2076,7 @@ end
 
 function AutoJump(State)
 	AutoJumping = State
-	
+
 	while AutoJumping == true do wait()
 		Player.Character.Humanoid.Jump = true
 	end
@@ -2106,6 +2111,12 @@ CommandBar.FocusLost:Connect(function()
 		end)
 	end
 	
+	if message == "enablefreecam" then
+		FreeCamEnabled = true
+	elseif message == "disablefreecam" then
+		FreeCamEnabled = false
+	end
+	
 	if message == "showplayerlist" or message == "playerlist" then
 		NotificationSound:Play()
 		PlayerListFrame.Visible = true
@@ -2113,31 +2124,84 @@ CommandBar.FocusLost:Connect(function()
 		NotificationSound:Play()
 		PlayerListFrame.Visible = false
 	end
-	
+
 	if message == "reduselag" or message == "lesslag" then
 		local Lighting = game.Lighting:GetChildren()
 		for _, instance in pairs(Lighting) do
 			instance:Remove()
 		end
 	end
-	
+
 	if message == "secretcommand" then
 		warn("there is nothing here lol")
 	end
-	
+
 	if message == "maxwell" then
 		NotificationSound2:Play()
 		MAXWELLGAME(Workspace)
 	end
-	
+
 	if message == "cmds" or message == "commands" then
 		NotificationSound:Play()
 		CommandListFrame.Visible = true
 	end
-	
+
 	if message == "vr" then
 		SendNotification("Wait..", "Fe Vr is loading..", 5, nil)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/vr.lua"))()
+	end
+	
+	if message == "opscript" then
+		SendNotification("Wait..", "Script is loading..", 5, nil)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Tescalus/Pendulum-Hubs-Source/main/Pendulum%20Hub%20V5.lua"))()
+	end
+	
+	if message == "walkonwalls" then
+		SendNotification("Wait..", "Walk On Walls is loading..", 5, nil)
+		loadstring(game:HttpGet('https://pastebin.com/raw/RY9cBbdG',true))()
+	end
+	
+	if message == "car" then
+		if game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+
+			game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").WalkSpeed = 60
+			game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").JumpPower = 20
+			game:GetService("Players").LocalPlayer.Character.Animate.walk.WalkAnim.AnimationId = "rbxassetid://129342287"
+			game:GetService("Players").LocalPlayer.Character.Animate.run.RunAnim.AnimationId = "rbxassetid://129342287"
+			game:GetService("Players").LocalPlayer.Character.Animate.fall.FallAnim.AnimationId = "rbxassetid://129342287"
+			game:GetService("Players").LocalPlayer.Character.Animate.idle.Animation1.AnimationId = "rbxassetid://129342287"
+			game:GetService("Players").LocalPlayer.Character.Animate.idle.Animation2.AnimationId = "rbxassetid://129342287"
+			game:GetService("Players").LocalPlayer.Character.Animate.jump.JumpAnim.AnimationId = "rbxassetid://129342287"
+			for i, thing in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
+				if thing.ClassName == "Part" then
+					thing.CustomPhysicalProperties = PhysicalProperties.new(0.04, 0, 0)
+				end
+			end
+			local r6height = "-1.03"
+			game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").HipHeight = r6height
+
+		elseif game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").RigType == Enum.HumanoidRigType.R15 then
+			game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").WalkSpeed = 60
+			game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").JumpPower = 20
+			game:GetService("Players").LocalPlayer.Character.Animate.walk.WalkAnim.AnimationId = "rbxassetid://3360694441"
+			game:GetService("Players").LocalPlayer.Character.Animate.run.RunAnim.AnimationId = "rbxassetid://3360694441"
+			game:GetService("Players").LocalPlayer.Character.Animate.fall.FallAnim.AnimationId = "rbxassetid://3360694441"
+			game:GetService("Players").LocalPlayer.Character.Animate.idle.Animation1.AnimationId = "rbxassetid://3360694441"
+			game:GetService("Players").LocalPlayer.Character.Animate.idle.Animation2.AnimationId = "rbxassetid://3360694441"
+			game:GetService("Players").LocalPlayer.Character.Animate.jump.JumpAnim.AnimationId = "rbxassetid://3360694441"
+			for i, thing in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
+				if thing.ClassName == "MeshPart" then
+					thing.CustomPhysicalProperties = PhysicalProperties.new(0.04, 0, 0)
+				end
+			end
+			local r15height = "0.56"
+			game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").HipHeight = r15height
+		end
+	end
+	
+	if message == "remotespy" then
+		SendNotification("Wait..", "Remote spy is loading..", 5, nil)
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/0110Doe/Remote-Spy/main/main',true))()
 	end
 
 	if message == "showspamchat" or message == "spamchat" then
@@ -2147,7 +2211,7 @@ CommandBar.FocusLost:Connect(function()
 		NotificationSound:Play()
 		FakeChatFrame.Visible = false
 	end
-	
+
 	if message:find("play") then
 		NotificationSound:Play()
 		local SplitMessage = message:split("play ")
@@ -2160,7 +2224,7 @@ CommandBar.FocusLost:Connect(function()
 			SendNotification("Playing;", SplitMessage[2], 5, nil)
 		end
 	end
-	
+
 	if message == "stop" then
 		NotificationSound:Play()
 		local c = MusicFolder:GetChildren()
@@ -2311,13 +2375,13 @@ CommandBar.FocusLost:Connect(function()
 		MakeNewTextPrint("Step 9; Move to your executor and type in 'loadstring(game:HttpGet('[LINK (Ctrl+V)]',true))()")
 		MakeNewTextPrint("Step 10; Go back to roblox and type 'endscript' and then execute the newest version!")
 	end
-	
+
 	if message == "autojump" then
 		AutoJump(true)
 	elseif message == "unautojump" then
 		AutoJump(false)
 	end
-	
+
 	if message == "rejoin" then
 		local TeleportService = game:GetService("TeleportService")
 		TeleportService:Teleport(game.PlaceId, Player)
@@ -2425,34 +2489,35 @@ CommandBar.FocusLost:Connect(function()
 		Player.Character.Humanoid.Sit = true
 	end
 
-	for _,Plr in pairs(Players) do
+	local PlayerC = game.Players:GetPlayers()
+	for _,Plr in pairs(PlayerC) do
 		if message:find("follow") and not message:find("unfollow") and not message:find("pathfindfollow") and not message:find("unpathfindfollow") and not message:find("followpart") and not message:find("unfollowpart") then
 			local Name = message:split("follow ")
-			
+
 			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				Follow(true, getRoot(Plr.Character))
 			end
 		elseif message:find("pathfindfollow") and not message:find("unpathfindfollow") and not message:find("follow") and not message:find("unfollow") and not message:find("followpart") and not message:find("unfollowpart") then
 			local Name = message:split("pathfindfollow ")
-			
+
 			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				PathFindFollow(true, getRoot(Plr.Character))
 			end
 		elseif message:find("to") and not message:find("stop") and not message:find("restorehats") and not message:find("toolrange") then
 			local Name = message:split("to ")
-			
+
 			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				TeleportTo(Plr)
 			end
 		elseif message:find("headsit") then
 			local Name = message:split("headsit ")
-			
+
 			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				Headsit(Plr)
 			end
 		elseif message:find("headstand") then
 			local Name = message:split("headstand ")
-			
+
 			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				HeadStand(Plr)
 			end
@@ -2463,7 +2528,7 @@ CommandBar.FocusLost:Connect(function()
 			end
 		end
 	end
-	
+
 	if message == "unpathfindfollow" then
 		PathFindFollow(false, nil)
 	elseif message == "unview" then
