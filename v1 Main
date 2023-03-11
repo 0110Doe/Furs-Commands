@@ -1,5 +1,5 @@
-NewestVersion = "1.0.25"
-ScriptVersion = "1.0.25"
+NewestVersion = "1.0.46"
+ScriptVersion = "1.0.46"
 ScriptVersionCreationDate = "2023/1/21"
 
 if FC_LOADED and CURRENT_FC_ENDED == false and not _G.FC_DEBUG == true then
