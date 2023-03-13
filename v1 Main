@@ -1,6 +1,8 @@
-NewestVersion = "1.0.5"
-ScriptVersion = "1.0.5"
+NewestVersion = "1.0.53"
+ScriptVersion = "1.0.53"
 ScriptVersionCreationDate = "2023/1/21"
+
+--rbxassetid://8142423452 rbxassetid://6916371803
 
 if FC_LOADED and CURRENT_FC_ENDED == false and not _G.FC_DEBUG == true then
 	print([[Furs commands is already running!
@@ -69,6 +71,7 @@ AutoJumping = false
 ChatBypassing = false
 PathFindFollowing = false
 PlayerXraying = false
+Banging = false
 FreeCamEnabled = true
 Viewing = false
 IsTyping = false
@@ -84,12 +87,13 @@ cmds ={
 	"newestversion (Used to check if script is upto date) {client}",
 	"getnew (Use if you need latest version) {client}",
 	"endscript {client}",
+	"neko [Turns you into that one script (owo)] (client)",
 	"cmds {client}",
 	"partxray {client}",
 	"maxwell {client}",
 	"hideprints {client}",
 	"clearprints {client}",
-	"findWorkspace {client}",
+	"findworkspace {client}",
 	"funny {client}",
 	"funny2 {client}",
 	"bighead {client}",
@@ -146,8 +150,14 @@ cmds ={
 	"rejoin",
 	"respawn",
 	"fling",
+	"flingme",
+	"sflingme",
 	"followpart [Model name showed in workspace]",
 	"headsit [Player name or display]",
+	"reverseheadsit [Player name or display (owo)]",
+	"givehead [Player name or display (owo)]",
+	"bang [Player name or display (owo)]",
+	"getbanged [Player name or display (owo)]",
 	"headstand [Player name or display]",
 	"to [Player name or display]",
 	"follow [Player name or display]",
@@ -159,6 +169,7 @@ cmds ={
 	"tpwalk [Number between 1-10000]",
 	"spin [Number between 1-10000]",
 	"fly [Number bewtween 1-10000 (Defult 2)]",
+	"unbang (owo)",
 	"unpathfindfollow",
 	"unfling",
 	"unfloat",
@@ -429,13 +440,14 @@ UiListLayout = Instance.new("UIListLayout", CommandListSearchBar)
 --JobId Ui
 JobIdFrame = Instance.new("Frame", MainGui)
 JobIdFrame.Position = UDim2.new(0.363, 0,0.347, 0)
-JobIdFrame.Size = UDim2.new(0, 333,0, 175)
+JobIdFrame.Size = UDim2.new(0.274, 0,0.304, 0)
 JobIdFrame.BackgroundColor3 = Color3.fromRGB(29, 29, 29)
+JobIdFrame.Visible = false
 UiCorner = Instance.new("UICorner", JobIdFrame)
 
 JobIdTextBox = Instance.new("TextBox", JobIdFrame)
-JobIdTextBox.Position = UDim2.new(0.114, 0,0.463, 0)
-JobIdTextBox.Size = UDim2.new(0, 257,0, 67)
+JobIdTextBox.Position = UDim2.new(0.087, 0,0.44, 0)
+JobIdTextBox.Size = UDim2.new(0.82, 0,0.429, 0)
 JobIdTextBox.BackgroundTransparency = Color3.fromRGB(68, 68, 68)
 JobIdTextBox.ClearTextOnFocus = false
 JobIdTextBox.TextEditable = false
@@ -446,7 +458,7 @@ UiCorner = Instance.new("UICorner", JobIdTextBox)
 
 JobIdTitle = Instance.new("TextLabel", JobIdFrame)
 JobIdTitle.Position = UDim2.new(0, 0,0.074, 0)
-JobIdTitle.Size = UDim2.new(0, 332,0, 50)
+JobIdTitle.Size = UDim2.new(0.997, 0,0.286, 0)
 JobIdTitle.BackgroundTransparency = 1
 JobIdTitle.Text = "Game Job ID"
 JobIdTitle.TextScaled = true
@@ -573,6 +585,9 @@ NotificationSound2.SoundId = "rbxassetid://6647897822"
 
 FunnyNotificationSound = Instance.new("Sound", SoundFolder)
 FunnyNotificationSound.SoundId = "rbxassetid://9125845655"
+
+UwUSound = Instance.new("Sound", SoundFolder)
+UwUSound.SoundId = "rbxassetid://4821247887"
 
 DiedSound = Instance.new("Sound", SoundFolder)
 DiedSound.SoundId = "rbxassetid://6598984092"
@@ -1385,7 +1400,7 @@ end
 
 function PrintNothing(Amount)
 	local Second = false
-	for _, number in pairs(Amount) do
+	for i=1,Amount do
 		wait()
 		if Second == false then
 			print(" ")
@@ -2049,7 +2064,7 @@ function Fling(State)
 		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
 		wait(.2)
 		getRoot(Player.Character).Orientation = Vector3.new(0,0,0)
-		--bambam.AngularVelocity = Vector3.new(0,0,0)
+		bambam.AngularVelocity = Vector3.new(0,0,0)
 		wait(.1)
 	until Flinging == false
 	bambam:Remove()
@@ -2096,6 +2111,42 @@ function Headsit(PlayerTo)
 	end
 end
 
+function ReverseHeadSit(PlayerTo)
+	local Stopped = false
+	if headSit then Stopped = true end
+	UwUSound:Play()
+	Player.Character.Humanoid.Sit = true
+
+	while Player.Character.Humanoid.Sit == true and IsDead == false do
+		wait()
+		headSit = RunService.Heartbeat:Connect(function()
+			if Player.Character.Humanoid.Sit == true and Stopped == false then
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,1.8,0.7)
+			else
+				Stopped = true
+			end
+		end)
+	end
+end
+
+function GiveHead(PlayerTo)
+	local Stopped = false
+	if headSit then Stopped = true end
+	UwUSound:Play()
+	Player.Character.Humanoid.Sit = true
+
+	while Player.Character.Humanoid.Sit == true and IsDead == false do
+		wait()
+		headSit = RunService.Heartbeat:Connect(function()
+			if Player.Character.Humanoid.Sit == true and Stopped == false then
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,-2.3,1)
+			else
+				Stopped = true
+			end
+		end)
+	end
+end
+
 function HeadStand(PlayerTo)
 	local Stopped = false
 	if headStand then Stopped = true end
@@ -2113,6 +2164,52 @@ function HeadStand(PlayerTo)
 			end
 		end)
 	end
+end
+
+function Bang(state, PlayerTo)
+	UwUSound:Play()
+	Banging = state
+
+	local bangAnim = Instance.new("Animation")
+	if Player.Character:FindFirstChild("Torso") then
+		bangAnim.AnimationId = "rbxassetid://148840371"
+	else
+		bangAnim.AnimationId = "rbxassetid://5918726674"
+	end
+	local bang = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(bangAnim)
+	bang:Play()
+	while Banging == true do
+		wait()
+		headStand = RunService.Heartbeat:Connect(function()
+			if Banging == true then
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,1.5)
+			end
+		end)
+	end
+	bang:Stop()
+end
+
+function GetBanged(state, PlayerTo)
+	UwUSound:Play()
+	Banging = state
+
+	local bangAnim = Instance.new("Animation")
+	if Player.Character:FindFirstChild("Torso") then
+		bangAnim.AnimationId = "rbxassetid://148840371"
+	else
+		bangAnim.AnimationId = "rbxassetid://5918726674"
+	end
+	local bang = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(bangAnim)
+	bang:Play()
+	while Banging == true do
+		wait()
+		headStand = RunService.Heartbeat:Connect(function()
+			if Banging == true then
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,-1.25)
+			end
+		end)
+	end
+	bang:Stop()
 end
 
 function Tpwalk(State, Number)
@@ -2216,6 +2313,34 @@ CommandBar.FocusLost:Connect(function()
 		JobIdFrame.Visible = false
 	end
 	
+	if message == "flingme" then
+		Player.Character.Humanoid.Sit = true
+		local ff = Instance.new("ForceField", Player.Character)
+		ff.Visible = false
+		local bomb = Instance.new("Explosion", Workspace)
+		bomb.Position = getRoot(Player.Character).Position - Vector3.new(math.random(-3,3),3,math.random(-3,3))
+		bomb.ExplosionType = Enum.ExplosionType.NoCraters
+		bomb.BlastRadius = 999999999999999999999999999999
+		bomb.BlastPressure = 900000
+		bomb.Visible = false
+		wait(1)
+		ff:Remove()
+	end
+	
+	if message == "sflingme" then
+		Player.Character.Humanoid.Sit = true
+		local ff = Instance.new("ForceField", Player.Character)
+		ff.Visible = false
+		local bomb = Instance.new("Explosion", Workspace)
+		bomb.Position = getRoot(Player.Character).Position - Vector3.new(math.random(-3,3),3,math.random(-3,3))
+		bomb.ExplosionType = Enum.ExplosionType.NoCraters
+		bomb.BlastRadius = 999999999999999999999999999999
+		bomb.BlastPressure = 999999999
+		bomb.Visible = false
+		wait(1)
+		ff:Remove()
+	end
+	
 	if message == "playerxray" then
 		PlayerHighlight(true)
 	elseif message == "unplayerxray" then
@@ -2267,6 +2392,11 @@ CommandBar.FocusLost:Connect(function()
 	if message == "opscript" then
 		SendNotification("Wait..", "Script is loading..", 5, nil)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/Tescalus/Pendulum-Hubs-Source/main/Pendulum%20Hub%20V5.lua"))()
+	end
+	
+	if message == "neko" then
+		SendNotification("Wait..", "Script is loading.. (This is client-sided)", 5, nil)
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/shidemuri/coffeeware/main/nekov4.lua'))()
 	end
 	
 	if message == "walkonwalls" then
@@ -2328,6 +2458,17 @@ CommandBar.FocusLost:Connect(function()
 	if message:find("play") then
 		NotificationSound:Play()
 		local SplitMessage = message:split("play ")
+		if SplitMessage[2] then
+			local Sound = Instance.new("Sound", MusicFolder)
+			Sound.SoundId = "rbxassetid://"..SplitMessage[2]
+			Sound.Looped = true
+			Sound.Volume = 0.5
+			Sound.Playing = true
+			SendNotification("Playing;", SplitMessage[2], 5, nil)
+		end
+	elseif message:find("music") then
+		NotificationSound:Play()
+		local SplitMessage = message:split("music ")
 		if SplitMessage[2] then
 			local Sound = Instance.new("Sound", MusicFolder)
 			Sound.SoundId = "rbxassetid://"..SplitMessage[2]
@@ -2570,7 +2711,7 @@ CommandBar.FocusLost:Connect(function()
 		end
 	end
 
-	if message == "findWorkspace" then
+	if message == "findworkspace" then
 		FindWorkspace()
 		wait(0.1)
 		print("Found a total of "..FoundItems.." items!")
@@ -2622,13 +2763,19 @@ CommandBar.FocusLost:Connect(function()
 			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				TeleportTo(Plr)
 			end
-		elseif message:find("headsit") then
+		elseif message:find("headsit") and not message:find("headstand") and not message:find("reverseheadsit") then
 			local Name = message:split("headsit ")
 
 			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				Headsit(Plr)
 			end
-		elseif message:find("headstand") then
+		elseif message:find("reverseheadsit") and not message:find("headsit") and not message:find("headstand") then
+			local Name = message:split("reverseheadsit ")
+
+			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
+				ReverseHeadSit(Plr)
+			end
+		elseif message:find("headstand") and not message:find("headsit") and not message:find("reverseheadsit") then
 			local Name = message:split("headstand ")
 
 			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
@@ -2636,8 +2783,21 @@ CommandBar.FocusLost:Connect(function()
 			end
 		elseif message:find("view") and not message:find("unview") then
 			local Name = message:split("view ")
+			
 			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
 				View(true, Plr)
+			end
+		elseif message:find("bang") and not message:find("unbang") and not message:find("getbanged") then
+			local Name = message:split("bang ")
+			
+			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
+				Bang(true, Plr)
+			end
+		elseif message:find("getbanged") and not message:find("bang") and not message:find("unbang") then
+			local Name = message:split("getbanged ")
+
+			if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
+				GetBanged(true, Plr)
 			end
 		end
 	end
@@ -2648,6 +2808,8 @@ CommandBar.FocusLost:Connect(function()
 		View(false, nil)
 	elseif message == "unfollow" then
 		Follow(false, nil)
+	elseif message == "unbang" then
+		Bang(false, nil)
 	end
 
 	for _, instance in pairs(WorkspaceChildren) do
@@ -2781,19 +2943,6 @@ CommandBar.FocusLost:Connect(function()
 	end
 end)
 
-function StopCommands()
-	Follow(false, nil)
-	FollowNPC(false, nil)
-	Float(false)
-	FlyJump(false)
-	Fly(false , 0)
-	Funny(false)
-	Funny2(false)
-	Funny3(false, 0)
-	Funny4(false, 0)
-	Tpwalk(false, 0)
-end
-
 Player.Character.Humanoid.Died:Connect(function()
 	IsDead = true
 	while IsDead == true do
@@ -2806,7 +2955,6 @@ end)
 
 Player.CharacterRemoving:Connect(function()
 	SendNotification("Please wait,", "Stuff are loading..", 5, "Okay")
-	StopCommands()
 
 	local IsRespawning = true
 	while IsRespawning == true do
@@ -2860,6 +3008,7 @@ dragify(MainFrame)
 dragify(FakeChatFrame)
 dragify(CommandListFrame)
 dragify(PlayerListFrame)
+dragify(JobIdFrame)
 MainGui.Enabled = true
 
 WhileWaitEvent.Event:Connect(function()
