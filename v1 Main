@@ -2113,13 +2113,13 @@ end
 
 function ReverseHeadSit(PlayerTo)
 	local Stopped = false
-	if headSit then Stopped = true end
+	if ReverseHeadSit then Stopped = true end
 	UwUSound:Play()
 	Player.Character.Humanoid.Sit = true
 
 	while Player.Character.Humanoid.Sit == true and IsDead == false do
 		wait()
-		headSit = RunService.Heartbeat:Connect(function()
+		ReverseHeadSit = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,1.8,0.7)
 			else
@@ -2131,13 +2131,13 @@ end
 
 function GiveHead(PlayerTo)
 	local Stopped = false
-	if headSit then Stopped = true end
+	if GiveHead then Stopped = true end
 	UwUSound:Play()
 	Player.Character.Humanoid.Sit = true
 
 	while Player.Character.Humanoid.Sit == true and IsDead == false do
 		wait()
-		headSit = RunService.Heartbeat:Connect(function()
+		GiveHead = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,-2.3,1)
 			else
@@ -2180,7 +2180,7 @@ function Bang(state, PlayerTo)
 	bang:Play()
 	while Banging == true do
 		wait()
-		headStand = RunService.Heartbeat:Connect(function()
+		Bang = RunService.Heartbeat:Connect(function()
 			if Banging == true then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,1.5)
 			end
@@ -2203,7 +2203,7 @@ function GetBanged(state, PlayerTo)
 	bang:Play()
 	while Banging == true do
 		wait()
-		headStand = RunService.Heartbeat:Connect(function()
+		GetBanged = RunService.Heartbeat:Connect(function()
 			if Banging == true then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,-1.25)
 			end
@@ -2320,7 +2320,8 @@ CommandBar.FocusLost:Connect(function()
 		local bomb = Instance.new("Explosion", Workspace)
 		bomb.Position = getRoot(Player.Character).Position - Vector3.new(math.random(-3,3),3,math.random(-3,3))
 		bomb.ExplosionType = Enum.ExplosionType.NoCraters
-		bomb.BlastRadius = 999999999999999999999999999999
+		bomb.DestroyJointRadiusPercent = 0
+		bomb.BlastRadius = 5
 		bomb.BlastPressure = 900000
 		bomb.Visible = false
 		wait(1)
@@ -2334,7 +2335,8 @@ CommandBar.FocusLost:Connect(function()
 		local bomb = Instance.new("Explosion", Workspace)
 		bomb.Position = getRoot(Player.Character).Position - Vector3.new(math.random(-3,3),3,math.random(-3,3))
 		bomb.ExplosionType = Enum.ExplosionType.NoCraters
-		bomb.BlastRadius = 999999999999999999999999999999
+		bomb.DestroyJointRadiusPercent = 0
+		bomb.BlastRadius = 5
 		bomb.BlastPressure = 999999999
 		bomb.Visible = false
 		wait(1)
