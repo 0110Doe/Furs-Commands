@@ -2129,15 +2129,14 @@ function ReverseHeadSit(PlayerTo)
 	end
 end
 
-function GiveHead(PlayerTo)
-print("YAY")
-	local Stopped = false
+local function GiveHead(PlayerTo)
+    local Stopped = false
 	UwUSound:Play()
 	Player.Character.Humanoid.Sit = true
 
-	while Player.Character.Humanoid.Sit == true do
+	while Player.Character.Humanoid.Sit == true and IsDead == false and Stopped == false do
 		wait()
-		giveHead = RunService.Heartbeat:Connect(function()
+		reverseHeadSit = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,-2.3,1)
 			else
@@ -2792,7 +2791,7 @@ CommandBar.FocusLost:Connect(function()
 			
 			pcall(function()
 				if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
-					HeadStand(Plr)
+					FUCKYOU(Plr)
 				end
 			end)
 		elseif message:find("givehead") then
@@ -2800,7 +2799,7 @@ CommandBar.FocusLost:Connect(function()
 
 			pcall(function()
 				if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
-					GiveHead(true, Plr)
+					GiveHead(Plr)
 				end
 			end)
 		elseif message:find("view") and not message:find("unview") then
