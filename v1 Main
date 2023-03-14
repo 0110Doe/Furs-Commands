@@ -2130,6 +2130,7 @@ function ReverseHeadSit(PlayerTo)
 end
 
 function GiveHead(PlayerTo)
+print("YAY")
 	local Stopped = false
 	UwUSound:Play()
 	Player.Character.Humanoid.Sit = true
