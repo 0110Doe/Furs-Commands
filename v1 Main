@@ -116,6 +116,7 @@ cmds ={
 	"jobid {client}",
 	"Shift+P [Enables freecam] {client}",
 	"view [Player you want to view] {client}",
+	"team [Team you want to be on] {client}",
 	"fov [Number between 1-120 (70 defult)] {client}",
 	"constantfov [Number between 1-120 (70 defult)] {client}",
 	"fogcolor [Number between 1-156] {client}",
@@ -2099,11 +2100,11 @@ function Headsit(PlayerTo)
 	NotificationSound:Play()
 	Player.Character.Humanoid.Sit = true
 
-	while Player.Character.Humanoid.Sit == true and IsDead == false do
+	while Player.Character.Humanoid.Sit == true and IsDead == false and Stopped == false do
 		wait()
 		headSit = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
-				getRoot(Player.Character).CFrame = getRoot(Workspace.Dummy4).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,1.6,0.4)
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,1.6,0.4)
 			else
 				Stopped = true
 			end
@@ -2116,11 +2117,11 @@ function ReverseHeadSit(PlayerTo)
 	UwUSound:Play()
 	Player.Character.Humanoid.Sit = true
 
-	while Player.Character.Humanoid.Sit == true and IsDead == false do
+	while Player.Character.Humanoid.Sit == true and IsDead == false and Stopped == false do
 		wait()
 		reverseHeadSit = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
-				getRoot(Player.Character).CFrame = getRoot(Workspace.Dummy4).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,1.8,0.7)
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,1.8,0.7)
 			else
 				Stopped = true
 			end
@@ -2137,7 +2138,7 @@ function GiveHead(PlayerTo)
 		wait()
 		giveHead = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
-				getRoot(Player.Character).CFrame = getRoot(Workspace.Dummy4).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,-2.3,1)
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,-2.3,1)
 			else
 				Stopped = true
 			end
@@ -2154,7 +2155,7 @@ function HeadStand(PlayerTo)
 		wait()
 		headStand = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Jump == false and Stopped == false then
-				getRoot(Player.Character).CFrame = getRoot(Workspace.Dummy4).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,5,0)
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,5,0)
 			else
 				Stopped = true
 				Player.Character.Humanoid.PlatformStand = false
@@ -2180,7 +2181,7 @@ function Bang(state, PlayerTo)
 		wait()
 		bangg = RunService.Heartbeat:Connect(function()
 			if Banging == true then
-				getRoot(Player.Character).CFrame = getRoot(Workspace.Dummy4).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,1.5)
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,1.5)
 			end
 		end)
 	end
@@ -2203,7 +2204,7 @@ function GetBanged(state, PlayerTo)
 		wait()
 		banggg = RunService.Heartbeat:Connect(function()
 			if Banging == true then
-				getRoot(Player.Character).CFrame = getRoot(Workspace.Dummy4).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,-1.25)
+				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,-1.25)
 			end
 		end)
 	end
@@ -2857,7 +2858,18 @@ CommandBar.FocusLost:Connect(function()
 		NotificationSound:Play()
 		Player.CameraMode = Enum.CameraMode.Classic
 	end
-
+	
+	local TeamsC = game.Teams:GetTeams()
+	for _, Team in pairs(TeamsC) do
+		if message:find("team") then
+			local TeamName = message:split("team ")
+			
+			if Team.Name:lower():find(TeamName[2]) then
+				Player.Team = Team
+			end
+		end
+	end
+	
 	if message == "fling" then
 		Fling(true)
 	elseif message == "unfling" then
