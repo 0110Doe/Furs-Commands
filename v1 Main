@@ -2134,7 +2134,7 @@ function GiveHead(PlayerTo)
 	UwUSound:Play()
 	Player.Character.Humanoid.Sit = true
 
-	while Player.Character.Humanoid.Sit == true and IsDead == false do
+	while Player.Character.Humanoid.Sit == true do
 		wait()
 		giveHead = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
