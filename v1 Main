@@ -112,6 +112,7 @@ cmds ={
 	"enablefreecam {client}",
 	"showplayerlist {client}",
 	"showspamchat {client}",
+	"showchatlogs",
 	"playerxray {client}",
 	"jobid {client}",
 	"Shift+P [Enables freecam] {client}",
@@ -124,6 +125,7 @@ cmds ={
 	"fogend [Number between 1-10000] {client}",
 	"funny3 [Number between 1-10000] {client}",
 	"hidespamchat {client}",
+	"hidechatlogs",
 	"unconstantfov {client}",
 	"unpartxray {client}",
 	"unfunny {client}",
@@ -506,6 +508,45 @@ PlayerListScrollingFrame.BackgroundTransparency = 1
 PlayerListScrollingFrame.CanvasSize = UDim2.new(0,0,125,0)
 UiListLayout = Instance.new("UIListLayout", PlayerListScrollingFrame)
 
+--ChatLogs
+ChatLogsFrame = Instance.new("Frame", MainGui)
+ChatLogsFrame.Position = UDim2.new(0.687, 0,0.458, 0)
+ChatLogsFrame.Size = UDim2.new(0.312, 0,0.542, 0)
+ChatLogsFrame.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
+ChatLogsFrame.Visible = false
+ChatLogsFrame.LayoutOrder = 999999998
+UiCorner = Instance.new("UICorner", ChatLogsFrame)
+
+ChatLogsCloseButton = Instance.new("TextButton", ChatLogsFrame)
+ChatLogsCloseButton.Position = UDim2.new(0.9,0,0,0)
+ChatLogsCloseButton.Size = UDim2.new(0.097, 0,0.12, 0)
+ChatLogsCloseButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+ChatLogsCloseButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+ChatLogsCloseButton.Text = "X"
+ChatLogsCloseButton.TextScaled = true
+UiCorner = Instance.new("UICorner", ChatLogsCloseButton)
+
+ChatLogsTitle = Instance.new("TextLabel", ChatLogsFrame)
+ChatLogsTitle.Size = UDim2.new(1, 0,0.12, 0)
+ChatLogsTitle.BackgroundTransparency = 1
+ChatLogsTitle.Text = "Chat Logs"
+ChatLogsTitle.TextScaled = true
+ChatLogsTitle.TextXAlignment = Enum.TextXAlignment.Left
+ChatLogsTitle.TextStrokeColor3 = Color3.fromRGB(255,255,255)
+ChatLogsTitle.TextStrokeTransparency = 0
+
+ChatLogsSecondFrame = Instance.new("Frame", ChatLogsFrame)
+ChatLogsSecondFrame.Position = UDim2.new(0, 0,0.12, 0)
+ChatLogsSecondFrame.Size = UDim2.new(1, 0,0.88, 0)
+ChatLogsSecondFrame.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+UiCorner = Instance.new("UICorner", ChatLogsSecondFrame)
+
+ChatLogsScrollingFrame = Instance.new("ScrollingFrame", ChatLogsSecondFrame)
+ChatLogsScrollingFrame.Size = UDim2.new(1, 0,1, 0)
+ChatLogsScrollingFrame.BackgroundTransparency = 1
+ChatLogsScrollingFrame.CanvasSize = UDim2.new(1, 0, 3000, 0)
+UiListLayout = Instance.new("UIListLayout", ChatLogsScrollingFrame)
+
 --Ui PlayerData
 PlayerName = Instance.new("TextLabel", PlayerFrame)
 PlayerName.Size = UDim2.new(0.98, 0,0.1, 0)
@@ -842,6 +883,24 @@ CommandListSearchBar.FocusLost:Connect(function()
 	end
 end)
 
+ChatLogsCloseButton.MouseButton1Click:Connect(function()
+	ClickSound:Play()
+	ChatLogsFrame.Visible = false
+end)
+
+function MessageRecord(Player)
+	Player.Chatted:Connect(function(msg)
+		local TextLable = Instance.new("TextLabel", ChatLogsScrollingFrame)
+		TextLable.Size = UDim2.new(0.95, 0, 0.0001, 0)
+		TextLable.Text = "("..Player.Name..") "..msg
+		TextLable.TextWrapped = true
+		TextLable.RichText = true
+		TextLable.TextScaled = true
+		TextLable.TextColor3 = Color3.fromRGB(255,255,255)
+		TextLable.TextStrokeTransparency = 0
+	end)
+end
+
 PlayerListCloseButton.MouseButton1Click:Connect(function()
 	ClickSound:Play()
 	PlayerListFrame.Visible = false
@@ -855,6 +914,7 @@ for _, Playerr in pairs(Players) do
 	TextLable.TextScaled = true
 	TextLable.TextColor3 = Color3.fromRGB(255,255,255)
 	TextLable.TextStrokeTransparency = 0
+	MessageRecord(Playerr)
 end
 
 Playerss.PlayerAdded:Connect(function(Plr)
@@ -865,6 +925,7 @@ Playerss.PlayerAdded:Connect(function(Plr)
 	TextLable.TextScaled = true
 	TextLable.TextColor3 = Color3.fromRGB(255,255,255)
 	TextLable.TextStrokeTransparency = 0
+	MessageRecord(Plr)
 end)
 
 Playerss.PlayerRemoving:Connect(function(Plr)
@@ -2129,14 +2190,14 @@ function ReverseHeadSit(PlayerTo)
 	end
 end
 
-local function GiveHead(PlayerTo)
-    local Stopped = false
+function GiveHead(PlayerTo)
+	local Stopped = false
 	UwUSound:Play()
 	Player.Character.Humanoid.Sit = true
 
-	while Player.Character.Humanoid.Sit == true and IsDead == false and Stopped == false do
+	while Player.Character.Humanoid.Sit == true and IsDead == false do
 		wait()
-		reverseHeadSit = RunService.Heartbeat:Connect(function()
+		giveHead = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,-2.3,1)
 			else
@@ -2454,6 +2515,14 @@ CommandBar.FocusLost:Connect(function()
 	elseif message == "hidespamchat" or message == "unspamchat" then
 		NotificationSound:Play()
 		FakeChatFrame.Visible = false
+	end
+	
+	if message == "showchatlogs" or message == "chatlogs" then
+		NotificationSound:Play()
+		ChatLogsFrame.Visible = true
+	elseif message == "hidechatlogs" or message == "unchatlogs" then
+		NotificationSound:Play()
+		ChatLogsFrame.Visible = false
 	end
 
 	if message:find("play") then
@@ -2791,7 +2860,7 @@ CommandBar.FocusLost:Connect(function()
 			
 			pcall(function()
 				if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
-					FUCKYOU(Plr)
+					HeadStand(Plr)
 				end
 			end)
 		elseif message:find("givehead") then
@@ -2799,7 +2868,7 @@ CommandBar.FocusLost:Connect(function()
 
 			pcall(function()
 				if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
-					GiveHead(Plr)
+					GiveHead(true, Plr)
 				end
 			end)
 		elseif message:find("view") and not message:find("unview") then
@@ -3047,6 +3116,7 @@ dragify(FakeChatFrame)
 dragify(CommandListFrame)
 dragify(PlayerListFrame)
 dragify(JobIdFrame)
+dragify(ChatLogsFrame)
 MainGui.Enabled = true
 
 WhileWaitEvent.Event:Connect(function()
