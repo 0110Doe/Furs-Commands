@@ -112,23 +112,29 @@ cmds ={
 	"enablefreecam {client}",
 	"showplayerlist {client}",
 	"showspamchat {client}",
-	"showchatlogs",
+	"showchatlogs {client}",
+	"fireme {client}",
 	"playerxray {client}",
 	"jobid {client}",
+	"rain {client}",
+	"f3x (aka buildingtools) {client}",
 	"Shift+P [Enables freecam] {client}",
+	"particleme [Image ID] {client}",
 	"view [Player you want to view] {client}",
 	"team [Team you want to be on] {client}",
 	"fov [Number between 1-120 (70 defult)] {client}",
 	"constantfov [Number between 1-120 (70 defult)] {client}",
 	"fogcolor [Number between 1-156] {client}",
 	"brightness [Number between 1-10000 (1 defult) {client}",
-	"fogend [Number between 1-10000] {client}",
-	"funny3 [Number between 1-10000] {client}",
+	"fogend [Number between 1-50000] {client}",
+	"funny3 [Number between 1-50000] {client}",
 	"hidespamchat {client}",
-	"hidechatlogs",
+	"hidechatlogs {client}",
 	"unconstantfov {client}",
+	"unrain {client}",
 	"unpartxray {client}",
 	"unfunny {client}",
+	"unfireme {client}",
 	"unfirstperson {client}",
 	"unnightvision {client}",
 	"unlight {client}",
@@ -165,13 +171,13 @@ cmds ={
 	"to [Player name or display]",
 	"follow [Player name or display]",
 	"pathfindfollow [Player name or display]",
-	"speed [Number between 1-10000 (Defult 16)]",
-	"jumppower [Number between 1-10000 (Defult 50)]",
-	"constantspeed [Number between 1-10000]",
-	"constantjumppower [Number between 1-10000]",
-	"tpwalk [Number between 1-10000]",
-	"spin [Number between 1-10000]",
-	"fly [Number bewtween 1-10000 (Defult 2)]",
+	"speed [Number between 1-50000 (Defult 16)]",
+	"jumppower [Number between 1-50000 (Defult 50)]",
+	"constantspeed [Number between 1-50000]",
+	"constantjumppower [Number between 1-50000]",
+	"tpwalk [Number between 1-50000]",
+	"spin [Number between 1-50000]",
+	"fly [Number bewtween 1-50000 (Defult 2)]",
 	"unbang (owo)",
 	"unpathfindfollow",
 	"unfling",
@@ -631,6 +637,9 @@ FunnyNotificationSound.SoundId = "rbxassetid://9125845655"
 UwUSound = Instance.new("Sound", SoundFolder)
 UwUSound.SoundId = "rbxassetid://4821247887"
 
+BoingSound = Instance.new("Sound", SoundFolder)
+BoingSound.SoundId = "rbxassetid://9111926008"
+
 DiedSound = Instance.new("Sound", SoundFolder)
 DiedSound.SoundId = "rbxassetid://6598984092"
 
@@ -642,6 +651,10 @@ NightVisionSound.SoundId = "rbxassetid://376178316"
 
 ClickSound = Instance.new("Sound", SoundFolder)
 ClickSound.SoundId = "rbxassetid://6895079853"
+
+RainSound = Instance.new("Sound", SoundFolder)
+RainSound.SoundId = "rbxassetid://9112854440"
+RainSound.Looped = true
 
 LoadedSound = Instance.new("Sound", SoundFolder)
 LoadedSound.SoundId = "rbxassetid://7383525713"
@@ -2157,13 +2170,12 @@ end
 --0,0.2,0.7
 function Headsit(PlayerTo)
 	local Stopped = false
-	if headSit then Stopped = true end
 	NotificationSound:Play()
 	Player.Character.Humanoid.Sit = true
 
-	while Player.Character.Humanoid.Sit == true and IsDead == false and Stopped == false do
+	while Player.Character.Humanoid.Sit == true and IsDead == false do
 		wait()
-		headSit = RunService.Heartbeat:Connect(function()
+		local headSit = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,1.6,0.4)
 			else
@@ -2178,9 +2190,9 @@ function ReverseHeadSit(PlayerTo)
 	UwUSound:Play()
 	Player.Character.Humanoid.Sit = true
 
-	while Player.Character.Humanoid.Sit == true and IsDead == false and Stopped == false do
+	while Player.Character.Humanoid.Sit == true and IsDead == false do
 		wait()
-		reverseHeadSit = RunService.Heartbeat:Connect(function()
+		local reverseHeadSit = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,1.8,0.7)
 			else
@@ -2197,7 +2209,7 @@ function GiveHead(PlayerTo)
 
 	while Player.Character.Humanoid.Sit == true and IsDead == false do
 		wait()
-		giveHead = RunService.Heartbeat:Connect(function()
+		local giveHead = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Sit == true and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(180),0)* CFrame.new(0,-2.3,1)
 			else
@@ -2214,7 +2226,7 @@ function HeadStand(PlayerTo)
 
 	while Player.Character.Humanoid.PlatformStand == true and IsDead == false do
 		wait()
-		headStand = RunService.Heartbeat:Connect(function()
+		local headStand = RunService.Heartbeat:Connect(function()
 			if Player.Character.Humanoid.Jump == false and Stopped == false then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,5,0)
 			else
@@ -2240,7 +2252,7 @@ function Bang(state, PlayerTo)
 	bang:Play()
 	while Banging == true and IsDead == false do
 		wait()
-		bangg = RunService.Heartbeat:Connect(function()
+		local bangg = RunService.Heartbeat:Connect(function()
 			if Banging == true then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,1.5)
 			end
@@ -2263,7 +2275,7 @@ function GetBanged(state, PlayerTo)
 	bang:Play()
 	while Banging == true and IsDead == false do
 		wait()
-		banggg = RunService.Heartbeat:Connect(function()
+		local banggg = RunService.Heartbeat:Connect(function()
 			if Banging == true then
 				getRoot(Player.Character).CFrame = getRoot(PlayerTo.Character).CFrame * CFrame.Angles(0,math.rad(0),0)* CFrame.new(0,0,-1.25)
 			end
@@ -2335,6 +2347,43 @@ function AutoJump(State)
 	end
 end
 
+RainFolder = Instance.new("Folder", Workspace)
+Raining = nil
+function MakeItRain(State)
+	BoingSound:Play()
+	Raining = State
+	
+	local Cloud = Instance.new("Part", RainFolder)
+	Cloud.Anchored = true
+	Cloud.Color = Color3.fromRGB(163, 162, 165)
+	Cloud.CanCollide = false
+	local Mesh = Instance.new("SpecialMesh", Cloud)
+	Mesh.MeshType = Enum.MeshType.FileMesh
+	Mesh.MeshId = "rbxassetid://700927324"
+	Mesh.Scale = Vector3.new(10, 5, 10)
+	if Raining == false then
+		Cloud:Remove()
+	end
+	--Mesh.TextureId = "rbx"
+	while Raining == true do
+		wait()
+		for i=1,15 do
+			Cloud.Position = getRoot(Player.Character).Position + Vector3.new(0,50,0)
+			local Part = Instance.new("Part", RainFolder)
+			Part.Position = getRoot(Player.Character).Position + Vector3.new(math.random(-15,15),50,math.random(-15,15))
+			Part.Size = Vector3.new(1,1,1)
+			Part.Color = Color3.fromRGB(0, 145, 255)
+			Part.Transparency = 0.5
+			Part.CanCollide = false
+		end
+	end
+	for i=1,40 do
+		wait()
+		Cloud.Position = Cloud.Position - Vector3.new(0,2.5,0)
+	end
+	Cloud:Remove()
+end
+
 DefultAtmoColor = nil
 DefultAtmoDecay = nil
 DefultAtmoDensity = nil
@@ -2373,7 +2422,54 @@ CommandBar.FocusLost:Connect(function()
 		JobIdFrame.Visible = false
 	end
 	
+	if message == "f3x" or message == "buildingtools" or message == "buildingtool"then
+		NotificationSound:Play()
+		SendNotification("Wait..","Script is loading..",5,nil)
+		loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)()
+	end
+	
+	if message == "rain" then
+		RainSound:Play()
+		MakeItRain(true)
+	elseif message == "unrain" then
+		RainSound:Stop()
+		MakeItRain(false)
+	end
+	
+	if message == "fireme" then
+		NotificationSound:Play()
+		local fire = Instance.new("Fire", getRoot(Player.Character))
+		fire.Size = 64
+		fire.Heat = 64
+	end
+	
+	if message == "unfireme" or message == "unfire" then
+		NotificationSound:Play()
+		if getRoot(Player.Character):FindFirstChildOfClass("Fire") then
+			getRoot(Player.Character):FindFirstChildOfClass("Fire"):Remove()
+		end
+	end
+	
+	if message:find("particleme") then
+		NotificationSound:Play()
+		local msg = message:split("particleme")
+		local Particle = Instance.new("ParticleEmitter", getRoot(Player.Character))
+		Particle.Texture = "rbxassetid://"..msg[2]
+		Particle.Size = NumberSequence.new(0.5)
+		Particle.SpreadAngle = Vector2.new(-360,360)
+		Particle.Speed = NumberRange.new(2)
+		Particle.Rate = 30
+	end
+	
+	if message == "unparticleme" or message == "unparticle" then
+		NotificationSound:Play()
+		if getRoot(Player.Character):FindFirstChildOf("ParticleEmitter") then
+			getRoot(Player.Character):FindFirstChildOf("ParticleEmitter"):Remove()
+		end
+	end
+	
 	if message == "flingme" then
+		BoingSound:Play()
 		Player.Character.Humanoid.Sit = true
 		local ff = Instance.new("ForceField", Player.Character)
 		ff.Visible = false
@@ -2389,6 +2485,8 @@ CommandBar.FocusLost:Connect(function()
 	end
 	
 	if message == "sflingme" then
+		BoingSound.Volume = 10
+		BoingSound:Play()
 		Player.Character.Humanoid.Sit = true
 		local ff = Instance.new("ForceField", Player.Character)
 		ff.Visible = false
@@ -2401,6 +2499,7 @@ CommandBar.FocusLost:Connect(function()
 		bomb.Visible = false
 		wait(1)
 		ff:Remove()
+		BoingSound.Volume = 0.5
 	end
 	
 	if message == "playerxray" then
@@ -2447,26 +2546,31 @@ CommandBar.FocusLost:Connect(function()
 	end
 
 	if message == "vr" then
+		NotificationSound:Play()
 		SendNotification("Wait..", "Fe Vr is loading..", 5, nil)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/vr.lua"))()
 	end
 	
 	if message == "opscript" then
+		NotificationSound:Play()
 		SendNotification("Wait..", "Script is loading..", 5, nil)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/Tescalus/Pendulum-Hubs-Source/main/Pendulum%20Hub%20V5.lua"))()
 	end
 	
 	if message == "neko" then
+		NotificationSound:Play()
 		SendNotification("Wait..", "Script is loading.. (This is client-sided)", 5, nil)
 		loadstring(game:HttpGet('https://raw.githubusercontent.com/shidemuri/coffeeware/main/nekov4.lua'))()
 	end
 	
 	if message == "walkonwalls" then
+		NotificationSound:Play()
 		SendNotification("Wait..", "Walk On Walls is loading..", 5, nil)
 		loadstring(game:HttpGet('https://pastebin.com/raw/RY9cBbdG',true))()
 	end
 	
 	if message == "car" then
+		NotificationSound:Play()
 		if game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").RigType == Enum.HumanoidRigType.R6 then
 
 			game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").WalkSpeed = 60
@@ -2505,6 +2609,7 @@ CommandBar.FocusLost:Connect(function()
 	end
 	
 	if message == "remotespy" then
+		NotificationSound:Play()
 		SendNotification("Wait..", "Remote spy is loading..", 5, nil)
 		loadstring(game:HttpGet('https://raw.githubusercontent.com/0110Doe/Remote-Spy/main/main',true))()
 	end
@@ -2868,7 +2973,7 @@ CommandBar.FocusLost:Connect(function()
 
 			pcall(function()
 				if Plr.Name:lower():find(Name[2]:lower()) or Plr.DisplayName:lower():find(Name[2]:lower()) then
-					GiveHead(true, Plr)
+					GiveHead(Plr)
 				end
 			end)
 		elseif message:find("view") and not message:find("unview") then
@@ -2945,7 +3050,7 @@ CommandBar.FocusLost:Connect(function()
 		Fling(false)
 	end
 
-	for i=1,10000 do
+	for i=1,50000 do
 		if message == "speed "..i then
 			NotificationSound:Play()
 			Player.Character.Humanoid.WalkSpeed = i
