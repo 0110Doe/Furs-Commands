@@ -23,7 +23,7 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 })
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Script is loading..";
-	Text = "Please wait..";
+	Text = "Please wait for walmart version of inf yield to load..";
 	Duration = 5;
 	Button1 = "Alrighty";
 	Icon = "rbxassetid://9417142960";
