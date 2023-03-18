@@ -23,7 +23,7 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 })
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "Script is loading..";
-	Text = "Please wait for walmart version of inf yield to load..";
+	Text = "Please wait..";
 	Duration = 5;
 	Button1 = "Alrighty";
 	Icon = "rbxassetid://9417142960";
@@ -1757,10 +1757,13 @@ function View(State ,Player)
 	local Stopped = false
 	Viewing = State
 
-	if Viewing == false then
-		Player = game.Players.LocalPlayer
-		workspace.CurrentCamera.CameraSubject = Player.Character.Humanoid
-		Stopped = true
+	if Viewing == true then
+		if viewDied then
+			viewDied:Disconnect()
+		end
+		if viewChanged then
+			viewChanged:Disconnect()
+		end
 	end
 	
 	for i,v in pairs(Players) do
@@ -2812,6 +2815,12 @@ CommandBar.FocusLost:Connect(function()
 	end
 
 	if message == "rejoin" then
+		game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
+			if (syn) then
+				syn.queue_on_teleport("wait(5) loadstring(game:HttpGet('https://raw.githubusercontent.com/0110Doe/Furs-Commands/main/v1%20Main',true))()")
+			end
+		end)		
+		
 		local TeleportService = game:GetService("TeleportService")
 		TeleportService:Teleport(game.PlaceId, Player)
 	end
