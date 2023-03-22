@@ -752,6 +752,12 @@ end
 --loadData()
 
 --unknown functions
+game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
+	if (syn) then
+		syn.queue_on_teleport("wait(5) loadstring(game:HttpGet('https://raw.githubusercontent.com/0110Doe/Furs-Commands/main/v1%20Main',true))()")
+	end
+end)
+
 MinimizeButton.MouseButton1Click:Connect(function()
 	ClickSound:Play()
 	if SecondMainFrame.Visible == true then
@@ -1757,13 +1763,9 @@ function View(State ,Player)
 	local Stopped = false
 	Viewing = State
 
-	if Viewing == true then
-		if viewDied then
-			viewDied:Disconnect()
-		end
-		if viewChanged then
-			viewChanged:Disconnect()
-		end
+	if Viewing == false then
+		Stopped = true
+		workspace.CurrentCamera.CameraSubject = Player.Character.Humanoid
 	end
 	
 	for i,v in pairs(Players) do
